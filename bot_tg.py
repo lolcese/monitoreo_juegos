@@ -259,19 +259,19 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
     fecha = datetime.now()
-    cursor.execute('SELECT * FROM juegos WHERE BGG_id = ? ',[BGG_id])
+    cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking FROM juegos WHERE BGG_id = ? ',[BGG_id])
     juegos = cursor.fetchall()
-    nombre = juegos[0][2]
+    nombre = juegos[0][1]
+    ranking = juegos[0][4]
     cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[update.callback_query.from_user.full_name,usuario_id,fecha,f"Ver juego {nombre}"])
     conn.commit()
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
     texto = f"*{nombre}*\n\n"
-    texto += f"[Enlace BGG]({link_BGG})\n\n"
+    texto += f"[Enlace BGG]({link_BGG}) - Ranking: {ranking}\n\n"
     texto += "Los precios indicados son *finales* "+"(incluyen Aduana y correo).\nEstá siendo monitoreado desde:\n\n"
     for j in juegos:
-        nombre_sitio = constantes.sitio_nom[j[3]]
-        # url_sitio = re.sub("\?","%3F",constantes.sitio_URL[j[3]]) + j[4]
-        url_sitio = constantes.sitio_URL[j[3]] + j[4]
+        nombre_sitio = constantes.sitio_nom[j[2]]
+        url_sitio = constantes.sitio_URL[j[2]] + j[3]
         print (url_sitio)
         id_juego = j[0]
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
