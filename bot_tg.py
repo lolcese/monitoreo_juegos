@@ -430,14 +430,13 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '30/07/2021: Muestra ranking de BGG y los 20 juegos más baratos.\n\n' + \
     '26/07/2021: Posibilidad de hacer búsquedas inline.\n\n' + \
     '26/07/2021: Cambiado el nombre a @Monitor\_Juegos\_bot.\n\n' + \
     '26/07/2021: Agregado shop4world.\n\n' + \
     '25/07/2021: Agregado shop4es.\n\n' + \
     '24/07/2021: Agregado 365games.\n\n' + \
-    '24/07/2021: Posibilidad de suscribirse a juegos en oferta y reposición.\n\n' + \
-    '23/07/2021: Se muestran los juegos que están en stock y antes no lo estaban.\n\n' + \
-    '22/07/2021: Se pueden monitorear los juegos de Tiendamia EBAY.\n\n'
+    '24/07/2021: Posibilidad de suscribirse a juegos en oferta y reposición.\n\n'
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
