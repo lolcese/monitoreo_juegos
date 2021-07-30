@@ -6,12 +6,11 @@ import html
 import urllib.request
 import requests
 import os
-import token_bot
 import constantes
 import path
-import token_bot
 
 os.chdir(path.actual)
+bot_token = os.environ.get('bot_token')
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -28,20 +27,20 @@ def procesa():
         conn.commit()
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
         conn.commit()
-        send_text = f'https://api.telegram.org/bot{token_bot.token}/sendMessage?chat_id={str(usuario_id)}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
+        send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={str(usuario_id)}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
         response = requests.get(send_text)
     elif resp == "S":
         conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado) VALUES (?,?,?,?,?)',(int(BGG_id),nombre,sitio_nom,sitio_id,fecha))
         conn.commit()
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
         conn.commit()
-        send_text = f'https://api.telegram.org/bot{token_bot.token}/sendMessage?chat_id={str(usuario_id)}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
+        send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={str(usuario_id)}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
         response = requests.get(send_text)
     else:
         razon = input("Razón: ")
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
         conn.commit()
-        send_text = f'https://api.telegram.org/bot{token_bot.token}/sendMessage?chat_id={str(usuario_id)}&parse_mode=Markdown&text=El juego {nombre} que sugeriste *NO* fue agregado al monitoreo.\n{razon}\nMuchas gracias.'
+        send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={str(usuario_id)}&parse_mode=Markdown&text=El juego {nombre} que sugeriste *NO* fue agregado al monitoreo.\n{razon}\nMuchas gracias.'
         response = requests.get(send_text)
     return
 
@@ -141,6 +140,3 @@ for j in juegos:
         continue
 
 cursor.close()
-
-# DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = 8;
-# UPDATE juegos_sugeridos SET URL = "https://www.buscalibre.com.ar/amazon?url=0994487606" WHERE id_juego_sugerido = 8;
