@@ -22,6 +22,11 @@ id_aviso = os.environ.get('id_aviso')
 
 PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, JUEGO_AGREGAR = range(9)
 
+######### Conecta con la base de datos
+def conecta_db():
+    conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    return conn
+
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
     usuario = update.message.from_user
@@ -69,6 +74,7 @@ def menu():
         [InlineKeyboardButton("\U0001F4DA Lista de juegos", callback_data='juegos_lista')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego", callback_data='juego_ver')],
         [InlineKeyboardButton("\U000023F0 Mis alarmas", callback_data='alarmas_muestra')],
+        [InlineKeyboardButton("\U0001F4B2 20 juegos baratos", callback_data='juegos_baratos')],
         [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
         [InlineKeyboardButton("\U00002757 Novedades", callback_data='novedades')],
         [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
@@ -186,6 +192,29 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = f"*Mis alarmas*\n\n{texto}", parse_mode = "Markdown", reply_markup=reply_markup)
+    return PRINCIPAL
+
+######### Juegos baratos
+def juegos_baratos(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+
+    conn = conecta_db()
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT id_juego, MIN(precio) FROM precios WHERE (precio NOT NULL AND fecha BETWEEN datetime("now", "-1 days") AND datetime("now", "localtime")) group by id_juego order by  min(precio) limit 20;')
+    baratos = cursor.fetchall()
+    barato = ""
+    for b in baratos:
+        id_juego, precio = b
+        cursor.execute('SELECT nombre, sitio, sitio_id FROM juegos WHERE id_juego = ?',[id_juego])
+        nombre, sitio, sitio_id = cursor.fetchone()
+        barato += f"\U000027A1 {nombre} está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = f"*Juegos más baratos en las últimas 24 horas*\n\n{barato}", parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Pide que se escriba el nombre del juego
@@ -516,11 +545,6 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(text = 'Gracias por la sugerencia. Va a ser revisada y vas a recibir un mensaje si es aprobada o rechazada.', parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
-######### Conecta con la base de datos
-def conecta_db():
-    conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-    return conn
-
 ######### Muestra los jeugos en oferta y restock
 def ofertas_restock(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
@@ -690,6 +714,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(alarmas_muestra,        pattern='^alarmas_muestra$'),
                 CallbackQueryHandler(juego_ver,              pattern='^juego_ver$'),
                 CallbackQueryHandler(novedades,              pattern='^novedades$'),
+                CallbackQueryHandler(juegos_baratos,         pattern='^juegos_baratos$'),
                 CallbackQueryHandler(ofertas_restock,        pattern='^ofertas_restock$'),
                 CallbackQueryHandler(sugerir_juego_datos,    pattern='^sugerir_juego_datos$'),
                 CallbackQueryHandler(comentarios_texto,      pattern='^comentarios_texto$'),
