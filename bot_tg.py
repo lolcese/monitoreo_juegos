@@ -214,7 +214,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = f"*Juegos más baratos en las últimas 24 horas*\n\n{barato}", parse_mode = "Markdown", reply_markup=reply_markup)
+    query.edit_message_text(text = f"*Juegos más baratos en las últimas 24 horas*\n\n{barato}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
 ######### Pide que se escriba el nombre del juego
