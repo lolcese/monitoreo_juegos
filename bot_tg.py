@@ -435,6 +435,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '31/07/2021: Se actualizan automáticamente las cotizaciones de las divisas.\n\n' + \
     '30/07/2021: Muestra ranking de BGG y los 20 juegos más baratos.\n\n' + \
     '26/07/2021: Posibilidad de hacer búsquedas inline.\n\n' + \
     '26/07/2021: Cambiado el nombre a @Monitor\_Juegos\_bot.\n\n' + \
