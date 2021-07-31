@@ -15,6 +15,7 @@ import constantes
 import os.path
 import path
 from uuid import uuid4
+import requests
 
 os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
@@ -538,9 +539,9 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, fecha) VALUES (?,?,?,?,?)',[usuario_nom,usuario_id,BGG_URL,url,fecha])
     conn.commit()
     texto = f"{usuario_nom} sugirió el juego {url}"
-    update.bot.sendMessage(chat_id = id_aviso, text = texto, parse_mode = "Markdown")
-    # send_text = f'https://api.telegram.org/bot{token_bot.token}/sendMessage?chat_id={token_bot.id_aviso}&parse_mode=Markdown&text={texto}'
-    # response = requests.get(send_text)
+    # update.bot.sendMessage(chat_id = id_aviso, text = texto, parse_mode = "Markdown")
+    send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&parse_mode=Markdown&text={texto}'
+    response = requests.get(send_text)
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
