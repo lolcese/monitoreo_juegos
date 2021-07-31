@@ -278,11 +278,11 @@ def juego_info(update: Update, context: CallbackContext) -> int:
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    arch = "graficos/"+str(BGG_id)+".png"
+    arch = f"graficos/{BGG_id}.png"
     if not os.path.exists(arch):
         arch = "graficos/0000.png"
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    id = context.bot.sendPhoto(chat_id=update.effective_chat.id, photo = open(arch, "rb"), caption=texto, parse_mode="Markdown", reply_markup=reply_markup)
+    id = context.bot.sendPhoto(chat_id=update.effective_chat.id, photo = constantes.sitio_URL["base"]+arch, caption=texto, parse_mode="Markdown", reply_markup=reply_markup)
     fecha = datetime.now()
     cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[update.callback_query.from_user.full_name,usuario_id,fecha,f"Ver juego {nombre}"])
     conn.commit()
