@@ -258,13 +258,45 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     BGG_id = query.data.split("_")[1]
     conn = conecta_db()
     cursor = conn.cursor()
+    nombre, texto = texto_info_juego(BGG_id)
+    texto += "\n"
+    cursor.execute('SELECT precio_alarma, fecha as "[timestamp]" FROM alarmas WHERE BGG_id = ? AND id_persona = ?', [BGG_id,usuario_id])
+    alarmas = cursor.fetchone()
+    if alarmas == None:
+        texto += "No tenés alarmas para este juego.\n"
+        keyboard = [
+            [InlineKeyboardButton("\U00002795 Agregar alarma", callback_data='alarmas_agregar_precio')],
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+    else:
+        ala_fech = alarmas[1]
+        texto += f"Tenés una alarma para cuando valga menos de ${alarmas[0]:.0f} desde el {ala_fech.day}/{ala_fech.month}/{ala_fech.year} a las {ala_fech.hour}:{ala_fech.minute:02d}.\n"
+        keyboard = [
+            [InlineKeyboardButton("\U00002716 Cambiar alarma", callback_data='alarmas_cambiar_precio')],
+            [InlineKeyboardButton("\U00002796 Borrar alarma", callback_data='alarmas_borrar')],
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    arch = "graficos/"+str(BGG_id)+".png"
+    if not os.path.exists(arch):
+        arch = "graficos/0000.png"
+    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
+    id = context.bot.sendPhoto(chat_id=update.effective_chat.id, photo = open(arch, "rb"), caption=texto, parse_mode="Markdown", reply_markup=reply_markup)
     fecha = datetime.now()
+    cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[update.callback_query.from_user.full_name,usuario_id,fecha,f"Ver juego {nombre}"])
+    conn.commit()
+    context.chat_data["mensaje_id"] = id.message_id
+    context.chat_data["BGG_id"] = BGG_id
+    context.chat_data["BGG_nombre"] = nombre
+    return ALARMAS
+
+def texto_info_juego(BGG_id):
+    conn = conecta_db()
+    cursor = conn.cursor()
     cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking FROM juegos WHERE BGG_id = ? ',[BGG_id])
     juegos = cursor.fetchall()
     nombre = juegos[0][1]
     ranking = juegos[0][4]
-    cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[update.callback_query.from_user.full_name,usuario_id,fecha,f"Ver juego {nombre}"])
-    conn.commit()
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
     texto = f"*{nombre}*\n\n"
     texto += f"[Enlace BGG]({link_BGG}) - Ranking: {ranking}\n\n"
@@ -272,7 +304,6 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     for j in juegos:
         nombre_sitio = constantes.sitio_nom[j[2]]
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
-        print (url_sitio)
         id_juego = j[0]
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         ult_precio = cursor.fetchone()
@@ -299,35 +330,8 @@ def juego_info(update: Update, context: CallbackContext) -> int:
                     texto += "Es el precio más barato de los últimos 15 días.\n"
                 else:
                     min_fech = min_reg[1]
-                    texto += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year} a las {min_fech.hour}:{min_fech.minute:02d}).\n"
-
-    texto += "\n"
-    cursor.execute('SELECT precio_alarma, fecha as "[timestamp]" FROM alarmas WHERE BGG_id = ? AND id_persona = ?', [BGG_id,usuario_id])
-    alarmas = cursor.fetchone()
-    if alarmas == None:
-        texto += "No tenés alarmas para este juego.\n"
-        keyboard = [
-            [InlineKeyboardButton("\U00002795 Agregar alarma", callback_data='alarmas_agregar_precio')],
-            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-        ]
-    else:
-        ala_fech = alarmas[1]
-        texto += f"Tenés una alarma para cuando valga menos de ${alarmas[0]:.0f} desde el {ala_fech.day}/{ala_fech.month}/{ala_fech.year} a las {ala_fech.hour}:{ala_fech.minute:02d}.\n"
-        keyboard = [
-            [InlineKeyboardButton("\U00002716 Cambiar alarma", callback_data='alarmas_cambiar_precio')],
-            [InlineKeyboardButton("\U00002796 Borrar alarma", callback_data='alarmas_borrar')],
-            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-        ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    arch = "graficos/"+str(BGG_id)+".png"
-    if not os.path.exists(arch):
-        arch = "graficos/0000.png"
-    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    id = context.bot.sendPhoto(chat_id=update.effective_chat.id, photo = open(arch, "rb"), caption=texto, parse_mode="Markdown", reply_markup=reply_markup)
-    context.chat_data["mensaje_id"] = id.message_id
-    context.chat_data["BGG_id"] = BGG_id
-    context.chat_data["BGG_nombre"] = nombre
-    return ALARMAS
+                    texto += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year} a las {min_fech.hour}:{min_fech.minute:02d}).\n"    
+    return [nombre, texto]
 
 ######### Pide que se ingrese el precio de la alarma
 def alarmas_agregar_precio(update: Update, context: CallbackContext) -> int:
@@ -629,6 +633,7 @@ def mensaje_oferta_borrar(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = f"No vas a recibir más mensajes cuando cualquier juego esté de oferta o reposición", parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
+
 def inlinequery(update: Update, context: CallbackContext) -> None:
     query = update.inline_query.query
     if query == "" or len(query) < 3:
@@ -642,63 +647,18 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 
     if len(juegos) <= 10:
         for j in juegos:
-            nombre = j[0]
             BGG_id = j[1]
-
+            nombre, texto = texto_info_juego(BGG_id)
             results.append(
                     InlineQueryResultArticle(
                     id=str(uuid4()),
                     title=nombre,
-                    input_message_content = InputTextMessageContent(texto_men(BGG_id, nombre),
+                    input_message_content = InputTextMessageContent(f"{texto}\nPara más información, gráficos y la posibilidad de poner alarmas, andá a @Monitor\_Juegos\_bot y escribí /start",
                                             parse_mode="Markdown",
                                             disable_web_page_preview = True)
                 )
             )
-
-    update.inline_query.answer(results)
-
-def texto_men(BGG_id, nombre):
-    conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-    cursor = conn.cursor()
-    fecha = datetime.now()
-    cursor.execute('SELECT * FROM juegos WHERE BGG_id = ? ',[BGG_id])
-    juegos = cursor.fetchall()
-    link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
-    texto = f"*{nombre}*\n\n"
-    texto += f"[Enlace BGG]({link_BGG})\n\n"
-    texto += "Los precios indicados son *finales* (incluyen Aduana y correo).\nEstá siendo monitoreado desde:\n\n"
-    for j in juegos:
-        nombre_sitio = constantes.sitio_nom[j[3]]
-        url_sitio = constantes.sitio_URL[j[3]]+j[4]
-        id_juego = j[0]
-        cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
-        ult_precio = cursor.fetchone()
-        if ult_precio == None:
-            texto += f"[{nombre_sitio}]({url_sitio}) - Está en la base de datos del bot pero todavía no intenté buscar el precio, en los próximos 30 minutos debería aparecer.\n"
-        else:
-            ult_precio = ult_precio[0]
-            if ult_precio == None:
-                texto += f"[{nombre_sitio}]({url_sitio}) - No está en stock actualmente, "
-                cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime")) ORDER BY fecha DESC LIMIT 1', [id_juego])
-                ult_val = cursor.fetchone()
-                if ult_val == None:
-                    texto += "y no lo estuvo en los últimos 15 días.\n"
-                else:
-                    ult_prec = ult_val[0]
-                    ult_fech = ult_val[1]
-                    texto += f"pero el {ult_fech.day}/{ult_fech.month}/{ult_fech.year} a las {ult_fech.hour}:{ult_fech.minute:02d} tuvo un precio de ${ult_prec:.0f}.\n"
-            else:
-                texto += f"[{nombre_sitio}]({url_sitio}) - Precio actual ${ult_precio:.0f}. "
-                cursor.execute('SELECT precio,fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime")) ORDER BY precio,fecha DESC LIMIT 1', [id_juego])
-                min_reg = cursor.fetchone()
-                min_precio = min_reg[0]
-                if min_precio == ult_precio:
-                    texto += "Es el precio más barato de los últimos 15 días.\n"
-                else:
-                    min_fech = min_reg[1]
-                    texto += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year} a las {min_fech.hour}:{min_fech.minute:02d}).\n"
-    texto += "\nPara más información, gráficos y la posibilidad de poner alarmas, andá a @Monitor\_Juegos\_bot y escribí /start"
-    return texto
+        update.inline_query.answer(results)
 
 ######### Handlers
 def main() -> PRINCIPAL:
