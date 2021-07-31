@@ -576,9 +576,12 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT id_juego FROM restock WHERE activa = "Sí"')
     restock = cursor.fetchall()
     for r in restock:
-        cursor.execute('SELECT nombre FROM juegos WHERE id_juego = ?',[r[0]])
-        nombre = cursor.fetchone()[0]
-        texto_st += f"\U000027A1 {nombre} está en stock (y antes no lo estaba)\n"
+        id_juego = r[0]
+        cursor.execute('SELECT nombre, sitio, sitio_id FROM juegos WHERE id_juego = ?',[id_juego])
+        nombre, sitio, sitio_id = cursor.fetchone()
+        cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
+        precio_actual = cursor.fetchone()[0]
+        texto_st += f"\U000027A1 {nombre} está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
     if texto_st == "":
         texto_st = "No hay ningún juego en reposición\n"
 
