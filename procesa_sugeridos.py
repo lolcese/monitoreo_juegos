@@ -78,6 +78,8 @@ for j in juegos:
         sitio, sitio_ID = m
         print (f"*** Ya está siendo monitoreado desde {sitio}: {sitio_ID}")
 
+    sitio_url = re.sub("%7C","|",sitio_url)
+
     sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "BLAM"
