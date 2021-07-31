@@ -68,7 +68,7 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
     context.bot.send_message(chat_id=update.effective_chat.id, text = f'Hola {usuario.first_name}, bienvenido al bot para monitorear precios de juegos. ¿Qué querés hacer?', parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
-######### Manú principal
+######### Menú principal
 def menu():
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Lista de juegos", callback_data='juegos_lista')],
@@ -598,7 +598,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = f"*Juegos en oferta*\n\n{texto_of}\n\n*Juegos en reposición*\n\n{texto_st}\n{texto_al}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
+    query.edit_message_text(text = f"*Juegos en oferta*\n\n{texto_of}\n*Juegos en reposición*\n\n{texto_st}\n{texto_al}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
 ######### Agregar al aviso de ofertas

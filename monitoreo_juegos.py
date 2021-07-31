@@ -353,8 +353,10 @@ def main():
         id_juego = s[1]
         cursor.execute('SELECT nombre, sitio, sitio_id, fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?',[id_juego])
         nombre, sitio, sitio_id, fecha_ag = cursor.fetchone()
+        cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
+        precio_actual = cursor.fetchall()[0][0]
         fecha = datetime.now()
-        tx_of = f"\U000027A1 {nombre} está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) (y antes no lo estaba)\n"
+        tx_of = f"\U000027A1 {nombre} está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
         if (fecha - fecha_ag).days >= 7:
             cursor.execute('SELECT * FROM restock WHERE id_juego = ?',[id_juego])
             restock_act = cursor.fetchone()
