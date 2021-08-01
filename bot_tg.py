@@ -5,7 +5,7 @@
 # de ver datos de juegos, fijar alarmas, sugerir nuevos juegos a monitorear, etc.
 ############################################################################################
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent,InlineQueryResultPhoto, bot
 from telegram.ext import (Updater,InlineQueryHandler,CommandHandler,CallbackQueryHandler,ConversationHandler,CallbackContext,MessageHandler,Filters)
 from datetime import datetime
 import re
@@ -301,7 +301,7 @@ def texto_info_juego(BGG_id):
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
     texto = f"*{nombre}*\n\n"
     texto += f"[Enlace BGG]({link_BGG}) - Ranking: {ranking}\n\n"
-    texto += "Los precios indicados son *finales* "+"(incluyen Aduana y correo).\nEstá siendo monitoreado desde:\n\n"
+    texto += "Los precios indicados son *finales* "+"(incluyen Aduana y correo).\n\n"
     for j in juegos:
         nombre_sitio = constantes.sitio_nom[j[2]]
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
@@ -309,11 +309,11 @@ def texto_info_juego(BGG_id):
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         ult_precio = cursor.fetchone()
         if ult_precio == None:
-            texto += f"[{nombre_sitio}]({url_sitio})"+" - Está en la base de datos del bot pero todavía no intenté buscar el precio, en los próximos 30 minutos debería aparecer.\n"
+            texto += f"[{nombre_sitio}]({url_sitio}): Está en la base de datos del bot pero todavía no intenté buscar el precio, en los próximos 30 minutos debería aparecer.\n"
         else:
             ult_precio = ult_precio[0]
             if ult_precio == None:
-                texto += f"[{nombre_sitio}]({url_sitio})"+" - No está en stock actualmente, "
+                texto += f"[{nombre_sitio}]({url_sitio}): No está en stock actualmente, "
                 cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime")) ORDER BY fecha DESC LIMIT 1', [id_juego])
                 ult_val = cursor.fetchone()
                 if ult_val == None:
@@ -321,9 +321,9 @@ def texto_info_juego(BGG_id):
                 else:
                     ult_prec = ult_val[0]
                     ult_fech = ult_val[1]
-                    texto += f"pero el {ult_fech.day}/{ult_fech.month}/{ult_fech.year} a las {ult_fech.hour}:{ult_fech.minute:02d} tuvo un precio de ${ult_prec:.0f}.\n"
+                    texto += f"pero el {ult_fech.day}/{ult_fech.month}/{ult_fech.year} tuvo un precio de ${ult_prec:.0f}.\n"
             else:
-                texto += f"[{nombre_sitio}]({url_sitio})"+f" - Precio actual ${ult_precio:.0f}. "
+                texto += f"[{nombre_sitio}]({url_sitio}): *${ult_precio:.0f}* - "
                 cursor.execute('SELECT precio,fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime")) ORDER BY precio,fecha DESC LIMIT 1', [id_juego])
                 min_reg = cursor.fetchone()
                 min_precio = min_reg[0]
@@ -331,7 +331,7 @@ def texto_info_juego(BGG_id):
                     texto += "Es el precio más barato de los últimos 15 días.\n"
                 else:
                     min_fech = min_reg[1]
-                    texto += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year} a las {min_fech.hour}:{min_fech.minute:02d}).\n"    
+                    texto += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year}).\n"    
     return [nombre, texto]
 
 ######### Pide que se ingrese el precio de la alarma
@@ -638,7 +638,7 @@ def mensaje_oferta_borrar(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = f"No vas a recibir más mensajes cuando cualquier juego esté de oferta o reposición", parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
-
+######### Responde directamente a las consultas inline
 def inlinequery(update: Update, context: CallbackContext) -> None:
     query = update.inline_query.query
     if query == "" or len(query) < 3:
@@ -654,14 +654,19 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
         for j in juegos:
             BGG_id = j[1]
             nombre, texto = texto_info_juego(BGG_id)
+            arch = f"{BGG_id}.png"
+            if not os.path.exists(f"graficos/chicos/{arch}"):
+                arch = "0000.png"
+            imagen = f'{constantes.sitio_URL["base"]}graficos/{arch}'
+
             results.append(
                     InlineQueryResultArticle(
                     id=str(uuid4()),
                     title=nombre,
-                    input_message_content = InputTextMessageContent(f"{texto}\nPara más información, gráficos y la posibilidad de poner alarmas, andá a @Monitor\_Juegos\_bot y escribí /start",
+                    input_message_content = InputTextMessageContent(f"[ ]({imagen})\n{texto}\nPara más información y la posibilidad de poner alarmas, andá a @Monitor\_Juegos\_bot y escribí /start",
                                             parse_mode="Markdown",
-                                            disable_web_page_preview = True)
-                )
+                                            disable_web_page_preview = False)
+                    )
             )
         update.inline_query.answer(results)
 
