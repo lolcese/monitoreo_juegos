@@ -10,27 +10,14 @@ import time
 from datetime import datetime
 import requests
 
-os.chdir(path.actual)
+# os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
 id_aviso = os.environ.get('id_aviso')
 
 fecha = datetime.now()
 
-######### Baja ranking de BGG
 conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 cursor = conn.cursor()
-cursor.execute('SELECT DISTINCT BGG_id FROM juegos')
-juegos_BGG = cursor.fetchall()
-for j in juegos_BGG:
-    BGG_id = j[0]
-    url = f'https://api.geekdo.com/xmlapi2/thing?id={BGG_id}&stats=1'
-    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
-    data = urllib.request.urlopen(req).read()
-    data = data.decode('utf-8')
-    ranking = html.unescape(re.search('name=\"boardgame\".*?value=\"(.*?)\"',data)[1])
-    cursor.execute('UPDATE juegos SET ranking = ? WHERE BGG_id = ?',(ranking, BGG_id))
-    conn.commit()
-    time.sleep(3)
 
 ######### Baja cotización de monedas de BNA
 url = 'https://www.bna.com.ar/Personas'
@@ -70,5 +57,19 @@ if abs(euro - euro_viejo) / euro_viejo > 0.05:
 else:
     cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "euro"',(euro, fecha))
     conn.commit()
+
+######### Baja ranking de BGG
+cursor.execute('SELECT DISTINCT BGG_id FROM juegos')
+juegos_BGG = cursor.fetchall()
+for j in juegos_BGG:
+    BGG_id = j[0]
+    url = f'https://api.geekdo.com/xmlapi2/thing?id={BGG_id}&stats=1'
+    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
+    data = urllib.request.urlopen(req).read()
+    data = data.decode('utf-8')
+    ranking = html.unescape(re.search('name=\"boardgame\".*?value=\"(.*?)\"',data)[1])
+    cursor.execute('UPDATE juegos SET ranking = ? WHERE BGG_id = ?',(ranking, BGG_id))
+    conn.commit()
+    time.sleep(3)
 
 cursor.close()
