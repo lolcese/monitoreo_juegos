@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 import requests
 
-# os.chdir(path.actual)
+os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
 id_aviso = os.environ.get('id_aviso')
 
