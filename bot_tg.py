@@ -435,14 +435,10 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '01/08/2021: La búsqueda inline buestra imágenes.\n\n' + \
     '31/07/2021: Se actualizan automáticamente las cotizaciones de las divisas.\n\n' + \
     '30/07/2021: Muestra ranking de BGG y los 20 juegos más baratos.\n\n' + \
-    '26/07/2021: Posibilidad de hacer búsquedas inline.\n\n' + \
-    '26/07/2021: Cambiado el nombre a @Monitor\_Juegos\_bot.\n\n' + \
-    '26/07/2021: Agregado shop4world.\n\n' + \
-    '25/07/2021: Agregado shop4es.\n\n' + \
-    '24/07/2021: Agregado 365games.\n\n' + \
-    '24/07/2021: Posibilidad de suscribirse a juegos en oferta y reposición.\n\n'
+    '26/07/2021: Posibilidad de hacer búsquedas inline.\n\n'
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -655,7 +651,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
             BGG_id = j[1]
             nombre, texto = texto_info_juego(BGG_id)
             arch = f"{BGG_id}.png"
-            if not os.path.exists(f"graficos/chicos/{arch}"):
+            if not os.path.exists(f"graficos/{arch}"):
                 arch = "0000.png"
             imagen = f'{constantes.sitio_URL["base"]}graficos/{arch}'
 
