@@ -685,6 +685,10 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
                     )
             )
         update.inline_query.answer(results)
+        fecha = datetime.now()
+        cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',["-","-",fecha,"Inline "+query])
+        conn.commit()
+
 
 ######### Handlers
 def main() -> PRINCIPAL:
