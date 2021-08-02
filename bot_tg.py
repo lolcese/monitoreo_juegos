@@ -5,7 +5,7 @@
 # de ver datos de juegos, fijar alarmas, sugerir nuevos juegos a monitorear, etc.
 ############################################################################################
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent,InlineQueryResultPhoto, bot
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import (Updater,InlineQueryHandler,CommandHandler,CallbackQueryHandler,ConversationHandler,CallbackContext,MessageHandler,Filters)
 from datetime import datetime
 import re
@@ -371,7 +371,7 @@ def alarmas_agregar(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
     fecha = datetime.now()
-    cursor.execute('INSERT INTO alarmas (id_persona, BGG_id, precio_alarma, fecha) VALUES (?,?,?,?)',[usuario_id,BGG_id,precio,fecha])
+    print(usuario_id,BGG_id,precio,fecha)
     conn.commit()
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -435,7 +435,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = '*Ayuda*\n\n' + \
     '@Monitor\_Juegos\_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios  (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, shop4es y shop4world) con una frecuencia de 30 minutos. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
-    'Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio *FINAL EN ARGENTINA* de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste.\n\n' + \
+    'Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio *FINAL EN ARGENTINA* de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.\n\n' + \
     'Para ver la información de un juego en particular, elegí la opción _Ver un juego_ y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio.\n\n' + \
     'Si no está el juego que te interesa, o si encontraste otro lugar donde lo venden, elegí en el menú la opción _Sugerir juego a monitorear_. Este agregado *no* es automático.\n\n' + \
     'En _Ofertas y juegos en reposición_ vas a ver todos los juegos que han bajado de precio más del 10% respecto a su promedio de 15 días, y los juegos que ahora están disponibles pero no lo estuvieron por más de 15 días.\n\n' + \
@@ -686,7 +686,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
             )
         update.inline_query.answer(results)
         fecha = datetime.now()
-        cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',["-","-",fecha,"Inline "+query])
+        cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',["-",0,fecha,"Inline "+query])
         conn.commit()
 
 
