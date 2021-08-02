@@ -178,13 +178,13 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     texto = ""
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM alarmas WHERE id_persona = ?',[user.id])
+    cursor.execute('SELECT BGG_id, precio_alarma FROM alarmas WHERE id_persona = ?',[user.id])
     alarmas = cursor.fetchall()
     alar = []
     for a in alarmas:
-        cursor.execute('SELECT DISTINCT nombre FROM juegos WHERE BGG_id = ?',[a[2]])
+        cursor.execute('SELECT DISTINCT nombre FROM juegos WHERE BGG_id = ?',[a[0]])
         juegos = cursor.fetchone()
-        alar.append("\U000027A1 {0} (${1:.0f})\n".format(juegos[0],a[4]))
+        alar.append("\U000027A1 {0} (${1:.0f})\n".format(juegos[0],a[1]))
     alar.sort()
     for a in alar:
         texto += a
@@ -361,7 +361,7 @@ def alarmas_agregar(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
     fecha = datetime.now()
-    cursor.execute('INSERT INTO alarmas (id_persona, BGG_id, sitio, precio_alarma, fecha) VALUES (?,?,?,?,?)',[usuario_id,BGG_id,"TODO",precio,fecha])
+    cursor.execute('INSERT INTO alarmas (id_persona, BGG_id, precio_alarma, fecha) VALUES (?,?,?,?)',[usuario_id,BGG_id,precio,fecha])
     conn.commit()
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
