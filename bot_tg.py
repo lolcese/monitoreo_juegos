@@ -302,6 +302,9 @@ def texto_info_juego(BGG_id):
     texto = f"*{nombre}*\n\n"
     texto += f"[Enlace BGG]({link_BGG}) - Ranking: {ranking}\n\n"
     texto += "Los precios indicados son *finales* "+"(incluyen Aduana y correo).\n\n"
+    texto_ju = []
+    precio_ju = []
+    ju = 0
     for j in juegos:
         nombre_sitio = constantes.sitio_nom[j[2]]
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
@@ -309,29 +312,35 @@ def texto_info_juego(BGG_id):
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         ult_precio = cursor.fetchone()
         if ult_precio == None:
-            texto += f"[{nombre_sitio}]({url_sitio}): Está en la base de datos del bot pero todavía no intenté buscar el precio, en los próximos 30 minutos debería aparecer.\n"
+            precio_ju.append(999999)
+            texto_ju.append(f"[{nombre_sitio}]({url_sitio}): Está en la base de datos del bot pero todavía no intenté buscar el precio, en los próximos 30 minutos debería aparecer.\n")
         else:
             ult_precio = ult_precio[0]
             if ult_precio == None:
-                texto += f"[{nombre_sitio}]({url_sitio}): No está en stock actualmente, "
+                precio_ju.append(999999)
+                texto_ju.append(f"[{nombre_sitio}]({url_sitio}): No está en stock actualmente, ")
                 cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime")) ORDER BY fecha DESC LIMIT 1', [id_juego])
                 ult_val = cursor.fetchone()
                 if ult_val == None:
-                    texto += "y no lo estuvo en los últimos 15 días.\n"
+                    texto_ju[ju] += "y no lo estuvo en los últimos 15 días.\n"
                 else:
                     ult_prec = ult_val[0]
                     ult_fech = ult_val[1]
-                    texto += f"pero el {ult_fech.day}/{ult_fech.month}/{ult_fech.year} tuvo un precio de ${ult_prec:.0f}.\n"
+                    texto_ju[ju] += f"pero el {ult_fech.day}/{ult_fech.month}/{ult_fech.year} tuvo un precio de ${ult_prec:.0f}.\n"
             else:
-                texto += f"[{nombre_sitio}]({url_sitio}): *${ult_precio:.0f}* - "
+                precio_ju.append(ult_precio)
+                texto_ju.append(f"[{nombre_sitio}]({url_sitio}): *${ult_precio:.0f}* - ")
                 cursor.execute('SELECT precio,fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime")) ORDER BY precio,fecha DESC LIMIT 1', [id_juego])
                 min_reg = cursor.fetchone()
                 min_precio = min_reg[0]
                 if min_precio == ult_precio:
-                    texto += "Es el precio más barato de los últimos 15 días.\n"
+                    texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
                 else:
                     min_fech = min_reg[1]
-                    texto += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year}).\n"    
+                    texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year}).\n"    
+        ju += 1
+    texto += "\U0001F449 "+'\U000027A1 '.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
+
     return [nombre, texto]
 
 ######### Pide que se ingrese el precio de la alarma
@@ -435,6 +444,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '01/08/2021: Cuando se ve un juego, los precios salen ordenados.\n\n' + \
     '01/08/2021: La búsqueda inline buestra imágenes.\n\n' + \
     '31/07/2021: Se actualizan automáticamente las cotizaciones de las divisas.\n\n' + \
     '30/07/2021: Muestra ranking de BGG y los 20 juegos más baratos.\n\n' + \
