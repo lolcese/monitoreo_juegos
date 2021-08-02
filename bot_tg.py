@@ -174,11 +174,12 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
 def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     user = update.callback_query.from_user
+    usuario_id = update.callback_query.from_user.id  
     query.answer()
     texto = ""
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT BGG_id, precio_alarma FROM alarmas WHERE id_persona = ?',[user.id])
+    cursor.execute('SELECT BGG_id, precio_alarma FROM alarmas WHERE id_persona = ?',[usuario_id])
     alarmas = cursor.fetchall()
     alar = []
     for a in alarmas:
@@ -186,8 +187,13 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
         juegos = cursor.fetchone()
         alar.append("\U000027A1 {0} (${1:.0f})\n".format(juegos[0],a[1]))
     alar.sort()
+    cont = 0
     for a in alar:
         texto += a
+        if cont % 150 == 0 and cont != 0:
+            context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
+            texto = ""
+        cont += 1
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -339,7 +345,11 @@ def texto_info_juego(BGG_id):
                     min_fech = min_reg[1]
                     texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year}).\n"    
         ju += 1
-    texto += "\U0001F449 "+'\U000027A1 '.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
+    if min(precio_ju) != 999999:
+        ini = "\U0001F449 "
+    else:
+        ini = "\U000027A1 "
+    texto += ini + '\U000027A1 '.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
 
     return [nombre, texto]
 
