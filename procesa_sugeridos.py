@@ -57,6 +57,7 @@ for j in juegos:
     print(f"BGG_URL: {BGG_URL}")
     print(f"sitio_url: {sitio_url}")
 
+    BGG_URL = re.sub("bgg\.cc","boardgamegeek\.com",BGG_URL)
     BGG_id = re.search('boardgamegeek\.com/boardgame.*?/(.*?)($|/)',BGG_URL)[1]
 
     print(f"BGG_id: {BGG_id}")
