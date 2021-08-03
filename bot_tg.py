@@ -75,7 +75,7 @@ def menu():
         [InlineKeyboardButton("\U0001F4DA Lista de juegos", callback_data='juegos_lista')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego", callback_data='juego_ver')],
         [InlineKeyboardButton("\U000023F0 Mis alarmas", callback_data='alarmas_muestra')],
-        [InlineKeyboardButton("\U0001F4B2 20 juegos baratos", callback_data='juegos_baratos')],
+        [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos')],
         [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
         [InlineKeyboardButton("\U00002757 Novedades", callback_data='novedades')],
         [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
@@ -209,7 +209,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT id_juego, MIN(precio) FROM precios WHERE (precio NOT NULL AND fecha BETWEEN datetime("now", "-1 days") AND datetime("now", "localtime")) group by id_juego order by  min(precio) limit 20;')
+    cursor.execute('SELECT id_juego, MIN(precio) FROM precios WHERE (precio NOT NULL AND fecha BETWEEN datetime("now", "-1 days") AND datetime("now", "localtime")) group by id_juego order by  min(precio) limit 30;')
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
@@ -457,7 +457,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     '01/08/2021: Cuando se ve un juego, los precios salen ordenados.\n\n' + \
     '01/08/2021: La búsqueda inline buestra imágenes.\n\n' + \
     '31/07/2021: Se actualizan automáticamente las cotizaciones de las divisas.\n\n' + \
-    '30/07/2021: Muestra ranking de BGG y los 20 juegos más baratos.\n\n' + \
+    '30/07/2021: Muestra ranking de BGG y los 30 juegos más baratos.\n\n' + \
     '26/07/2021: Posibilidad de hacer búsquedas inline.\n\n'
 
     keyboard = [
