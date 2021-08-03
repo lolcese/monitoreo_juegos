@@ -49,16 +49,17 @@ cursor = conn.cursor()
 cursor.execute('SELECT * FROM juegos_sugeridos')
 juegos = cursor.fetchall()
 for j in juegos:
-    id_juego_sugerido,usuario_nom,usuario_id,BGG_URL,sitio_url,fecha = j
-    # print(f"\n{usuario_nom} - {usuario_id} - {BGG_URL} - {sitio_url} - {fecha}\n")
+    id_juego_sugerido,usuario_nom,usuario_id,bgg_url,sitio_url,fecha = j
+    # print(f"\n{usuario_nom} - {usuario_id} - {bgg_url} - {sitio_url} - {fecha}\n")
     fecha = datetime.now()
 
+    bgg_url = re.sub("bgg\.cc","boardgamegeek.com",bgg_url)
+
     print(f"\n\nUsuario: {usuario_nom}")
-    print(f"BGG_URL: {BGG_URL}")
+    print(f"bgg_url: {bgg_url}")
     print(f"sitio_url: {sitio_url}")
 
-    BGG_URL = re.sub("bgg\.cc","boardgamegeek\.com",BGG_URL)
-    BGG_id = re.search('boardgamegeek\.com/boardgame.*?/(.*?)($|/)',BGG_URL)[1]
+    BGG_id = re.search('boardgamegeek\.com/boardgame.*?/(.*?)($|/)',bgg_url)[1]
 
     print(f"BGG_id: {BGG_id}")
 

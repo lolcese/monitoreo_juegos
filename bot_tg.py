@@ -371,7 +371,7 @@ def alarmas_agregar(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
     fecha = datetime.now()
-    cursor.execute('INSERT INTO alarmas (id_persona, BGG_id, precio_alarma, fecha) VALUES (?,?,?,?)',[usuario_id,BGG_id,precio,fecha])
+    cursor.execute('INSERT INTO alarmas (id_persona, BGG_id, precio_alarma, fecha, sitio) VALUES (?,?,?,?,?)',[usuario_id,BGG_id,precio,fecha,"TODO"])
     conn.commit()
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
