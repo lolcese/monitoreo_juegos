@@ -138,14 +138,21 @@ def juegos_lista_TODO(update: Update, context: CallbackContext) -> int:
 def juegos_lista_sitio(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
+    usuario_id = update.callback_query.from_user.id   
     sitio = query.data.split("_")[3]
     texto = f"*Juegos monitoreados en {constantes.sitio_nom[sitio]}*\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('SELECT DISTINCT nombre FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
     juegos = cursor.fetchall()
+    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
+    cont = 0
     for j in juegos:
         texto += f"\U000027A1 {j[0]}\n"
+        if cont % 150 == 0 and cont != 0:
+            context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
+            texto = ""
+        cont += 1
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -157,13 +164,20 @@ def juegos_lista_sitio(update: Update, context: CallbackContext) -> int:
 def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
+    usuario_id = update.callback_query.from_user.id   
     texto = ""
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('SELECT nombre,sitio FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
     juegos = cursor.fetchall()
+    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
+    cont = 0
     for j in juegos:
-        texto += f"\U000027A1 {j[0]} ({constantes.sitio_nom[j[1]]})\n"
+        texto += f"\U000027A1 {j[0]}\n"
+        if cont % 150 == 0 and cont != 0:
+            context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
+            texto = ""
+        cont += 1
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -191,7 +205,7 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     cont = 0
     for a in alar:
         texto += a
-        if cont % 150 == 0 and cont != 0:
+        if cont % 100 == 0 and cont != 0:
             context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
             texto = ""
         cont += 1
@@ -215,9 +229,9 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     barato = ""
     for b in baratos:
         id_juego, precio = b
-        cursor.execute('SELECT nombre, sitio, sitio_id FROM juegos WHERE id_juego = ?',[id_juego])
-        nombre, sitio, sitio_id = cursor.fetchone()
-        barato += f"\U000027A1 {nombre} está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
+        cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id FROM juegos WHERE id_juego = ?',[id_juego])
+        nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
+        barato += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(sitio_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -321,6 +335,7 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     context.chat_data["BGG_nombre"] = nombre
     return ALARMAS
 
+######### Muestra toda la información del juego elegido
 def texto_info_juego(BGG_id):
     conn = conecta_db()
     cursor = conn.cursor()
@@ -591,7 +606,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(text = 'Gracias por la sugerencia. Va a ser revisada y vas a recibir un mensaje si es aprobada o rechazada.', parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
-######### Muestra los jeugos en oferta y restock
+######### Muestra los juegos en oferta y restock
 def ofertas_restock(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
@@ -604,12 +619,12 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT id_juego,precio_prom,precio_actual FROM ofertas WHERE activa = "Sí"')
     ofertas = cursor.fetchall()
     for o in ofertas:
-        cursor.execute('SELECT nombre, sitio, sitio_id FROM juegos WHERE id_juego = ?',[o[0]])
-        nombre, sitio, sitio_id = cursor.fetchone()
+        cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id FROM juegos WHERE id_juego = ?',[o[0]])
+        nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
         precio_prom = o[1]
         precio_actual = o[2]
         porc = (precio_prom - precio_actual) / precio_prom * 100
-        texto_of += f"\U000027A1 {nombre} está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n"
+        texto_of += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n"
     if texto_of == "":
         texto_of = "No hay ningún juego en oferta\n"
 
@@ -618,11 +633,11 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     restock = cursor.fetchall()
     for r in restock:
         id_juego = r[0]
-        cursor.execute('SELECT nombre, sitio, sitio_id FROM juegos WHERE id_juego = ?',[id_juego])
-        nombre, sitio, sitio_id = cursor.fetchone()
+        cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id FROM juegos WHERE id_juego = ?',[id_juego])
+        nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         precio_actual = cursor.fetchone()[0]
-        texto_st += f"\U000027A1 {nombre} está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
+        texto_st += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
     if texto_st == "":
         texto_st = "No hay ningún juego en reposición\n"
 
