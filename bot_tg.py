@@ -210,7 +210,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT id_juego, MIN(precio) FROM precios WHERE (precio NOT NULL AND fecha BETWEEN datetime("now", "-1 days") AND datetime("now", "localtime")) group by id_juego order by min(precio) limit 30')
+    cursor.execute('SELECT id_juego, MIN(precio) FROM precios WHERE (precio NOT NULL AND fecha BETWEEN datetime("now", "-1 days", "localtime") AND datetime("now", "localtime")) group by id_juego order by min(precio) limit 30')
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
@@ -349,7 +349,7 @@ def texto_info_juego(BGG_id):
             if ult_precio == None:
                 precio_ju.append(999999)
                 texto_ju.append(f"[{nombre_sitio}]({url_sitio}): No está en stock actualmente, ")
-                cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime")) ORDER BY fecha DESC LIMIT 1', [id_juego])
+                cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days", "localtime") AND datetime("now", "localtime")) ORDER BY fecha DESC LIMIT 1', [id_juego])
                 ult_val = cursor.fetchone()
                 if ult_val == None:
                     texto_ju[ju] += "y no lo estuvo en los últimos 15 días.\n"
@@ -360,7 +360,7 @@ def texto_info_juego(BGG_id):
             else:
                 precio_ju.append(ult_precio)
                 texto_ju.append(f"[{nombre_sitio}]({url_sitio}): *${ult_precio:.0f}* - ")
-                cursor.execute('SELECT precio,fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime")) ORDER BY precio,fecha DESC LIMIT 1', [id_juego])
+                cursor.execute('SELECT precio,fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days", "localtime") AND datetime("now", "localtime")) ORDER BY precio,fecha DESC LIMIT 1', [id_juego])
                 min_reg = cursor.fetchone()
                 min_precio = min_reg[0]
                 if min_precio == ult_precio:

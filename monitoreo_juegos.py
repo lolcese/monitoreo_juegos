@@ -260,7 +260,7 @@ def main():
             cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',(id_juego, precio, fecha)) 
             conn.commit()
 
-            cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime"))',[id_juego])
+            cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND fecha > datetime("now", "-15 days", "localtime")',[id_juego])
             datos = cursor.fetchall()
             precio_hi = [sub[0] for sub in datos]
             fecha_hi = [sub[1] for sub in datos]
@@ -306,11 +306,11 @@ def main():
             requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
 
     # Ofertas y reposiciones
-    cursor.execute('SELECT id_juego,avg(precio) FROM precios GROUP BY id_juego HAVING precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime"))')
+    cursor.execute('SELECT id_juego, avg(precio) FROM precios WHERE fecha > datetime("now", "-15 days", "localtime") GROUP BY id_juego HAVING avg(precio) NOT NULL')
     prom = cursor.fetchall()
     texto_of = ""
     texto_of_me = ""
-    cursor.execute('DELETE FROM ofertas WHERE fecha_inicial < datetime("now", "-3 days")')
+    cursor.execute('DELETE FROM ofertas WHERE fecha_inicial < datetime("now", "-3 days", "localtime")')
     conn.commit()
     cursor.execute('UPDATE ofertas SET activa = "No"')
     conn.commit()
@@ -339,11 +339,11 @@ def main():
                 
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = conn.cursor()
-    cursor.execute('SELECT precios.* FROM precios INNER JOIN (SELECT id_juego, MAX(fecha) AS ultima_fecha FROM precios GROUP BY id_juego) AS precios_ultima_fecha ON precios_ultima_fecha.ultima_fecha = precios.fecha AND precios_ultima_fecha.id_juego = precios.id_juego INNER JOIN (SELECT id_juego, MAX(fecha) AS ultima_fecha_con_stock FROM precios WHERE precio IS NOT NULL GROUP BY id_juego) AS precios_ultima_fecha_con_stock ON precios_ultima_fecha_con_stock.ultima_fecha_con_stock = precios_ultima_fecha.ultima_fecha AND precios_ultima_fecha_con_stock.id_juego = precios_ultima_fecha.id_juego WHERE precios.id_juego NOT IN (SELECT id_juego FROM precios WHERE precio IS NOT NULL AND fecha BETWEEN datetime("now", "-30 days") AND datetime("now", "-2 days") GROUP BY id_juego)') # Gracias a Juan Leal
+    cursor.execute('SELECT precios.* FROM precios INNER JOIN (SELECT id_juego, MAX(fecha) AS ultima_fecha FROM precios GROUP BY id_juego) AS precios_ultima_fecha ON precios_ultima_fecha.ultima_fecha = precios.fecha AND precios_ultima_fecha.id_juego = precios.id_juego INNER JOIN (SELECT id_juego, MAX(fecha) AS ultima_fecha_con_stock FROM precios WHERE precio IS NOT NULL GROUP BY id_juego) AS precios_ultima_fecha_con_stock ON precios_ultima_fecha_con_stock.ultima_fecha_con_stock = precios_ultima_fecha.ultima_fecha AND precios_ultima_fecha_con_stock.id_juego = precios_ultima_fecha.id_juego WHERE precios.id_juego NOT IN (SELECT id_juego FROM precios WHERE precio IS NOT NULL AND fecha BETWEEN datetime("now", "-30 days", "localtime") AND datetime("now", "-2 days", "localtime") GROUP BY id_juego)') # Gracias a Juan Leal
     stock = cursor.fetchall()
     texto_st = ""
     texto_st_me = ""
-    cursor.execute('DELETE FROM restock WHERE fecha_inicial < datetime("now", "-3 days")')
+    cursor.execute('DELETE FROM restock WHERE fecha_inicial < datetime("now", "-3 days", "localtime")')
     conn.commit()
     cursor.execute('UPDATE restock SET activa = "No"')
     conn.commit()
