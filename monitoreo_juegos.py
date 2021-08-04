@@ -289,7 +289,7 @@ def main():
             plt.savefig(arch,dpi=100)
             # ida = updater.bot.sendPhoto(chat_id = token_bot.id_grupo_fotos, photo = open(arch, "rb"))
             # id_gr = ida['photo'][0]['file_id']
-            plt.clf()
+            plt.close()
         # else:
             # id_gr = 0
         # cursor.execute('UPDATE juegos SET id_grafico = ? WHERE BGG_id = ?',(id_gr, BGG_id))
