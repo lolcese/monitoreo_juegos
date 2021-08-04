@@ -493,7 +493,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
-    '04/08/2021: Muestra los 30 mejores juegos según BGG.\n\n' + \
+    '04/08/2021: Muestra los links a BGG en los listados de ofertas.\n\n' + \
     '01/08/2021: Cuando se ve un juego, los precios salen ordenados.\n\n' + \
     '01/08/2021: La búsqueda inline buestra imágenes.\n\n' + \
     '31/07/2021: Se actualizan automáticamente las cotizaciones de las divisas.\n\n' + \
