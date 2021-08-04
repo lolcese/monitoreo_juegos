@@ -240,7 +240,7 @@ def juegos_BGG(update: Update, context: CallbackContext) -> int:
         id_juego, precio = r
         cursor.execute('SELECT nombre, sitio, sitio_id, BGG_id FROM juegos WHERE id_juego = ?',[id_juego])
         nombre, sitio, sitio_id, BGG_id = cursor.fetchone()
-        rank += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
+        rank += f"\U00001F947 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -729,6 +729,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(juego_ver,              pattern='^juego_ver$'),
                 CallbackQueryHandler(novedades,              pattern='^novedades$'),
                 CallbackQueryHandler(juegos_baratos,         pattern='^juegos_baratos$'),
+                CallbackQueryHandler(juegos_BGG,             pattern='^juegos_BGG$'),
                 CallbackQueryHandler(ofertas_restock,        pattern='^ofertas_restock$'),
                 CallbackQueryHandler(sugerir_juego_datos,    pattern='^sugerir_juego_datos$'),
                 CallbackQueryHandler(comentarios_texto,      pattern='^comentarios_texto$'),
