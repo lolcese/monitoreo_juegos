@@ -27,7 +27,7 @@ def procesa():
         conn.commit()
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
         conn.commit()
-        send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={str(usuario_id)}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
+        send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
         response = requests.get(send_text)
     elif resp == "S":
         conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking) VALUES (?,?,?,?,?,?)',(int(BGG_id),nombre,sitio_nom,sitio_id,fecha,ranking))
