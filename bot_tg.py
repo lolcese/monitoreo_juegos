@@ -74,7 +74,7 @@ def menu():
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Lista de juegos por sitio", callback_data='juegos_lista')],
         [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos')],
-        [InlineKeyboardButton("\U0001F4B2 30 mejores juegos de BGG", callback_data='juegos_BGG')],
+        [InlineKeyboardButton("\U0001F947 30 mejores juegos de BGG", callback_data='juegos_BGG')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego", callback_data='juego_ver')],
         [InlineKeyboardButton("\U000023F0 Mis alarmas", callback_data='alarmas_muestra')],
         [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
@@ -240,7 +240,7 @@ def juegos_BGG(update: Update, context: CallbackContext) -> int:
         id_juego, precio = r
         cursor.execute('SELECT nombre, sitio, sitio_id, BGG_id FROM juegos WHERE id_juego = ?',[id_juego])
         nombre, sitio, sitio_id, BGG_id = cursor.fetchone()
-        rank += f"\U00001F947 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
+        rank += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
