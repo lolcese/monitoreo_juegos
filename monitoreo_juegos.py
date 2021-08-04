@@ -231,8 +231,6 @@ def main():
     for jb in juegos_BGG: # Cada juego diferente
         BGG_id,nombre = jb
 
-        print(nombre)
-
         fecha = datetime.now()
         hacer_grafico = False
 
@@ -303,9 +301,9 @@ def main():
             id_persona, precio_al = alarma
             sitio_ID = constantes.sitio_URL[sitio]+nombre
             nombre_sitio = constantes.sitio_nom[sitio]
-            texto = f'\U000023F0\U000023F0\U000023F0\n\n[{nombre}]({constantes.sitio_URL["BGG"]+str(BGG_id)}) *está a ${precio:.0f}* en [{nombre_sitio}]({sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
+            texto = f'\U000023F0\U000023F0\U000023F0\n\n [{nombre}]({constantes.sitio_URL["BGG"]+str(BGG_id)}) está a *${precio:.0f}* en [{nombre_sitio}]({sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
             # updater.bot.sendMessage(chat_id = id_persona, text = texto, parse_mode = "Markdown", disable_web_page_preview = True)
-            requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&parse_mode=Markdown&text={texto}')
+            requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
 
     # Ofertas y reposiciones
     cursor.execute('SELECT id_juego,avg(precio) FROM precios GROUP BY id_juego HAVING precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days") AND datetime("now", "localtime"))')
