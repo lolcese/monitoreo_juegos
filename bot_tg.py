@@ -72,15 +72,16 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
 ######### Menú principal
 def menu():
     keyboard = [
-        [InlineKeyboardButton("\U0001F4DA Lista de juegos", callback_data='juegos_lista')],
+        [InlineKeyboardButton("\U0001F4DA Lista de juegos por sitio", callback_data='juegos_lista')],
+        [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos')],
+        [InlineKeyboardButton("\U0001F4B2 30 mejores juegos de BGG", callback_data='juegos_BGG')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego", callback_data='juego_ver')],
         [InlineKeyboardButton("\U000023F0 Mis alarmas", callback_data='alarmas_muestra')],
-        [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos')],
         [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
-        [InlineKeyboardButton("\U00002757 Novedades", callback_data='novedades')],
         [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
         [InlineKeyboardButton("\U0000270F Sugerir juego a monitorear", callback_data='sugerir_juego_datos')],
         [InlineKeyboardButton("\U0001F4AC Comentarios y sugerencias", callback_data='comentarios_texto')],
+        [InlineKeyboardButton("\U00002757 Novedades", callback_data='novedades')],
         [InlineKeyboardButton("\U00002753 Ayuda", callback_data='ayuda')]
     ]
     return keyboard
@@ -222,6 +223,29 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = f"*Juegos más baratos en las últimas 24 horas*\n\n{barato}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
+    return PRINCIPAL
+
+######### Juegos de BGG
+def juegos_BGG(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+
+    conn = conecta_db()
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT id_juego order by ranking limit 30;')
+    ranking = cursor.fetchall()
+    rank = ""
+    for r in ranking:
+        id_juego, precio = r
+        cursor.execute('SELECT nombre, sitio, sitio_id, BGG_id FROM juegos WHERE id_juego = ?',[id_juego])
+        nombre, sitio, sitio_id, BGG_id = cursor.fetchone()
+        rank += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = f"*Juegos con mejor ranking en BGG*\n\n{rank}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
 ######### Pide que se escriba el nombre del juego
@@ -454,6 +478,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '04/08/2021: Muestra los 30 mejores juegos según BGG.\n\n' + \
     '01/08/2021: Cuando se ve un juego, los precios salen ordenados.\n\n' + \
     '01/08/2021: La búsqueda inline buestra imágenes.\n\n' + \
     '31/07/2021: Se actualizan automáticamente las cotizaciones de las divisas.\n\n' + \
