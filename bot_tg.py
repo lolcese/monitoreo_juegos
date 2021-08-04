@@ -157,7 +157,7 @@ def juegos_lista_sitio(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
+    context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Lista de los últimos juegos agregados
@@ -182,7 +182,7 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(f"*Últimos 30 juegos agregados*\n\n{texto}", parse_mode = "Markdown", reply_markup=reply_markup)
+    context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Muestra todas las alarmas de un usuario
