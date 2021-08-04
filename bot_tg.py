@@ -210,7 +210,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT id_juego, MIN(precio) FROM precios WHERE (precio NOT NULL AND fecha BETWEEN datetime("now", "-1 days") AND datetime("now", "localtime")) group by id_juego order by  min(precio) limit 30;')
+    cursor.execute('SELECT id_juego, MIN(precio) FROM precios WHERE (precio NOT NULL AND fecha BETWEEN datetime("now", "-1 days") AND datetime("now", "localtime")) group by id_juego order by min(precio) limit 30')
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
@@ -233,11 +233,11 @@ def juegos_BGG(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT id_juego order by ranking limit 30;')
+    cursor.execute('SELECT id_juego order by ranking limit 30')
     ranking = cursor.fetchall()
     rank = ""
     for r in ranking:
-        id_juego, precio = r
+        id_juego = r
         cursor.execute('SELECT nombre, sitio, sitio_id, BGG_id FROM juegos WHERE id_juego = ?',[id_juego])
         nombre, sitio, sitio_id, BGG_id = cursor.fetchone()
         rank += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
