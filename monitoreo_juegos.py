@@ -132,12 +132,14 @@ def lee_pagina_tmeb(ju_id):
 ######### Calcula precio para TM
 def precio_tm(peso,precio_ar):
     costo_peso = peso * constantes.var['precio_kg']
-    desc_3kg = 0
-    desc_5kg = 0
     if peso > 3:
         desc_3kg = 0.3 * (peso - 3) * constantes.var['precio_kg']
+    else:
+        desc_3kg = 0
     if peso > 5:
         desc_5kg = 0.5 * (peso - 5) * constantes.var['precio_kg']
+    else:
+        desc_5kg = 0
     precio_final = precio_ar * 1.1 + costo_peso + constantes.var['tasa_tm'] - desc_3kg - desc_5kg
     precio_dol = precio_ar / constantes.var['dolar_tm'] + constantes.var['envio_dol']
     imp = 0
