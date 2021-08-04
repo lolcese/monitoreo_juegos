@@ -233,7 +233,7 @@ def juegos_BGG(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT id_juego order by ranking limit 30')
+    cursor.execute('SELECT id_juego FROM juegos ORDER BY ranking LIMIT 30')
     ranking = cursor.fetchall()
     rank = ""
     for r in ranking:
