@@ -210,7 +210,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT id_juego, MIN(precio) FROM precios WHERE (precio NOT NULL AND fecha BETWEEN datetime("now", "-1 days", "localtime") AND datetime("now", "localtime")) group by id_juego order by min(precio) limit 30')
+    cursor.execute('SELECT id_juego, min(precio) FROM precios WHERE (precio NOT NULL AND fecha > datetime("now", "-1 days", "localtime")) group by id_juego ORDER BY min(precio) LIMIT 30')
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
@@ -226,27 +226,27 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     return PRINCIPAL
 
 ######### Juegos de BGG
-def juegos_BGG(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    query.answer()
+# def juegos_BGG(update: Update, context: CallbackContext) -> int:
+#     query = update.callback_query
+#     query.answer()
 
-    conn = conecta_db()
-    cursor = conn.cursor()
+#     conn = conecta_db()
+#     cursor = conn.cursor()
 
-    cursor.execute('SELECT id_juego FROM juegos ORDER BY ranking LIMIT 30')
-    ranking = cursor.fetchall()
-    rank = ""
-    for r in ranking:
-        id_juego = r
-        cursor.execute('SELECT nombre, sitio, sitio_id, BGG_id FROM juegos WHERE id_juego = ?',[id_juego])
-        nombre, sitio, sitio_id, BGG_id = cursor.fetchone()
-        rank += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
-    keyboard = [
-        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = f"*Juegos con mejor ranking en BGG*\n\n{rank}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
-    return PRINCIPAL
+#     cursor.execute('SELECT id_juego FROM juegos ORDER BY ranking LIMIT 30')
+#     ranking = cursor.fetchall()
+#     rank = ""
+#     for r in ranking:
+#         id_juego = r
+#         cursor.execute('SELECT nombre, sitio, sitio_id, BGG_id FROM juegos WHERE id_juego = ?',[id_juego])
+#         nombre, sitio, sitio_id, BGG_id = cursor.fetchone()
+#         rank += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
+#     keyboard = [
+#         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+#     ]
+#     reply_markup = InlineKeyboardMarkup(keyboard)
+#     query.edit_message_text(text = f"*Juegos con mejor ranking en BGG*\n\n{rank}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
+#     return PRINCIPAL
 
 ######### Pide que se escriba el nombre del juego
 def juego_ver(update: Update, context: CallbackContext) -> int:
@@ -263,7 +263,7 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
         return JUEGO_ELECCION
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre,BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',['%'+nombre_juego+'%'])
+    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',['%'+nombre_juego+'%'])
     juegos = cursor.fetchall()
     if len(juegos) > 10:
         update.message.reply_text("Demasiados resultados, escribí más letras")    
@@ -324,14 +324,14 @@ def juego_info(update: Update, context: CallbackContext) -> int:
 def texto_info_juego(BGG_id):
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking FROM juegos WHERE BGG_id = ? ',[BGG_id])
+    cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking FROM juegos WHERE BGG_id = ?',[BGG_id])
     juegos = cursor.fetchall()
     nombre = juegos[0][1]
     ranking = juegos[0][4]
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
     texto = f"*{nombre}*\n\n"
     texto += f"[Enlace BGG]({link_BGG}) - Ranking: {ranking}\n\n"
-    texto += "Los precios indicados son *finales* "+"(incluyen Aduana y correo).\n\n"
+    texto += "Los precios indicados son *finales* (incluyen Aduana y correo).\n\n"
     texto_ju = []
     precio_ju = []
     ju = 0
@@ -498,7 +498,7 @@ def estadistica(update: Update, context: CallbackContext) -> int:
     query.answer()
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT COUNT (DISTINCT nombre) FROM usuarios WHERE (fecha BETWEEN datetime("now", "-1 days") AND datetime("now", "localtime"))')
+    cursor.execute('SELECT COUNT (DISTINCT nombre) FROM usuarios WHERE fecha > datetime("now", "-1 days")')
     num_usu = cursor.fetchone()[0]
     cursor.execute('SELECT COUNT (DISTINCT BGG_id) FROM juegos')
     num_jue = cursor.fetchone()[0]
@@ -512,11 +512,11 @@ def estadistica(update: Update, context: CallbackContext) -> int:
     jue_mas_ala = int(cursor.fetchone()[0])
     cursor.execute('SELECT nombre FROM juegos WHERE BGG_id = ?',[jue_mas_ala])
     mas_ala = cursor.fetchone()[0]
-    cursor.execute('SELECT id_juego,MAX(precio) FROM precios WHERE (fecha BETWEEN datetime("now", "-1 days") AND datetime("now", "localtime"))')
+    cursor.execute('SELECT id_juego,MAX(precio) FROM precios WHERE fecha > datetime("now", "-1 days")')
     juego_mas_pr, mas_caro_precio = cursor.fetchone()
     cursor.execute('SELECT nombre FROM juegos WHERE id_juego = ?',[juego_mas_pr])
     mas_caro = cursor.fetchone()[0]
-    cursor.execute('SELECT id_juego,MIN(precio) FROM precios WHERE(fecha BETWEEN datetime("now", "-1 days") AND datetime("now", "localtime"))')
+    cursor.execute('SELECT id_juego,MIN(precio) FROM precios WHERE fecha > datetime("now", "-1 days")')
     juego_menos_pr, mas_barato_precio = cursor.fetchone()
     cursor.execute('SELECT nombre FROM juegos WHERE id_juego = ?',[juego_menos_pr])
     mas_barato = cursor.fetchone()[0]
@@ -729,7 +729,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(juego_ver,              pattern='^juego_ver$'),
                 CallbackQueryHandler(novedades,              pattern='^novedades$'),
                 CallbackQueryHandler(juegos_baratos,         pattern='^juegos_baratos$'),
-                CallbackQueryHandler(juegos_BGG,             pattern='^juegos_BGG$'),
+                # CallbackQueryHandler(juegos_BGG,             pattern='^juegos_BGG$'),
                 CallbackQueryHandler(ofertas_restock,        pattern='^ofertas_restock$'),
                 CallbackQueryHandler(sugerir_juego_datos,    pattern='^sugerir_juego_datos$'),
                 CallbackQueryHandler(comentarios_texto,      pattern='^comentarios_texto$'),
