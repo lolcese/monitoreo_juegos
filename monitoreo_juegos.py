@@ -303,7 +303,7 @@ def main():
             id_persona, precio_al = alarma
             sitio_ID = constantes.sitio_URL[sitio]+nombre
             nombre_sitio = constantes.sitio_nom[sitio]
-            texto = f'\U000023F0\U000023F0\U000023F0\n\nEl juego *{nombre} está a ${precio:.0f}* en [{nombre_sitio}]({sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
+            texto = f'\U000023F0\U000023F0\U000023F0\n\n[{nombre}]({constantes.sitio_URL["BGG"]+str(BGG_id)}) *está a ${precio:.0f}* en [{nombre_sitio}]({sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
             # updater.bot.sendMessage(chat_id = id_persona, text = texto, parse_mode = "Markdown", disable_web_page_preview = True)
             requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&parse_mode=Markdown&text={texto}')
 
@@ -328,7 +328,7 @@ def main():
             fecha = datetime.now()
             cursor.execute('SELECT fecha_inicial as "[timestamp]" FROM ofertas WHERE id_juego = ?',[id_juego])
             ofertas_act = cursor.fetchone()
-            tx_al = f"\U000027A1 {nombre} está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n"
+            tx_al = f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n"
             if ofertas_act == None: # Si no está en el listado de ofertas actuales
                 cursor.execute('INSERT INTO ofertas (id_juego,precio_prom,precio_actual,fecha_inicial,activa) VALUES (?,?,?,?,?)',(id_juego,precio_prom,precio_actual,fecha,"Sí"))
                 conn.commit()
@@ -356,7 +356,7 @@ def main():
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         precio_actual = cursor.fetchall()[0][0]
         fecha = datetime.now()
-        tx_of = f"\U000027A1 {nombre} está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
+        tx_of = f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
         if (fecha - fecha_ag).days >= 7:
             cursor.execute('SELECT * FROM restock WHERE id_juego = ?',[id_juego])
             restock_act = cursor.fetchone()
