@@ -74,7 +74,7 @@ def menu():
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Lista de juegos por sitio", callback_data='juegos_lista')],
         [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos')],
-        [InlineKeyboardButton("\U0001F947 30 mejores juegos de BGG", callback_data='juegos_BGG')],
+        # [InlineKeyboardButton("\U0001F947 30 mejores juegos de BGG", callback_data='juegos_BGG')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego", callback_data='juego_ver')],
         [InlineKeyboardButton("\U000023F0 Mis alarmas", callback_data='alarmas_muestra')],
         [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
