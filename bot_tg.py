@@ -158,7 +158,7 @@ def juegos_lista_sitio(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
+    context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
 ######### Lista de los últimos juegos agregados
@@ -166,7 +166,7 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     usuario_id = update.callback_query.from_user.id   
-    texto = ""
+    texto = f"*Últimos 30 juegos agregados*\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('SELECT nombre, sitio, sitio_id FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
@@ -184,7 +184,7 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
+    context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
 ######### Muestra todas las alarmas de un usuario
