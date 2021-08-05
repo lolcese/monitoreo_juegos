@@ -143,13 +143,14 @@ def juegos_lista_sitio(update: Update, context: CallbackContext) -> int:
     texto = f"*Juegos monitoreados en {constantes.sitio_nom[sitio]}*\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
+    cursor.execute('SELECT nombre, sitio_id FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
     juegos = cursor.fetchall()
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     cont = 0
     for j in juegos:
-        texto += f"\U000027A1 {j[0]}\n"
-        if cont % 150 == 0 and cont != 0:
+        nombre, sitio_id = j
+        texto += f"\U000027A1 [{nombre}]({constantes.sitio_URL[sitio]+str(sitio_id)})\n"
+        if cont % 100 == 0 and cont != 0:
             context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
             texto = ""
         cont += 1
@@ -168,12 +169,13 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
     texto = ""
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT nombre,sitio FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
+    cursor.execute('SELECT nombre, sitio, sitio_id FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
     juegos = cursor.fetchall()
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     cont = 0
     for j in juegos:
-        texto += f"\U000027A1 {j[0]}\n"
+        nombre, sitio, sitio_id = j
+        texto += f"\U000027A1 [{nombre}]({constantes.sitio_URL[sitio]+str(sitio_id)})\n"
         if cont % 150 == 0 and cont != 0:
             context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
             texto = ""
@@ -493,12 +495,12 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '05/08/2021: Muestra los links al sitio de cada juego en los listados.\n\n' + \
     '04/08/2021: Muestra los links a BGG en los listados de ofertas.\n\n' + \
     '01/08/2021: Cuando se ve un juego, los precios salen ordenados.\n\n' + \
-    '01/08/2021: La búsqueda inline buestra imágenes.\n\n' + \
+    '01/08/2021: La búsqueda inline muestra imágenes.\n\n' + \
     '31/07/2021: Se actualizan automáticamente las cotizaciones de las divisas.\n\n' + \
-    '30/07/2021: Muestra ranking de BGG y los 30 juegos más baratos.\n\n' + \
-    '26/07/2021: Posibilidad de hacer búsquedas inline.\n\n'
+    '30/07/2021: Muestra ranking de BGG y los 30 juegos más baratos.\n\n'
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
