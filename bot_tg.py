@@ -231,7 +231,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
         id_juego, precio = b
         cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id FROM juegos WHERE id_juego = ?',[id_juego])
         nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
-        barato += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(sitio_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
+        barato += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
