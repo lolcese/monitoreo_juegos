@@ -225,17 +225,14 @@ def lee_pagina_shop4world(ju_id):
 
 ######### Programa principal
 def main():
-
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = conn.cursor()
     cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos ORDER BY nombre')
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
-        bgg_id,nombre = jb
-
+        bgg_id, nombre = jb
         fecha = datetime.now()
         hacer_grafico = False
-
         cursor.execute('SELECT id_juego, sitio, sitio_ID FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
         juegos_id = cursor.fetchall()
         for j in juegos_id: # Cada repetición del mismo juego
@@ -301,9 +298,7 @@ def main():
         alarmas = cursor.fetchall()
         for alarma in alarmas:
             id_persona, precio_al = alarma
-            sitio_ID = constantes.sitio_URL[sitio]+nombre
-            nombre_sitio = constantes.sitio_nom[sitio]
-            texto = f'\U000023F0\U000023F0\U000023F0\n\n [{nombre}]({constantes.sitio_URL["BGG"]+str(bgg_id)}) está a *${precio:.0f}* en [{nombre_sitio}]({sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
+            texto = f'\U000023F0\U000023F0\U000023F0\n\n [{nombre}]({constantes.sitio_URL["BGG"]+str(bgg_id)}) está a *${precio:.0f}* en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
             # updater.bot.sendMessage(chat_id = id_persona, text = texto, parse_mode = "Markdown", disable_web_page_preview = True)
             requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
 
