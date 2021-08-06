@@ -45,6 +45,25 @@ def procesa():
         response = requests.get(send_text)
     return
 
+def ninguno():
+    resp = input("¿Agregar / Rechazar? (C/R): ")
+    if resp == "C":
+        return
+        # id_n = input("Ingrese el ling de BGG, una coma y el sitio: ")
+        # conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking) VALUES (?,?,?,?,?,?)',(int(BGG_id),nombre,sitio_nom,id_n,fecha, ranking))
+        # conn.commit()
+        # conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
+        # conn.commit()
+        # send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
+        # response = requests.get(send_text)
+    elif resp == "R":
+        razon = input("Ingrese la razón del rechazo: ")
+        conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
+        conn.commit()
+        send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
+        response = requests.get(send_text)
+    return
+
 conn = conecta_db()
 cursor = conn.cursor()
 cursor.execute('SELECT * FROM juegos_sugeridos')
@@ -56,7 +75,7 @@ for j in juegos:
 
     bgg_url = re.sub("bgg\.cc","boardgamegeek.com",bgg_url)
 
-    print(f"\n\nUsuario: {usuario_nom} (usuario_id)")
+    print(f"\n\nUsuario: {usuario_nom} ({usuario_id})")
     print(f"bgg_url: {bgg_url}")
     print(f"sitio_url: {sitio_url}")
 
@@ -145,5 +164,7 @@ for j in juegos:
         sitio_id = sitio_id[1]
         procesa()
         continue
+
+    ninguno()
 
 cursor.close()
