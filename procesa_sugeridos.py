@@ -11,7 +11,6 @@ import path
 
 os.chdir(path.actual)
 
-global bot_token
 bot_token = os.environ.get('bot_token')
 
 ######### Conecta con la base de datos
