@@ -10,6 +10,8 @@ import constantes
 import path
 
 os.chdir(path.actual)
+
+global bot_token
 bot_token = os.environ.get('bot_token')
 
 ######### Conecta con la base de datos
@@ -36,7 +38,6 @@ def procesa():
         conn.commit()
         send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
         response = requests.get(send_text)
-        print(send_text)
     else:
         razon = input("Razón: ")
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
