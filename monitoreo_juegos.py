@@ -282,7 +282,8 @@ def main():
                 leyenda.append(constantes.sitio_nom[j[1]])
 
         arch = f"graficos/{bgg_id}.png"
-        os.remove(arch)
+        if os.path.exists(arch):
+            os.remove(arch)
         if hacer_grafico == True: # Una vez que se bajaron todas las páginas que monitorean un juego
             fig.tight_layout(rect=[0, 0.01, 1, 0.97])
             plt.legend(leyenda)
