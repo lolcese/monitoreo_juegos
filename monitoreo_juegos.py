@@ -281,10 +281,11 @@ def main():
                 ax1.plot(fecha_hi, precio_hi, marker='o', linestyle='dashed', markersize=5)
                 leyenda.append(constantes.sitio_nom[j[1]])
 
+        arch = f"graficos/{bgg_id}.png"
+        os.remove(arch)
         if hacer_grafico == True: # Una vez que se bajaron todas las páginas que monitorean un juego
             fig.tight_layout(rect=[0, 0.01, 1, 0.97])
             plt.legend(leyenda)
-            arch = f"graficos/{bgg_id}.png"
             plt.savefig(arch,dpi=100)
             # ida = updater.bot.sendPhoto(chat_id = token_bot.id_grupo_fotos, photo = open(arch, "rb"))
             # id_gr = ida['photo'][0]['file_id']
@@ -298,7 +299,7 @@ def main():
         alarmas = cursor.fetchall()
         for alarma in alarmas:
             id_persona, precio_al = alarma
-            texto = f'\U000023F0\U000023F0\U000023F0\n\n [{nombre}]({constantes.sitio_URL["BGG"]+str(bgg_id)}) está a *${precio:.0f}* en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
+            texto = f'\U000023F0\U000023F0\U000023F0\n\n[{nombre}]({constantes.sitio_URL["BGG"]+str(bgg_id)}) está a *${precio:.0f}* en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
             # updater.bot.sendMessage(chat_id = id_persona, text = texto, parse_mode = "Markdown", disable_web_page_preview = True)
             requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
 
@@ -312,8 +313,7 @@ def main():
     cursor.execute('UPDATE ofertas SET activa = "No"')
     conn.commit()
     for p in prom:
-        id_juego = p[0]
-        precio_prom = p[1]
+        id_juego, precio_prom = p
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         precio_actual = cursor.fetchall()[0][0]
         if precio_actual != None and precio_actual <= 0.9 * precio_prom:
