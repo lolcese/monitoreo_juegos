@@ -72,11 +72,11 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
 ######### Menú principal
 def menu():
     keyboard = [
-        [InlineKeyboardButton("\U0001F4DA Lista de juegos por sitio", callback_data='juegos_lista')],
+        [InlineKeyboardButton("\U0001F4DA Lista de juegos monitoreados", callback_data='juegos_lista')],
         [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos')],
         # [InlineKeyboardButton("\U0001F947 30 mejores juegos de BGG", callback_data='juegos_BGG')],
-        [InlineKeyboardButton("\U0001F3B2 Ver un juego", callback_data='juego_ver')],
-        [InlineKeyboardButton("\U000023F0 Mis alarmas", callback_data='alarmas_muestra')],
+        [InlineKeyboardButton("\U0001F3B2 Ver un juego y poner alarmas", callback_data='juego_ver')],
+        [InlineKeyboardButton("\U000023F0 Ver mis alarmas", callback_data='alarmas_muestra')],
         [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
         [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
         [InlineKeyboardButton("\U0000270F Sugerir juego a monitorear", callback_data='sugerir_juego_datos')],
