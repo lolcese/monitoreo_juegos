@@ -327,6 +327,7 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     arch = f"graficos/{BGG_id}.png"
     if not os.path.exists(arch):
         arch = "graficos/0000.png"
+    arch += f"?f={datetime.now().isoformat()}" # Para evitar que una imagen quede en cache
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     id = context.bot.sendPhoto(chat_id=update.effective_chat.id, photo = constantes.sitio_URL["base"]+arch, caption=texto, parse_mode="Markdown", reply_markup=reply_markup)
     fecha = datetime.now()
@@ -715,7 +716,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
             arch = f"{BGG_id}.png"
             if not os.path.exists(f"graficos/{arch}"):
                 arch = "0000.png"
-            imagen = f'{constantes.sitio_URL["base"]}graficos/{arch}'
+            imagen = f'{constantes.sitio_URL["base"]}graficos/{arch}?f={datetime.now().isoformat()}' # Para evitar que una imagen quede en cache
 
             results.append(
                     InlineQueryResultArticle(
