@@ -598,7 +598,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount o Grooves.land")
         return JUEGO_AGREGAR
 
-    if len(dat) == 2 and re.search("deepdiscount"):
+    if len(dat) == 2 and re.search("deepdiscount", dat[1]):
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")    
         return JUEGO_AGREGAR
 

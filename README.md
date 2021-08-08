@@ -14,5 +14,4 @@ Agregar sitios
 ------
 - planeton
 - miniaturemarket
-- Groovesland
 - nzgames 
