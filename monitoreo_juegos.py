@@ -342,7 +342,7 @@ def main():
     prom = cursor.fetchall()
     texto_of = ""
     texto_of_me = ""
-    cursor.execute('DELETE FROM ofertas WHERE fecha_inicial < datetime("now", "-3 days", "localtime")')
+    cursor.execute('DELETE FROM ofertas WHERE fecha_inicial < datetime("now", "-15 days", "localtime")')
     conn.commit()
     cursor.execute('UPDATE ofertas SET activa = "No"')
     conn.commit()
