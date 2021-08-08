@@ -46,7 +46,7 @@ def procesa():
     return
 
 def ninguno():
-    resp = input("¿Agregar / Rechazar? (C/R): ")
+    resp = input("¿Ignorar / Rechazar? (I/R): ")
     if resp == "C":
         return
         # id_n = input("Ingrese el ling de BGG, una coma y el sitio: ")
