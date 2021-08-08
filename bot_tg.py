@@ -497,12 +497,11 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '08/08/2021: Monitorea Deepdiscount.\n\n' + \
     '05/08/2021: Muestra los links al sitio de cada juego en los listados.\n\n' + \
     '04/08/2021: Muestra los links a BGG en los listados de ofertas.\n\n' + \
     '01/08/2021: Cuando se ve un juego, los precios salen ordenados.\n\n' + \
-    '01/08/2021: La búsqueda inline muestra imágenes.\n\n' + \
-    '31/07/2021: Se actualizan automáticamente las cotizaciones de las divisas.\n\n' + \
-    '30/07/2021: Muestra ranking de BGG y los 30 juegos más baratos.\n\n'
+    '01/08/2021: La búsqueda inline muestra imágenes.\n\n'
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],

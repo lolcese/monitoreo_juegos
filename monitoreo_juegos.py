@@ -241,14 +241,14 @@ def lee_pagina_deep(ju_id, peso):
     elif peso < 4:
         costo_envio = constantes.var['envio_deepdiscount_3_4_lb']
 
-    precio_dol = (float(precio_dol[1]) + costo_envio) * constantes.var['impuesto_compras_exterior']
+    precio_dol = float(precio_dol[1]) + costo_envio
 
     if precio_dol > 50:
         imp = (precio_dol - 50) * 0.5
     else:
         imp = 0
 
-    precio_ar = precio_dol * constantes.var['dolar']
+    precio_ar = precio_dol * constantes.var['dolar'] * constantes.var['impuesto_compras_exterior']
     precio_final_ad = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
 
     return precio_final_ad
@@ -258,16 +258,16 @@ def lee_pagina_deep(ju_id, peso):
 def main():
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT BGG_id, nombre, peso FROM juegos ORDER BY nombre')
+    cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos ORDER BY nombre')
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
-        bgg_id, nombre, peso = jb
+        bgg_id, nombre = jb
         fecha = datetime.now()
         hacer_grafico = False
-        cursor.execute('SELECT id_juego, sitio, sitio_ID FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
+        cursor.execute('SELECT id_juego, sitio, sitio_ID, peso FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
         juegos_id = cursor.fetchall()
         for j in juegos_id: # Cada repetición del mismo juego
-            id_juego, sitio, sitio_ID = j
+            id_juego, sitio, sitio_ID, peso = j
             if   sitio == "BLAM":
                 precio = lee_pagina_blam(sitio_ID)
             elif sitio == "BLIB":
