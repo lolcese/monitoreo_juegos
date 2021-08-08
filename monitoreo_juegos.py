@@ -258,7 +258,7 @@ def lee_pagina_deep(ju_id, peso):
 def main():
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos ORDER BY nombre')
+    cursor.execute('SELECT DISTINCT BGG_id, nombre, peso FROM juegos ORDER BY nombre')
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
         bgg_id, nombre, peso = jb
