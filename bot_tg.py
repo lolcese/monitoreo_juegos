@@ -387,7 +387,7 @@ def texto_info_juego(BGG_id):
                 min_reg = cursor.fetchone()
                 min_precio = min_reg[0]
                 if min_precio == ult_precio:
-                    texto_ju[ju] += "Es el precio más barato de los últimos 15 días.{aclar}\n"
+                    texto_ju[ju] += f"Es el precio más barato de los últimos 15 días.{aclar}\n"
                 else:
                     min_fech = min_reg[1]
                     texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year}).{aclar}\n"    
