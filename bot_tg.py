@@ -602,6 +602,8 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")    
         return JUEGO_AGREGAR
 
+    if len(dat) == 2:
+        peso = None
     BGG_URL = dat[0]
     url = dat[1]
     if len(dat) > 2:
