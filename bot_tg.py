@@ -358,7 +358,7 @@ def texto_info_juego(BGG_id):
         nombre_sitio = constantes.sitio_nom[j[2]]
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
         id_juego = j[0]
-        if nombre_sitio == "deep":
+        if nombre_sitio == "Deepdiscount":
             aclar = " El precio final no es exacto. Podría variar unos ± U$S 2."
         else:
             aclar = ""
