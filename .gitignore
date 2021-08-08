@@ -4,5 +4,5 @@ extras/
 monitoreo_juegos.db
 *.sh
 desarollo.md
-consultas.sqlite.txt
+consultas.sqlite
 bot_token.txt

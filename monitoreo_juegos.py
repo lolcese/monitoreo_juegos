@@ -223,6 +223,29 @@ def lee_pagina_shop4world(ju_id):
 
     return precio_final_ad
 
+######### Lee información de deepdiscount
+def lee_pagina_deep(ju_id):
+    url = "https://www.deepdiscount.com/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
+
+    precio_dol = re.search('\"price\": \"(.*?)"',text)
+    if not precio_dol:
+        return None
+    precio_dol = (float(precio_dol[1]) + constantes.var['envio_deepdiscount']) * constantes.var['dolar'] * constantes.var['impuesto_compras_exterior']
+
+    if precio_dol > 50:
+        imp = (precio_dol - 50) * 0.5
+    else:
+        imp = 0
+
+    precio_ar = precio_dol * constantes.var['dolar']
+    precio_final_ad = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
+
+    return precio_final_ad
+
+
 ######### Programa principal
 def main():
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -255,6 +278,8 @@ def main():
                 precio = lee_pagina_shop4es(sitio_ID)
             elif sitio == "shop4world":
                 precio = lee_pagina_shop4world(sitio_ID)
+            elif sitio == "deep":
+                precio = lee_pagina_deep(sitio_ID)
 
             cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',(id_juego, precio, fecha)) 
             conn.commit()

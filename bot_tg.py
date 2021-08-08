@@ -101,6 +101,7 @@ def juegos_lista(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U0001F4D2 365games", callback_data='juegos_lista_sitio_365')],
         [InlineKeyboardButton("\U0001F4D2 shop4es", callback_data='juegos_lista_sitio_shop4es')],
         [InlineKeyboardButton("\U0001F4D2 shop4world", callback_data='juegos_lista_sitio_shop4world')],
+        [InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_lista_sitio_deep')],
         [InlineKeyboardButton("\U0001F5DE Últimos 30 agregados", callback_data='juegos_lista_ULT')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -476,7 +477,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Ayuda*\n\n' + \
-    '@Monitor\_Juegos\_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios  (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, shop4es y shop4world) con una frecuencia de 30 minutos. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
+    '@Monitor\_Juegos\_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios  (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, shop4es, shop4world y deepdiscount) con una frecuencia de 30 minutos. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
     'Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio *FINAL EN ARGENTINA* de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.\n\n' + \
     'Para ver la información de un juego en particular, elegí la opción _Ver un juego_ y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio.\n\n' + \
     'Si no está el juego que te interesa, o si encontraste otro lugar donde lo venden, elegí en el menú la opción _Sugerir juego a monitorear_. Este agregado *no* es automático.\n\n' + \
@@ -579,7 +580,7 @@ def comentarios_mandar(update: Update, context: CallbackContext) -> int:
 def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text = 'Escribí la URL de BGG del juego (https://www.boardgamegeek.com/boardgame/XXXXXXX), una coma y el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, shop4es y shop4world).\n\nPor ejemplo https://www.boardgamegeek.com/boardgame/220/high-society , https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777', parse_mode = "Markdown", disable_web_page_preview = True)
+    query.edit_message_text(text = 'Escribí la URL de BGG del juego (https://www.boardgamegeek.com/boardgame/XXXXXXX), una coma y el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, shop4es, shop4world y deepdiscount).\n\nPor ejemplo https://www.boardgamegeek.com/boardgame/220/high-society , https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777', parse_mode = "Markdown", disable_web_page_preview = True)
     return JUEGO_AGREGAR
 
 ######### Guarda el juego sugerido
