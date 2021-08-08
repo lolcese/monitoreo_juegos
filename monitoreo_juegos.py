@@ -233,7 +233,7 @@ def lee_pagina_deep(ju_id):
     precio_dol = re.search('\"price\": \"(.*?)"',text)
     if not precio_dol:
         return None
-    precio_dol = (float(precio_dol[1]) + constantes.var['envio_deepdiscount']) * constantes.var['dolar'] * constantes.var['impuesto_compras_exterior']
+    precio_dol = (float(precio_dol[1]) + constantes.var['envio_deepdiscount']) * constantes.var['impuesto_compras_exterior']
 
     if precio_dol > 50:
         imp = (precio_dol - 50) * 0.5
