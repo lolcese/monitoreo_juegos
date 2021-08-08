@@ -358,6 +358,10 @@ def texto_info_juego(BGG_id):
         nombre_sitio = constantes.sitio_nom[j[2]]
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
         id_juego = j[0]
+        if nombre_sitio == "deep":
+            aclar = " El precio final no es exacto. Podría variar unos ± U$S 2."
+        else:
+            aclar = ""
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         ult_precio = cursor.fetchone()
         if ult_precio == None:
@@ -375,7 +379,7 @@ def texto_info_juego(BGG_id):
                 else:
                     ult_prec = ult_val[0]
                     ult_fech = ult_val[1]
-                    texto_ju[ju] += f"pero el {ult_fech.day}/{ult_fech.month}/{ult_fech.year} tuvo un precio de ${ult_prec:.0f}.\n"
+                    texto_ju[ju] += f"pero el {ult_fech.day}/{ult_fech.month}/{ult_fech.year} tuvo un precio de ${ult_prec:.0f}.{aclar}\n"
             else:
                 precio_ju.append(ult_precio)
                 texto_ju.append(f"[{nombre_sitio}]({url_sitio}): *${ult_precio:.0f}* - ")
@@ -383,10 +387,10 @@ def texto_info_juego(BGG_id):
                 min_reg = cursor.fetchone()
                 min_precio = min_reg[0]
                 if min_precio == ult_precio:
-                    texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
+                    texto_ju[ju] += "Es el precio más barato de los últimos 15 días.{aclar}\n"
                 else:
                     min_fech = min_reg[1]
-                    texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year}).\n"    
+                    texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year}).{aclar}\n"    
         ju += 1
     if min(precio_ju) != 999999:
         ini = "\U0001F449 "
