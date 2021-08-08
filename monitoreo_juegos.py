@@ -224,7 +224,7 @@ def lee_pagina_shop4world(ju_id):
     return precio_final_ad
 
 ######### Lee información de deepdiscount
-def lee_pagina_deep(ju_id):
+def lee_pagina_deep(ju_id, peso):
     url = "https://www.deepdiscount.com/"+ju_id
     text = baja_pagina(url)
     if text == "Error":
@@ -233,7 +233,15 @@ def lee_pagina_deep(ju_id):
     precio_dol = re.search('\"price\": \"(.*?)"',text)
     if not precio_dol:
         return None
-    precio_dol = (float(precio_dol[1]) + constantes.var['envio_deepdiscount']) * constantes.var['impuesto_compras_exterior']
+
+    if peso < 2:
+        costo_envio = constantes.var['envio_deepdiscount_0_2_lb']
+    elif peso < 3:
+        costo_envio = constantes.var['envio_deepdiscount_2_3_lb']
+    elif peso < 4:
+        costo_envio = constantes.var['envio_deepdiscount_3_4_lb']
+
+    precio_dol = (float(precio_dol[1]) + costo_envio) * constantes.var['impuesto_compras_exterior']
 
     if precio_dol > 50:
         imp = (precio_dol - 50) * 0.5
@@ -253,7 +261,7 @@ def main():
     cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos ORDER BY nombre')
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
-        bgg_id, nombre = jb
+        bgg_id, nombre, peso = jb
         fecha = datetime.now()
         hacer_grafico = False
         cursor.execute('SELECT id_juego, sitio, sitio_ID FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
@@ -279,7 +287,7 @@ def main():
             elif sitio == "shop4world":
                 precio = lee_pagina_shop4world(sitio_ID)
             elif sitio == "deep":
-                precio = lee_pagina_deep(sitio_ID)
+                precio = lee_pagina_deep(sitio_ID, peso)
 
             cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',(id_juego, precio, fecha)) 
             conn.commit()

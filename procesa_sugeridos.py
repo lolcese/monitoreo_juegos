@@ -24,14 +24,14 @@ def procesa():
     resp = input("¿Agregar? (M/S/N): ")
     if resp == "M":
         id_n = input("Ingrese la nueva id: ")
-        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking) VALUES (?,?,?,?,?,?)',(int(BGG_id),nombre,sitio_nom,id_n,fecha, ranking))
+        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso) VALUES (?,?,?,?,?,?,?)',(int(BGG_id),nombre,sitio_nom,id_n,fecha, ranking, peso))
         conn.commit()
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
         conn.commit()
         send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
         response = requests.get(send_text)
     elif resp == "S":
-        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking) VALUES (?,?,?,?,?,?)',(int(BGG_id),nombre,sitio_nom,sitio_id,fecha,ranking))
+        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso) VALUES (?,?,?,?,?,?,?)',(int(BGG_id),nombre,sitio_nom,sitio_id,fecha, ranking, peso))
         conn.commit()
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
         conn.commit()
@@ -66,10 +66,10 @@ def ninguno():
 
 conn = conecta_db()
 cursor = conn.cursor()
-cursor.execute('SELECT * FROM juegos_sugeridos')
+cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, BGG_URL, URL, peso, fecha FROM juegos_sugeridos')
 juegos = cursor.fetchall()
 for j in juegos:
-    id_juego_sugerido,usuario_nom,usuario_id,bgg_url,sitio_url,fecha = j
+    id_juego_sugerido, usuario_nom, usuario_id, bgg_url, sitio_url, peso, fecha = j
     # print(f"\n{usuario_nom} - {usuario_id} - {bgg_url} - {sitio_url} - {fecha}\n")
     fecha = datetime.now()
 
@@ -93,6 +93,10 @@ for j in juegos:
 
     print("Nombre: ",nombre)
     print("Ranking: ",ranking)
+    if peso != None:
+        print("Peso: ",peso)
+    elif re.search('deepdiscount\.com\/(.*?)$',sitio_url):
+        print("** No tiene peso y es de deepdiscount **")
 
     cursor.execute ('SELECT sitio,sitio_ID FROM juegos WHERE BGG_id = ?',[int(BGG_id)])
     moni = cursor.fetchall()

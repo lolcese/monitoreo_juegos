@@ -358,10 +358,6 @@ def texto_info_juego(BGG_id):
         nombre_sitio = constantes.sitio_nom[j[2]]
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
         id_juego = j[0]
-        if nombre_sitio == "Deepdiscount":
-            aclar = " El precio final no es exacto, podría variar unos ± U$S 2."
-        else:
-            aclar = ""
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         ult_precio = cursor.fetchone()
         if ult_precio == None:
@@ -379,7 +375,7 @@ def texto_info_juego(BGG_id):
                 else:
                     ult_prec = ult_val[0]
                     ult_fech = ult_val[1]
-                    texto_ju[ju] += f"pero el {ult_fech.day}/{ult_fech.month}/{ult_fech.year} tuvo un precio de ${ult_prec:.0f}.{aclar}\n"
+                    texto_ju[ju] += f"pero el {ult_fech.day}/{ult_fech.month}/{ult_fech.year} tuvo un precio de ${ult_prec:.0f}.\n"
             else:
                 precio_ju.append(ult_precio)
                 texto_ju.append(f"[{nombre_sitio}]({url_sitio}): *${ult_precio:.0f}* - ")
@@ -387,10 +383,10 @@ def texto_info_juego(BGG_id):
                 min_reg = cursor.fetchone()
                 min_precio = min_reg[0]
                 if min_precio == ult_precio:
-                    texto_ju[ju] += f"Es el precio más barato de los últimos 15 días.{aclar}\n"
+                    texto_ju[ju] += f"Es el precio más barato de los últimos 15 días.\n"
                 else:
                     min_fech = min_reg[1]
-                    texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year}).{aclar}\n"    
+                    texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${min_precio:.0f} (el {min_fech.day}/{min_fech.month}/{min_fech.year}).\n"
         ju += 1
     if min(precio_ju) != 999999:
         ini = "\U0001F449 "
@@ -584,7 +580,7 @@ def comentarios_mandar(update: Update, context: CallbackContext) -> int:
 def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text = 'Escribí la URL de BGG del juego (https://www.boardgamegeek.com/boardgame/XXXXXXX), una coma y el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, shop4es, shop4world y deepdiscount).\n\nPor ejemplo https://www.boardgamegeek.com/boardgame/220/high-society , https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777', parse_mode = "Markdown", disable_web_page_preview = True)
+    query.edit_message_text(text = 'Escribí la URL de BGG del juego (https://www.boardgamegeek.com/boardgame/XXXXXXX), una coma y el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, shop4es, shop4world y deepdiscount).\nEn el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).\n\nPor ejemplo:\nhttps://www.boardgamegeek.com/boardgame/220/high-society , https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777\nhttps://www.boardgamegeek.com/boardgame/293296/splendor-marvel , https://www.deepdiscount.com/splendor-marvel/3558380055334 , 2.43', parse_mode = "Markdown", disable_web_page_preview = True)
     return JUEGO_AGREGAR
 
 ######### Guarda el juego sugerido
@@ -592,16 +588,28 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     usuario_nom = update.message.from_user.full_name
     usuario_id = update.message.from_user.id
     dat = update.message.text.split(",")
-    if len(dat) != 2:
+
+    if len(dat) < 2:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el ID de BGG, el URL del juego.")    
         return JUEGO_AGREGAR
+
+    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount", dat[1]):
+        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser tiendamia, bookdepository, buscalibre, 365games, shop4es, shop4world o deepdiscount")    
+        return JUEGO_AGREGAR
+
+    if len(dat) == 2 and re.search("deepdiscount"):
+        update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")    
+        return JUEGO_AGREGAR
+
     BGG_URL = dat[0]
     url = dat[1]
+    if len(dat) > 2:
+        peso = dat[2]
 
     conn = conecta_db()
     cursor = conn.cursor()
     fecha = datetime.now()
-    cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, fecha) VALUES (?,?,?,?,?)',[usuario_nom,usuario_id,BGG_URL,url,fecha])
+    cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha) VALUES (?,?,?,?,?,?)',[usuario_nom, usuario_id, BGG_URL, url, peso, fecha])
     conn.commit()
     texto = f"{usuario_nom} sugirió el juego {url}"
     # update.bot.sendMessage(chat_id = id_aviso, text = texto, parse_mode = "Markdown")
