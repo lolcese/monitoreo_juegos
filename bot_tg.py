@@ -359,14 +359,14 @@ def texto_info_juego(BGG_id):
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
         id_juego = j[0]
         if nombre_sitio == "Deepdiscount":
-            aclar = " El precio final no es exacto. Podría variar unos ± U$S 2."
+            aclar = " El precio final no es exacto, podría variar unos ± U$S 2."
         else:
             aclar = ""
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         ult_precio = cursor.fetchone()
         if ult_precio == None:
             precio_ju.append(999999)
-            texto_ju.append(f"[{nombre_sitio}]({url_sitio}): Está en la base de datos del bot pero todavía no intenté buscar el precio, en los próximos 30 minutos debería aparecer.\n")
+            texto_ju.append(f"[{nombre_sitio}]({url_sitio}): Está en la base de datos del bot pero todavía no intenté buscar el precio, en los próximos 60 minutos debería aparecer.\n")
         else:
             ult_precio = ult_precio[0]
             if ult_precio == None:
