@@ -13,7 +13,6 @@ Mediano plazo
 Agregar sitios
 ------
 - planeton
-- deepdiscount
 - miniaturemarket
 - Groovesland
 - nzgames 

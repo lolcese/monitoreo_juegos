@@ -253,6 +253,31 @@ def lee_pagina_deep(ju_id, peso):
 
     return precio_final_ad
 
+######### Lee información de deepdiscount
+def lee_pagina_grooves(ju_id):
+    url = "https://www.grooves.land/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
+
+    precio_eur = re.search('<div class=\"price\".*?[^s]>(\d.*?)&nbsp;EUR</big>',text)
+    if not precio_eur:
+        return None
+
+    precio_eur = float(re.sub(",", ".", precio_eur[1]))
+    if precio_eur < constantes.var['limite_envio_gratis_grooves']:
+        precio_eur += constantes.var['envio_grooves']
+    precio_dol = precio_eur * constantes.var['euro'] / constantes.var['dolar']
+    precio_ar = precio_dol * constantes.var['dolar'] * constantes.var['impuesto_compras_exterior']
+
+    if precio_dol > 50:
+        imp = (precio_dol - 50) * 0.5
+    else:
+        imp = 0
+
+    precio_final_ad = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
+
+    return precio_final_ad
 
 ######### Programa principal
 def main():
@@ -288,6 +313,8 @@ def main():
                 precio = lee_pagina_shop4world(sitio_ID)
             elif sitio == "deep":
                 precio = lee_pagina_deep(sitio_ID, peso)
+            elif sitio == "grooves":
+                precio = lee_pagina_grooves(sitio_ID)
 
             cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',(id_juego, precio, fecha)) 
             conn.commit()

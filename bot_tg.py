@@ -102,6 +102,7 @@ def juegos_lista(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U0001F4D2 shop4es", callback_data='juegos_lista_sitio_shop4es')],
         [InlineKeyboardButton("\U0001F4D2 shop4world", callback_data='juegos_lista_sitio_shop4world')],
         [InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_lista_sitio_deep')],
+        [InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_lista_sitio_grooves')],
         [InlineKeyboardButton("\U0001F5DE Últimos 30 agregados", callback_data='juegos_lista_ULT')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -477,12 +478,12 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Ayuda*\n\n' + \
-    '@Monitor\_Juegos\_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios  (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, shop4es, shop4world y deepdiscount) con una frecuencia de 30 minutos. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
+    '@Monitor\_Juegos\_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios  (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land) con una frecuencia de 30 minutos. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
     'Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio *FINAL EN ARGENTINA* de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.\n\n' + \
     'Para ver la información de un juego en particular, elegí la opción _Ver un juego_ y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio.\n\n' + \
     'Si no está el juego que te interesa, o si encontraste otro lugar donde lo venden, elegí en el menú la opción _Sugerir juego a monitorear_. Este agregado *no* es automático.\n\n' + \
     'En _Ofertas y juegos en reposición_ vas a ver todos los juegos que han bajado de precio más del 10% respecto a su promedio de 15 días, y los juegos que ahora están disponibles pero no lo estuvieron por más de 15 días.\n\n' + \
-    'Desde cualquier chat o grupo, escribí @Monitor\_Juegos\_bot y parte del nombre de un juego para ver la información sin salir del chat (sin el gráfico por el momento).\n\n' + \
+    'Desde cualquier chat o grupo, escribí @Monitor\_Juegos\_bot y parte del nombre de un juego para ver la información sin salir del chat.\n\n' + \
     'Si un menú no responde, escribí nuevamente /start.\n\n' + \
     'Cualquier duda, mandame un mensaje a @Luis\_Olcese.'
     keyboard = [
@@ -497,6 +498,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '08/08/2021: Monitorea Grooves.land.\n\n' + \
     '08/08/2021: Monitorea Deepdiscount.\n\n' + \
     '05/08/2021: Muestra los links al sitio de cada juego en los listados.\n\n' + \
     '04/08/2021: Muestra los links a BGG en los listados de ofertas.\n\n' + \
@@ -579,7 +581,7 @@ def comentarios_mandar(update: Update, context: CallbackContext) -> int:
 def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text = 'Escribí la URL de BGG del juego (https://www.boardgamegeek.com/boardgame/XXXXXXX), una coma y el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, shop4es, shop4world y deepdiscount).\nEn el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).\n\nEjemplos:\n\U000027A1 https://www.boardgamegeek.com/boardgame/220/high-society , https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777\n\U000027A1 https://www.boardgamegeek.com/boardgame/293296/splendor-marvel , https://www.deepdiscount.com/splendor-marvel/3558380055334 , 2.43', parse_mode = "Markdown", disable_web_page_preview = True)
+    query.edit_message_text(text = 'Escribí la URL de BGG del juego (https://www.boardgamegeek.com/boardgame/XXXXXXX), una coma y el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land).\nEn el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).\n\nEjemplos:\n\nhttps://www.boardgamegeek.com/boardgame/220/high-society , https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777\n\nhttps://www.boardgamegeek.com/boardgame/293296/splendor-marvel , https://www.deepdiscount.com/splendor-marvel/3558380055334 , 2.43', parse_mode = "Markdown", disable_web_page_preview = True)
     return JUEGO_AGREGAR
 
 ######### Guarda el juego sugerido
@@ -592,8 +594,8 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el ID de BGG, el URL del juego.")    
         return JUEGO_AGREGAR
 
-    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount", dat[1]):
-        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser tiendamia, bookdepository, buscalibre, 365games, shop4es, shop4world o deepdiscount")    
+    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves", dat[1]):
+        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount o Grooves.land")
         return JUEGO_AGREGAR
 
     if len(dat) == 2 and re.search("deepdiscount"):
