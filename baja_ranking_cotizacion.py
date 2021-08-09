@@ -16,7 +16,7 @@ id_aviso = os.environ.get('id_aviso')
 
 fecha = datetime.now()
 
-conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+conn = sqlite3.connect(constantes.db_file, timeout = 30, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 cursor = conn.cursor()
 
 ######### Baja cotización de monedas de BNA
