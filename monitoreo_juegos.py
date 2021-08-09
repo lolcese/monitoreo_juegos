@@ -31,7 +31,7 @@ def baja_pagina(url):
         data = urllib.request.urlopen(req).read()
     except HTTPError as e:
         return "Error"
-    return data.decode('utf-8')
+    return data.decode('unicode_escape').encode('utf-8')
 
 ######### Lee información de BLAM
 def lee_pagina_blam(ju_id):

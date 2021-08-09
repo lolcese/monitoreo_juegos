@@ -594,18 +594,19 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el ID de BGG, el URL del juego.")    
         return JUEGO_AGREGAR
 
-    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves", dat[1]):
+    url = dat[1]
+
+    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves", url):
         update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount o Grooves.land")
         return JUEGO_AGREGAR
 
-    if len(dat) == 2 and re.search("deepdiscount", dat[1]):
+    if len(dat) == 2 and re.search("deepdiscount", url):
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")    
         return JUEGO_AGREGAR
 
     if len(dat) == 2:
         peso = None
     BGG_URL = dat[0]
-    url = dat[1]
     if len(dat) > 2:
         peso = dat[2]
 
