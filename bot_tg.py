@@ -91,7 +91,7 @@ def juegos_lista(update: Update, context: CallbackContext) -> int:
     query.answer()
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Todos", callback_data='juegos_lista_TODO')],
-        [InlineKeyboardButton("\U0001F4DC Planilla todos los juegos", callback_data='juegos_planilla')],
+        [InlineKeyboardButton("\U0001F4DC Planilla con todos los juegos", callback_data='juegos_planilla')],
         [InlineKeyboardButton("\U0001F4D5 Buscalibre", callback_data='juegos_lista_sitio_BLIB')],
         [InlineKeyboardButton("\U0001F4D5 Buscalibre Amazon", callback_data='juegos_lista_sitio_BLAM')],
         [InlineKeyboardButton("\U0001F4D8 Tiendamia Amazon", callback_data='juegos_lista_sitio_TMAM')],
@@ -751,6 +751,7 @@ def main() -> PRINCIPAL:
         states={
             PRINCIPAL: [
                 CallbackQueryHandler(juegos_lista,           pattern='^juegos_lista$'),
+                CallbackQueryHandler(juegos_planilla,        pattern='^juegos_planilla$'),
                 CallbackQueryHandler(alarmas_muestra,        pattern='^alarmas_muestra$'),
                 CallbackQueryHandler(juego_ver,              pattern='^juego_ver$'),
                 CallbackQueryHandler(novedades,              pattern='^novedades$'),
