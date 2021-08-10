@@ -287,11 +287,11 @@ def main():
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
         bgg_id, nombre = jb
-        fecha = datetime.now()
         hacer_grafico = False
         cursor.execute('SELECT id_juego, sitio, sitio_ID, peso FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
         juegos_id = cursor.fetchall()
         for j in juegos_id: # Cada repetición del mismo juego
+            fecha = datetime.now()
             id_juego, sitio, sitio_ID, peso = j
             if   sitio == "BLAM":
                 precio = lee_pagina_blam(sitio_ID)
