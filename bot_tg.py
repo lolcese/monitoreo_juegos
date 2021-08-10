@@ -74,8 +74,7 @@ def menu():
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Lista de juegos monitoreados", callback_data='juegos_lista')],
         [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos')],
-        # [InlineKeyboardButton("\U0001F947 30 mejores juegos de BGG", callback_data='juegos_BGG')],
-        [InlineKeyboardButton("\U0001F3B2 Ver un juego y poner alarmas", callback_data='juego_ver')],
+        [InlineKeyboardButton("\U0001F3B2 Ver un juego y poner/borrar alarmas", callback_data='juego_ver')],
         [InlineKeyboardButton("\U000023F0 Ver mis alarmas", callback_data='alarmas_muestra')],
         [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
         [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
@@ -242,29 +241,6 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = f"*Juegos más baratos en las últimas 24 horas*\n\n{barato}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
-
-######### Juegos de BGG
-# def juegos_BGG(update: Update, context: CallbackContext) -> int:
-#     query = update.callback_query
-#     query.answer()
-
-#     conn = conecta_db()
-#     cursor = conn.cursor()
-
-#     cursor.execute('SELECT id_juego FROM juegos ORDER BY ranking LIMIT 30')
-#     ranking = cursor.fetchall()
-#     rank = ""
-#     for r in ranking:
-#         id_juego = r
-#         cursor.execute('SELECT nombre, sitio, sitio_id, BGG_id FROM juegos WHERE id_juego = ?',[id_juego])
-#         nombre, sitio, sitio_id, BGG_id = cursor.fetchone()
-#         rank += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(BGG_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
-#     keyboard = [
-#         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-#     ]
-#     reply_markup = InlineKeyboardMarkup(keyboard)
-#     query.edit_message_text(text = f"*Juegos con mejor ranking en BGG*\n\n{rank}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
-#     return PRINCIPAL
 
 ######### Pide que se escriba el nombre del juego
 def juego_ver(update: Update, context: CallbackContext) -> int:
@@ -480,7 +456,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     texto = '*Ayuda*\n\n' + \
     '@Monitor\_Juegos\_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios  (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land) con una frecuencia de 30 minutos. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
     'Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio *FINAL EN ARGENTINA* de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.\n\n' + \
-    'Para ver la información de un juego en particular, elegí la opción _Ver un juego y poner alarmas_ y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio.\n\n' + \
+    'Para ver la información de un juego en particular, elegí la opción _Ver un juego y poner/scar alarmas_ y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio, o borrarla si lo querés.\n\n' + \
     'Si no está el juego que te interesa, o si encontraste otro lugar donde lo venden, elegí en el menú la opción _Sugerir juego a monitorear_. Este agregado *no* es automático.\n\n' + \
     'En _Ofertas y juegos en reposición_ vas a ver todos los juegos que han bajado de precio más del 10% respecto a su promedio de 15 días, y los juegos que ahora están disponibles pero no lo estuvieron por más de 15 días.\n\n' + \
     'Desde cualquier chat o grupo, escribí @Monitor\_Juegos\_bot y parte del nombre de un juego para ver la información sin salir del chat.\n\n' + \
