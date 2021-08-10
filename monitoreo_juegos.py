@@ -9,7 +9,8 @@
 import urllib.request
 import re
 from datetime import datetime
-from urllib.error import HTTPError
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 import sqlite3
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -27,10 +28,12 @@ updater = Updater(bot_token)
 
 ######### Baja una página cualquiera
 def baja_pagina(url):
-    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
+    req = Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
     try:
-        data = urllib.request.urlopen(req).read()
+        data = urlopen(req)
     except HTTPError as e:
+        return "Error"
+    except URLError as e:
         return "Error"
     return data.decode('unicode_escape', errors = 'ignore')
 
