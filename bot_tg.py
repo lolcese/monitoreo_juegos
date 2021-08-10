@@ -480,7 +480,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     texto = '*Ayuda*\n\n' + \
     '@Monitor\_Juegos\_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios  (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land) con una frecuencia de 30 minutos. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
     'Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio *FINAL EN ARGENTINA* de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.\n\n' + \
-    'Para ver la información de un juego en particular, elegí la opción _Ver un juego_ y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio.\n\n' + \
+    'Para ver la información de un juego en particular, elegí la opción _Ver un juego y poner alarmas_ y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio.\n\n' + \
     'Si no está el juego que te interesa, o si encontraste otro lugar donde lo venden, elegí en el menú la opción _Sugerir juego a monitorear_. Este agregado *no* es automático.\n\n' + \
     'En _Ofertas y juegos en reposición_ vas a ver todos los juegos que han bajado de precio más del 10% respecto a su promedio de 15 días, y los juegos que ahora están disponibles pero no lo estuvieron por más de 15 días.\n\n' + \
     'Desde cualquier chat o grupo, escribí @Monitor\_Juegos\_bot y parte del nombre de un juego para ver la información sin salir del chat.\n\n' + \
