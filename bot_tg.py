@@ -91,6 +91,7 @@ def juegos_lista(update: Update, context: CallbackContext) -> int:
     query.answer()
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Todos", callback_data='juegos_lista_TODO')],
+        [InlineKeyboardButton("\U0001F4DC Planilla todos los juegos", callback_data='juegos_planilla')],
         [InlineKeyboardButton("\U0001F4D5 Buscalibre", callback_data='juegos_lista_sitio_BLIB')],
         [InlineKeyboardButton("\U0001F4D5 Buscalibre Amazon", callback_data='juegos_lista_sitio_BLAM')],
         [InlineKeyboardButton("\U0001F4D8 Tiendamia Amazon", callback_data='juegos_lista_sitio_TMAM')],
@@ -133,6 +134,21 @@ def juegos_lista_TODO(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
+    return PRINCIPAL
+
+######### Link a la planilla con todos los juegos
+def juegos_planilla(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    texto = '*Planilla con todos los juegos*\n\n' + \
+    'Si querés ver una planilla con todos los precios de los juegos, andá ' + \
+    '[acá](https://docs.google.com/spreadsheets/d/1eh5ckbIl5td0B8aRScxkIZU62MfeMplXxGdlsAWPoVA/edit?usp=sharing)\n' + \
+    'Tené en cuenta que, si bien se actualiza automáticamente, puede tener un desfasaje de hasta 2 horas con los precios reales.'
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Lista de juegos de un sitio
@@ -474,12 +490,11 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '10/08/2021: Acceso a una planilla con todos los precios.\n\n' + \
     '08/08/2021: Monitorea Grooves.land.\n\n' + \
     '08/08/2021: Monitorea Deepdiscount.\n\n' + \
     '05/08/2021: Muestra los links al sitio de cada juego en los listados.\n\n' + \
-    '04/08/2021: Muestra los links a BGG en los listados de ofertas.\n\n' + \
-    '01/08/2021: Cuando se ve un juego, los precios salen ordenados.\n\n' + \
-    '01/08/2021: La búsqueda inline muestra imágenes.\n\n'
+    '04/08/2021: Muestra los links a BGG en los listados de ofertas.\n\n'
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -740,7 +755,6 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(juego_ver,              pattern='^juego_ver$'),
                 CallbackQueryHandler(novedades,              pattern='^novedades$'),
                 CallbackQueryHandler(juegos_baratos,         pattern='^juegos_baratos$'),
-                # CallbackQueryHandler(juegos_BGG,             pattern='^juegos_BGG$'),
                 CallbackQueryHandler(ofertas_restock,        pattern='^ofertas_restock$'),
                 CallbackQueryHandler(sugerir_juego_datos,    pattern='^sugerir_juego_datos$'),
                 CallbackQueryHandler(comentarios_texto,      pattern='^comentarios_texto$'),
