@@ -19,6 +19,7 @@ import os.path
 import path
 from telegram.ext import (Updater)
 import requests
+import csv
 
 os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
@@ -376,7 +377,7 @@ def main():
     for p in prom:
         id_juego, precio_prom = p
         cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
-        precio_actual = cursor.fetchall()[0][0]
+        precio_actual = cursor.fetchone()
         if precio_actual != None and precio_actual <= 0.9 * precio_prom:
             cursor.execute('SELECT nombre, sitio, sitio_id,BGG_id FROM juegos WHERE id_juego = ?', [id_juego])
             nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
@@ -435,6 +436,37 @@ def main():
         for m in mensa:
             id_usuario = m[0]
             requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_usuario}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
+
+    # Exporta el archivo
+    ju = open('precios_exporta.csv', mode='w', newline='', encoding="UTF-8")
+    juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+    conn = sqlite3.connect(db_file, timeout = 30, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    cursor = conn.cursor()
+    cursor.execute('SELECT nombre, BGG_id, id_juego, sitio, sitio_ID FROM juegos ORDER BY nombre')
+    juegos_id = cursor.fetchall()
+    for j in juegos_id:
+        nombre, BGG_id, id_juego, sitio, sitio_ID = j
+        cursor.execute('SELECT precio, fecha  FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
+        dat = cursor.fetchone()
+        if dat:
+            precio_actual, fecha = dat
+            if precio_actual == None:
+                precio = "-"
+            else:
+                precio = f"${precio_actual:.0f}"
+            cursor.execute('SELECT precio FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days", "localtime") AND datetime("now", "localtime")) ORDER BY precio DESC LIMIT 1', [id_juego])
+            min_precio = cursor.fetchone()
+            if min_precio:
+                min_precio = f"${min_precio[0]:.0f}"
+            else:
+                min_precio = "-"
+            juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio])
+    
+    ju.close()
+    if os.path.exists('graficos/precios_exporta.csv'):
+        os.remove('graficos/precios_exporta.csv')
+    os.rename('precios_exporta.csv','graficos/precios_exporta.csv')
 
 if __name__ == '__main__':
     main()
