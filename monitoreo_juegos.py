@@ -441,8 +441,6 @@ def main():
     ju = open('precios_exporta.csv', mode='w', newline='', encoding="UTF-8")
     juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-    conn = sqlite3.connect(db_file, timeout = 30, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-    cursor = conn.cursor()
     cursor.execute('SELECT nombre, BGG_id, id_juego, sitio, sitio_ID FROM juegos ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
