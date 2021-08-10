@@ -152,7 +152,7 @@ def juegos_lista_sitio(update: Update, context: CallbackContext) -> int:
     for j in juegos:
         nombre, sitio_id = j
         texto += f"\U000027A1 [{nombre}]({constantes.sitio_URL[sitio]+str(sitio_id)})\n"
-        if cont % 100 == 0 and cont != 0:
+        if cont % 50 == 0 and cont != 0:
             context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
             texto = ""
         cont += 1
