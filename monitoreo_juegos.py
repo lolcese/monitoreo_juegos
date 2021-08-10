@@ -39,7 +39,7 @@ def baja_pagina(url):
 
 ######### Lee información de BLAM
 def lee_pagina_blam(ju_id):
-    url = "https://www.buscalibre.com.ar/boton-prueba-gp?t=tetraemosv3&envio-avion=1&codigo="+ju_id+"&sitio=amazon&version=2&condition=new"
+    url = f"https://www.buscalibre.com.ar/boton-prueba-gp?t=tetraemosv3&envio-avion=1&codigo={ju_id}&sitio=amazon&version=2&condition=new"
     text = baja_pagina(url)
     if text == "Error":
         return None
@@ -441,7 +441,7 @@ def main():
             requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_usuario}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
 
     # Exporta el archivo
-    ju = open('precios_exporta.csv', mode='w', newline='', encoding="UTF-8")
+    ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
     juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
     cursor.execute('SELECT nombre, BGG_id, id_juego, sitio, sitio_ID FROM juegos ORDER BY nombre')
@@ -465,9 +465,9 @@ def main():
             juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio])
     
     ju.close()
-    if os.path.exists('graficos/precios_exporta.csv'):
-        os.remove('graficos/precios_exporta.csv')
-    os.rename('precios_exporta.csv','graficos/precios_exporta.csv')
+    if os.path.exists(f'graficos/{constantes.exporta_file}'):
+        os.remove(f'graficos/{constantes.exporta_file}')
+    os.rename(constantes.exporta_file,f'graficos/{constantes.exporta_file}')
 
 if __name__ == '__main__':
     main()
