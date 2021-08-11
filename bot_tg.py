@@ -751,7 +751,6 @@ def main() -> PRINCIPAL:
         states={
             PRINCIPAL: [
                 CallbackQueryHandler(juegos_lista,           pattern='^juegos_lista$'),
-                CallbackQueryHandler(juegos_planilla,        pattern='^juegos_planilla$'),
                 CallbackQueryHandler(alarmas_muestra,        pattern='^alarmas_muestra$'),
                 CallbackQueryHandler(juego_ver,              pattern='^juego_ver$'),
                 CallbackQueryHandler(novedades,              pattern='^novedades$'),
@@ -767,6 +766,7 @@ def main() -> PRINCIPAL:
             ],
             LISTA_JUEGOS: [
                 CallbackQueryHandler(juegos_lista_TODO,    pattern='^juegos_lista_TODO$'),
+                CallbackQueryHandler(juegos_planilla,      pattern='^juegos_planilla$'),
                 CallbackQueryHandler(juegos_lista_sitio,   pattern='^juegos_lista_sitio_'),
                 CallbackQueryHandler(juegos_lista_ULT,     pattern='^juegos_lista_ULT$'),
                 CallbackQueryHandler(inicio,               pattern='^inicio$'),
