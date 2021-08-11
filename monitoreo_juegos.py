@@ -363,9 +363,14 @@ def main():
         alarmas = cursor.fetchall()
         for alarma in alarmas:
             id_persona, precio_al = alarma
-            texto = f'\U000023F0\U000023F0\U000023F0\n\n[{nombre}]({constantes.sitio_URL["BGG"]+str(bgg_id)}) está a *${precio:.0f}* en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
+            arch = f"{bgg_id}.png"
+            if not os.path.exists(f"graficos/{arch}"):
+                arch = "0000.png"
+            imagen = f'{constantes.sitio_URL["base"]}graficos/{arch}?f={datetime.now().isoformat()}' # Para evitar que una imagen quede en cache
+
+            texto = f'\U000023F0\U000023F0\U000023F0\n[ ]({imagen})\n[{nombre}]({constantes.sitio_URL["BGG"]+str(bgg_id)}) está a *${precio:.0f}* en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
             # updater.bot.sendMessage(chat_id = id_persona, text = texto, parse_mode = "Markdown", disable_web_page_preview = True)
-            requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
+            requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&disable_web_page_preview=False&parse_mode=Markdown&text={texto}')
 
     # Ofertas y reposiciones
     cursor.execute('SELECT id_juego, avg(precio) FROM precios WHERE fecha > datetime("now", "-15 days", "localtime") GROUP BY id_juego HAVING avg(precio) NOT NULL')
