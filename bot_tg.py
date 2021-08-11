@@ -268,9 +268,6 @@ def juego_ver(update: Update, context: CallbackContext) -> int:
 ######### Muestra un menú con los juegos que coinciden con el texto
 def juego_nom(update: Update, context: CallbackContext) -> int:
     nombre_juego = update.message.text
-    if len(nombre_juego) < 3:
-        update.message.reply_text("Escribí al menos 3 letras")    
-        return JUEGO_ELECCION
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',['%'+nombre_juego+'%'])
@@ -336,13 +333,16 @@ def juego_info(update: Update, context: CallbackContext) -> int:
 def texto_info_juego(BGG_id):
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking FROM juegos WHERE BGG_id = ?',[BGG_id])
+    cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking, dependencia_leng FROM juegos WHERE BGG_id = ?',[BGG_id])
     juegos = cursor.fetchall()
     nombre = juegos[0][1]
     ranking = juegos[0][4]
+    dependencia_leng = constantes.dependencia_len[juegos[0][5]]
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
     texto = f"*{nombre}*\n\n"
-    texto += f"[Enlace BGG]({link_BGG}) - Ranking: {ranking}\n\n"
+    texto += f"[Enlace BGG]({link_BGG})\n"
+    texto += f"Ranking: {ranking}\n"
+    texto += f"Dependencia del idioma: {dependencia_leng}\n\n"
     texto += "Los precios indicados son *finales* (incluyen Aduana y correo).\n\n"
     texto_ju = []
     precio_ju = []
