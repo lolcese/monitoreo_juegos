@@ -466,7 +466,7 @@ def main():
                 min_precio = f"${min_precio[0]:.0f}"
             else:
                 min_precio = "-"
-            juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio, dependencia_leng])
+            juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio, constantes.dependencia_len[dependencia_leng]])
     
     ju.close()
     if os.path.exists(f'graficos/{constantes.exporta_file}'):
