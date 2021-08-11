@@ -447,7 +447,7 @@ def main():
     juegos_id = cursor.fetchall()
     for j in juegos_id:
         nombre, BGG_id, id_juego, sitio, sitio_ID = j
-        cursor.execute('SELECT precio, fecha  FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
+        cursor.execute('SELECT precio, fecha FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         dat = cursor.fetchone()
         if dat:
             precio_actual, fecha = dat
@@ -455,7 +455,7 @@ def main():
                 precio = "-"
             else:
                 precio = f"${precio_actual:.0f}"
-            cursor.execute('SELECT precio FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days", "localtime") AND datetime("now", "localtime")) ORDER BY precio DESC LIMIT 1', [id_juego])
+            cursor.execute('SELECT precio FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days", "localtime") AND datetime("now", "localtime")) ORDER BY precio ASC LIMIT 1', [id_juego])
             min_precio = cursor.fetchone()
             if min_precio:
                 min_precio = f"${min_precio[0]:.0f}"
