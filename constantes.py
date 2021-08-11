@@ -29,3 +29,11 @@ variables = cursor.fetchall()
 for variable in variables:
     nom_v, valor, desc = variable
     var[nom_v] = float(valor)
+
+dependencia_len = {}
+dependencia_len[0] = "No hay datos"
+dependencia_len[1] = "Sin texto"
+dependencia_len[2] = "Poco texto"
+dependencia_len[3] = "Cantidad de texto moderada"
+dependencia_len[4] = "Alta dependencia"
+dependencia_len[5] = "Injugable en otro idioma"

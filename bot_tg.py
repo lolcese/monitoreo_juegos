@@ -262,7 +262,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
 def juego_ver(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text = 'Para ver información de un juego, escribí al menos 3 letras del mismo.', parse_mode = "Markdown")
+    query.edit_message_text(text = 'Para ver información de un juego, escribí parte del nombre.', parse_mode = "Markdown")
     return JUEGO_ELECCION
 
 ######### Muestra un menú con los juegos que coinciden con el texto
