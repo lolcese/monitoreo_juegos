@@ -62,13 +62,20 @@ else:
 cursor.execute('SELECT DISTINCT BGG_id FROM juegos')
 juegos_BGG = cursor.fetchall()
 for j in juegos_BGG:
+    votos = {}
     BGG_id = j[0]
     url = f'https://api.geekdo.com/xmlapi2/thing?id={BGG_id}&stats=1'
     req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
     data = urllib.request.urlopen(req).read()
     data = data.decode('utf-8')
     ranking = html.unescape(re.search('name=\"boardgame\".*?value=\"(.*?)\"',data)[1])
-    cursor.execute('UPDATE juegos SET ranking = ? WHERE BGG_id = ?',(ranking, BGG_id))
+    votos[1] = float(re.search('result level=\"1\".*?numvotes=\"(.*?)\"',data)[1])
+    votos[2] = float(re.search('result level=\"2\".*?numvotes=\"(.*?)\"',data)[1])
+    votos[3] = float(re.search('result level=\"3\".*?numvotes=\"(.*?)\"',data)[1])
+    votos[4] = float(re.search('result level=\"4\".*?numvotes=\"(.*?)\"',data)[1])
+    votos[5] = float(re.search('result level=\"5\".*?numvotes=\"(.*?)\"',data)[1])
+    dependencia_leng = int(max(votos, key=votos.get))
+    cursor.execute('UPDATE juegos SET ranking = ?, dependencia_leng = ? WHERE BGG_id = ?',(ranking, dependencia_leng, BGG_id))
     conn.commit()
     time.sleep(3)
 
