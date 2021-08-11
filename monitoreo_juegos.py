@@ -448,10 +448,10 @@ def main():
     ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
     juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-    cursor.execute('SELECT nombre, BGG_id, id_juego, sitio, sitio_ID FROM juegos ORDER BY nombre')
+    cursor.execute('SELECT nombre, BGG_id, id_juego, sitio, sitio_ID, dependencia_leng FROM juegos ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
-        nombre, BGG_id, id_juego, sitio, sitio_ID = j
+        nombre, BGG_id, id_juego, sitio, sitio_ID, dependencia_leng = j
         cursor.execute('SELECT precio, fecha FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
         dat = cursor.fetchone()
         if dat:
@@ -466,7 +466,7 @@ def main():
                 min_precio = f"${min_precio[0]:.0f}"
             else:
                 min_precio = "-"
-            juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio])
+            juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio, dependencia_leng])
     
     ju.close()
     if os.path.exists(f'graficos/{constantes.exporta_file}'):

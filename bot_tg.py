@@ -340,8 +340,7 @@ def texto_info_juego(BGG_id):
     dependencia_leng = constantes.dependencia_len[juegos[0][5]]
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
     texto = f"*{nombre}*\n\n"
-    texto += f"[Enlace BGG]({link_BGG})\n"
-    texto += f"Ranking: {ranking}\n"
+    texto += f"[Enlace BGG]({link_BGG}) - Ranking: {ranking}\n"
     texto += f"Dependencia del idioma: {dependencia_leng}\n\n"
     texto += "Los precios indicados son *finales* (incluyen Aduana y correo).\n\n"
     texto_ju = []
