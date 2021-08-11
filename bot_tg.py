@@ -148,7 +148,7 @@ def juegos_planilla(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
+    query.edit_message_text(text = texto, parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
 ######### Lista de juegos de un sitio
