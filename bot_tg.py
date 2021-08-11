@@ -413,7 +413,7 @@ def alarmas_agregar(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text(text = f'Agregaste una alarma para {nombre}. Si el precio es menor a ${precio}, te mando un mensaje.', parse_mode = "Markdown", reply_markup=reply_markup)
+    update.message.reply_text(text = f'Agregaste una alarma para {nombre}. Si el precio es menor a ${precio}, te voy a mandar un mensaje.', parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Pide que se ingrese el precio de la alarma a cambiar
@@ -490,6 +490,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '11/08/2021: Agregado el gráfico a la alarma.\n\n' + \
     '10/08/2021: Acceso a una planilla con todos los precios.\n\n' + \
     '08/08/2021: Monitorea Grooves.land.\n\n' + \
     '08/08/2021: Monitorea Deepdiscount.\n\n' + \
