@@ -489,6 +489,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '11/08/2021: Agregada la dependencia del idioma.\n\n' + \
     '11/08/2021: Agregado el gráfico a la alarma.\n\n' + \
     '10/08/2021: Acceso a una planilla con todos los precios.\n\n' + \
     '08/08/2021: Monitorea Grooves.land.\n\n' + \
