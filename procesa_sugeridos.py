@@ -83,6 +83,7 @@ if resp == "S":
                 peso = None
             cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha) VALUES (?,?,?,?,?,?)',["-", 0, BGG_URL, url, peso, fecha])
             conn.commit()
+    os.remove('sugeridos.txt')
 
 cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, BGG_URL, URL, peso, fecha FROM juegos_sugeridos')
 juegos = cursor.fetchall()
@@ -95,9 +96,11 @@ for j in juegos:
     print(f"bgg_url: {bgg_url}")
     print(f"sitio_url: {sitio_url}")
 
-    BGG_id = re.search('boardgamegeek\.com/boardgame.*?/(.*?)($|/)',bgg_url)[1]
-
-    print(f"BGG_id: {BGG_id}")
+    BGG_id = re.search('boardgamegeek\.com/boardgame.*?/(.*?)($|/)',bgg_url)
+    if BGG_id:
+        BGG_id = BGG_id[1]
+    else:
+        BGG_id = input("Ingrese la BGG id: ")
 
     url = f'https://api.geekdo.com/xmlapi2/thing?id={BGG_id}&stats=1'
     req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
