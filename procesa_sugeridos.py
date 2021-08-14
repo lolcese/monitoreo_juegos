@@ -179,28 +179,28 @@ for j in juegos:
         procesa()
         continue
 
-    sitio_id = re.search('365games\.co\.uk\/(.*?)$',sitio_url)
+    sitio_id = re.search('365games\.co\.uk\/(.*?)(\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "365"
         sitio_id = sitio_id[1]
         procesa()
         continue
 
-    sitio_id = re.search('shop4es\.com\/(.*?)$',sitio_url)
+    sitio_id = re.search('shop4es\.com\/(.*?)(\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "shop4es"
         sitio_id = sitio_id[1]
         procesa()
         continue
 
-    sitio_id = re.search('shop4world\.com\/(.*?)$',sitio_url)
+    sitio_id = re.search('shop4world\.com\/(.*?)(\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "shop4world"
         sitio_id = sitio_id[1]
         procesa()
         continue
 
-    sitio_id = re.search('deepdiscount\.com\/(.*?)$',sitio_url)
+    sitio_id = re.search('deepdiscount\.com\/(.*?)(\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "deep"
         sitio_id = sitio_id[1]
