@@ -73,17 +73,18 @@ conn = conecta_db()
 cursor = conn.cursor()
 fecha = datetime.now()
 
-resp = input("¿Importa sugeridos.txt? (S/N): ")
-if resp == "S":
-    with open('sugeridos.txt') as file:
-        arch = csv.reader(file, delimiter='\t')
-        for row in arch:
-            BGG_URL, url, peso = row
-            if peso == "":
-                peso = None
-            cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha) VALUES (?,?,?,?,?,?)',["-", 0, BGG_URL, url, peso, fecha])
-            conn.commit()
-    os.remove('sugeridos.txt')
+if os.path.exists('sugeridos.txt'):
+    resp = input("¿Importa sugeridos.txt? (S/N): ")
+    if resp == "S":
+        with open('sugeridos.txt') as file:
+            arch = csv.reader(file, delimiter='\t')
+            for row in arch:
+                BGG_URL, url, peso = row
+                if peso == "":
+                    peso = None
+                cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha) VALUES (?,?,?,?,?,?)',["-", 0, BGG_URL, url, peso, fecha])
+                conn.commit()
+        os.remove('sugeridos.txt')
 
 cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, BGG_URL, URL, peso, fecha FROM juegos_sugeridos')
 juegos = cursor.fetchall()
