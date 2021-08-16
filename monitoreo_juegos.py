@@ -5,6 +5,7 @@
 # y baja las páginas de cada juego, extrae el precio y el peso (si fuera necesario),
 # calcula el precio final en Argentina, grafica y manda alarmas.
 ############################################################################################
+# https://pypi.org/project/schedule/
 
 import urllib.request
 import re
@@ -445,9 +446,7 @@ def main():
             requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_usuario}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
 
     # Exporta el archivo
-    ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
-    juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
+    csv_lineas = []
     cursor.execute('SELECT nombre, BGG_id, id_juego, sitio, sitio_ID, dependencia_leng FROM juegos ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
@@ -466,8 +465,12 @@ def main():
                 min_precio = f"${min_precio[0]:.0f}"
             else:
                 min_precio = "-"
-            juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio, constantes.dependencia_len[dependencia_leng]])
+                csv_lineas.append([nombre, constantes.sitio_URL['BGG']+str(BGG_id), constantes.sitio_nom[sitio], constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio, constantes.dependencia_len[dependencia_leng]])
     
+    ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
+    juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    for c in csv_lineas:
+        juegos_exporta.writerow(c)
     ju.close()
     if os.path.exists(f'graficos/{constantes.exporta_file}'):
         os.remove(f'graficos/{constantes.exporta_file}')
