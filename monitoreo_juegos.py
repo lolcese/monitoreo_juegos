@@ -20,8 +20,9 @@ import os.path
 import path
 from telegram.ext import (Updater)
 import requests
-import csv
+import sys
 
+prioridad = str(sys.argv[1])
 os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
 updater = Updater(bot_token)
@@ -30,12 +31,12 @@ updater = Updater(bot_token)
 def baja_pagina(url):
     req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
     try:
-        data = urllib.request.urlopen(req).read()
+        data = urllib.request.urlopen(req)
     except HTTPError as e:
         return "Error"
     except URLError as e:
         return "Error"
-    return data.decode('unicode_escape', errors = 'ignore')
+    return data.read().decode(data.headers.get_content_charset())
 
 ######### Lee información de BLAM
 def lee_pagina_blam(ju_id):
@@ -285,9 +286,10 @@ def lee_pagina_grooves(ju_id):
 
 ######### Programa principal
 def main():
+    plt.ioff()
     conn = sqlite3.connect(constantes.db_file, timeout = 30, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos ORDER BY nombre')
+    cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos WHERE prioridad = ? ORDER BY nombre',[prioridad])
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
         bgg_id, nombre = jb
@@ -352,13 +354,7 @@ def main():
             fig.tight_layout(rect=[0, 0.01, 1, 0.97])
             plt.legend(leyenda)
             plt.savefig(arch,dpi=100)
-            # ida = updater.bot.sendPhoto(chat_id = token_bot.id_grupo_fotos, photo = open(arch, "rb"))
-            # id_gr = ida['photo'][0]['file_id']
-            plt.close()
-        # else:
-            # id_gr = 0
-        # cursor.execute('UPDATE juegos SET id_grafico = ? WHERE BGG_id = ?',(id_gr, BGG_id))
-        # conn.commit()
+            plt.close('all')
 
         cursor.execute('SELECT id_persona, precio_alarma FROM alarmas WHERE BGG_id = ? and precio_alarma >= ?',(bgg_id, precio))
         alarmas = cursor.fetchall()
@@ -370,111 +366,7 @@ def main():
             imagen = f'{constantes.sitio_URL["base"]}graficos/{arch}?f={datetime.now().isoformat()}' # Para evitar que una imagen quede en cache
 
             texto = f'\U000023F0\U000023F0\U000023F0\n[ ]({imagen})\n[{nombre}]({constantes.sitio_URL["BGG"]+str(bgg_id)}) está a *${precio:.0f}* en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
-            # updater.bot.sendMessage(chat_id = id_persona, text = texto, parse_mode = "Markdown", disable_web_page_preview = True)
             requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&disable_web_page_preview=False&parse_mode=Markdown&text={texto}')
-
-    # Ofertas y reposiciones
-    cursor.execute('SELECT id_juego, avg(precio) FROM precios WHERE fecha > datetime("now", "-15 days", "localtime") GROUP BY id_juego HAVING avg(precio) NOT NULL')
-    prom = cursor.fetchall()
-    texto_of = ""
-    texto_of_me = ""
-    cursor.execute('DELETE FROM ofertas WHERE fecha_inicial < datetime("now", "-15 days", "localtime")')
-    conn.commit()
-    cursor.execute('UPDATE ofertas SET activa = "No"')
-    conn.commit()
-    for p in prom:
-        id_juego, precio_prom = p
-        cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
-        precio_actual = cursor.fetchone()[0]
-        if precio_actual != None and precio_actual <= 0.9 * precio_prom:
-            cursor.execute('SELECT nombre, sitio, sitio_id,BGG_id FROM juegos WHERE id_juego = ?', [id_juego])
-            nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
-            porc = (precio_prom - precio_actual) / precio_prom * 100
-            fecha = datetime.now()
-            cursor.execute('SELECT fecha_inicial as "[timestamp]" FROM ofertas WHERE id_juego = ?',[id_juego])
-            ofertas_act = cursor.fetchone()
-            tx_al = f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n"
-            if ofertas_act == None: # Si no está en el listado de ofertas actuales
-                cursor.execute('INSERT INTO ofertas (id_juego,precio_prom,precio_actual,fecha_inicial,activa) VALUES (?,?,?,?,?)',(id_juego,precio_prom,precio_actual,fecha,"Sí"))
-                conn.commit()
-                texto_of_me += tx_al
-                texto_of += tx_al
-            else:
-                cursor.execute('UPDATE ofertas SET precio_prom = ?, precio_actual = ?, activa = "Sí" WHERE id_juego = ?',(precio_prom,precio_actual,id_juego))
-                conn.commit()
-                texto_of += tx_al
-                
-    cursor.execute('SELECT precios.* FROM precios INNER JOIN (SELECT id_juego, MAX(fecha) AS ultima_fecha FROM precios GROUP BY id_juego) AS precios_ultima_fecha ON precios_ultima_fecha.ultima_fecha = precios.fecha AND precios_ultima_fecha.id_juego = precios.id_juego INNER JOIN (SELECT id_juego, MAX(fecha) AS ultima_fecha_con_stock FROM precios WHERE precio IS NOT NULL GROUP BY id_juego) AS precios_ultima_fecha_con_stock ON precios_ultima_fecha_con_stock.ultima_fecha_con_stock = precios_ultima_fecha.ultima_fecha AND precios_ultima_fecha_con_stock.id_juego = precios_ultima_fecha.id_juego WHERE precios.id_juego NOT IN (SELECT id_juego FROM precios WHERE precio IS NOT NULL AND fecha BETWEEN datetime("now", "-30 days", "localtime") AND datetime("now", "-2 days", "localtime") GROUP BY id_juego)') # Gracias a Juan Leal
-    stock = cursor.fetchall()
-    texto_st = ""
-    texto_st_me = ""
-    cursor.execute('DELETE FROM restock WHERE fecha_inicial < datetime("now", "-3 days", "localtime")')
-    conn.commit()
-    cursor.execute('UPDATE restock SET activa = "No"')
-    conn.commit()
-    for s in stock:
-        id_juego = s[1]
-        cursor.execute('SELECT nombre, BGG_id, sitio, sitio_id, fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?',[id_juego])
-        nombre, bgg_id, sitio, sitio_id, fecha_ag = cursor.fetchone()
-        cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
-        precio_actual = cursor.fetchall()[0][0]
-        fecha = datetime.now()
-        tx_of = f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
-        if (fecha - fecha_ag).days >= 7:
-            cursor.execute('SELECT * FROM restock WHERE id_juego = ?',[id_juego])
-            restock_act = cursor.fetchone()
-            if restock_act == None: # Si no está en el listado de restock actuales
-                cursor.execute('INSERT INTO restock (id_juego, fecha_inicial, activa) VALUES (?,?,?)',(id_juego, fecha, "Sí"))
-                conn.commit()
-                texto_st_me += tx_of
-                texto_st += tx_of
-            else:
-                cursor.execute('UPDATE restock SET activa = "Sí" WHERE id_juego = ?',[id_juego])
-                conn.commit()
-                texto_st += tx_of
-
-    if texto_of_me != "":
-        texto_of_me = "*Juegos en oferta*\n\n" + texto_of_me
-    if texto_st_me != "":
-        texto_st_me = "*Juegos en reposición*\n\n" + texto_st_me
-    if texto_of_me != "" or texto_st_me != "":
-        cursor.execute('SELECT id_usuario FROM alarmas_ofertas')
-        mensa = cursor.fetchall()
-        texto = f"\U0001F381\U0001F381\U0001F381\n\n{texto_of_me}{texto_st_me}\n\U0001F381\U0001F381\U0001F381"
-        for m in mensa:
-            id_usuario = m[0]
-            requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_usuario}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
-
-    # Exporta el archivo
-    csv_lineas = []
-    cursor.execute('SELECT nombre, BGG_id, id_juego, sitio, sitio_ID, dependencia_leng FROM juegos ORDER BY nombre')
-    juegos_id = cursor.fetchall()
-    for j in juegos_id:
-        nombre, BGG_id, id_juego, sitio, sitio_ID, dependencia_leng = j
-        cursor.execute('SELECT precio, fecha FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
-        dat = cursor.fetchone()
-        if dat:
-            precio_actual, fecha = dat
-            if precio_actual == None:
-                precio = "-"
-            else:
-                precio = f"${precio_actual:.0f}"
-            cursor.execute('SELECT precio FROM precios WHERE id_juego = ? AND precio NOT NULL AND (fecha BETWEEN datetime("now", "-15 days", "localtime") AND datetime("now", "localtime")) ORDER BY precio ASC LIMIT 1', [id_juego])
-            min_precio = cursor.fetchone()
-            if min_precio:
-                min_precio = f"${min_precio[0]:.0f}"
-            else:
-                min_precio = "-"
-            csv_lineas.append([nombre, constantes.sitio_URL['BGG']+str(BGG_id), constantes.sitio_nom[sitio], constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio, constantes.dependencia_len[dependencia_leng]])
-    
-    ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
-    juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    for c in csv_lineas:
-        juegos_exporta.writerow(c)
-    ju.close()
-    if os.path.exists(f'graficos/{constantes.exporta_file}'):
-        os.remove(f'graficos/{constantes.exporta_file}')
-    os.rename(constantes.exporta_file,f'graficos/{constantes.exporta_file}')
 
 if __name__ == '__main__':
     main()
