@@ -127,7 +127,7 @@ for j in juegos:
     print("Ranking: ",ranking)
     if peso != None:
         print("Peso: ",peso)
-    elif re.search('deepdiscount\.com\/(.*?)$',sitio_url):
+    elif re.search('deepdiscount\.com\/(.*?)(\?|&|$)',sitio_url):
         print("** No tiene peso y es de deepdiscount **")
 
     cursor.execute ('SELECT sitio,sitio_ID FROM juegos WHERE BGG_id = ?',[int(BGG_id)])
@@ -201,7 +201,7 @@ for j in juegos:
         procesa()
         continue
 
-    sitio_id = re.search('deepdiscount\.com\/(.*?)(\?|&)',sitio_url)
+    sitio_id = re.search('deepdiscount\.com\/(.*?)(\?|&|$)',sitio_url)
     if sitio_id:
         sitio_nom = "deep"
         sitio_id = sitio_id[1]
