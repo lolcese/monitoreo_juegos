@@ -18,7 +18,6 @@ for a in alarmas:
         prioridad = "1"
     elif num < 50:
         prioridad = "2"
-    print (prioridad, bgg_id)  
     cursor.execute('UPDATE juegos SET prioridad = ? WHERE BGG_id = ?', (prioridad, bgg_id))
     conn.commit()
     num += 1
