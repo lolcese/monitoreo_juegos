@@ -22,5 +22,5 @@ for a in alarmas:
     conn.commit()
     num += 1
 
-cursor.execute('UPDATE juegos SET prioridad = 1 WHERE BGG_id = 250458')
+cursor.execute('UPDATE juegos SET prioridad = 1 WHERE BGG_id = 250458 OR BGG_id = 251247')
 conn.commit()
