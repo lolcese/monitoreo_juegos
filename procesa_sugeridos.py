@@ -173,7 +173,7 @@ for j in juegos:
         procesa()
         continue
 
-    sitio_id = re.search('tiendamia\.com(\/|.)ar\/e-product\?ebay=(.*?)(\s|$|\/|\?|&)',sitio_url)
+    sitio_id = re.search('tiendamia\.com(\/|.)ar\/e-?producto?\?ebay=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "TMEB"
         sitio_id = sitio_id[2]
