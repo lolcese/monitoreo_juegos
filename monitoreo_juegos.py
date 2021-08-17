@@ -12,6 +12,8 @@ import re
 from datetime import datetime
 from urllib.error import URLError, HTTPError
 import sqlite3
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.ticker import FormatStrFormatter
