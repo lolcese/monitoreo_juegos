@@ -9,7 +9,7 @@ conn = sqlite3.connect(constantes.db_file, timeout = 30, detect_types=sqlite3.PA
 cursor = conn.cursor()
 cursor.execute('UPDATE juegos SET prioridad = "3"')
 conn.commit()
-cursor.execute('SELECT BGG_id FROM alarmas GROUP BY BGG_id ORDER BY count() DESC LIMIT 50')
+cursor.execute('SELECT BGG_id FROM alarmas GROUP BY BGG_id ORDER BY count() DESC LIMIT 70')
 alarmas = cursor.fetchall()
 num = 0
 for a in alarmas:
