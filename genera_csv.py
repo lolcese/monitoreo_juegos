@@ -6,24 +6,13 @@
 # calcula el precio final en Argentina, grafica y manda alarmas.
 ############################################################################################
 
-import urllib.request
-import re
-from datetime import datetime
-from urllib.error import URLError, HTTPError
 import sqlite3
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from matplotlib.ticker import FormatStrFormatter
 import constantes
 import os.path
 import path
-from telegram.ext import (Updater)
-import requests
 import csv
 
 os.chdir(path.actual)
-bot_token = os.environ.get('bot_token')
-updater = Updater(bot_token)
 
 ######### Programa principal
 def main():
