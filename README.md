@@ -9,7 +9,7 @@
 - ofertas_reposiciones.py
 - genera_csv.py
 
-### Cada 180 minutos
+### Cada 120 minutos
 - monitoreo_juegos.py 3
 
 ### Cada 1 día
@@ -23,7 +23,6 @@
 
 Corto plazo
 -----------
-- Poner botón de inicio en la búsqueda de juego
 - Mudar a Heroku
 - Emprolijar la borrada de mensajes
 

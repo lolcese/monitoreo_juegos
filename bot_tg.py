@@ -61,7 +61,7 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     usuario = query.from_user
-    usuario_id = update.callback_query.from_user.id   
+    usuario_id = update.callback_query.from_user.id
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -81,11 +81,12 @@ def menu():
         [InlineKeyboardButton("\U0000270F Sugerir juego a monitorear", callback_data='sugerir_juego_datos')],
         [InlineKeyboardButton("\U0001F4AC Comentarios y sugerencias", callback_data='comentarios_texto')],
         [InlineKeyboardButton("\U00002757 Novedades", callback_data='novedades')],
+        [InlineKeyboardButton("\U00002615 Invitame a un cafecito", callback_data='cafecito')],
         [InlineKeyboardButton("\U00002753 Ayuda", callback_data='ayuda')]
     ]
     return keyboard
 
-######### Listas de juegos 
+######### Listas de juegos
 def juegos_lista(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
@@ -115,7 +116,7 @@ def juegos_lista(update: Update, context: CallbackContext) -> int:
 def juegos_lista_TODO(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id   
+    usuario_id = update.callback_query.from_user.id
     texto = "*Todos los juegos monitoreados*\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
@@ -155,7 +156,7 @@ def juegos_planilla(update: Update, context: CallbackContext) -> int:
 def juegos_lista_sitio(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id   
+    usuario_id = update.callback_query.from_user.id
     sitio = query.data.split("_")[3]
     texto = f"*Juegos monitoreados en {constantes.sitio_nom[sitio]}*\n\n"
     conn = conecta_db()
@@ -182,7 +183,7 @@ def juegos_lista_sitio(update: Update, context: CallbackContext) -> int:
 def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id   
+    usuario_id = update.callback_query.from_user.id
     texto = f"*Últimos 30 juegos agregados*\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
@@ -208,7 +209,7 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
 def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     user = update.callback_query.from_user
-    usuario_id = update.callback_query.from_user.id  
+    usuario_id = update.callback_query.from_user.id
     query.answer()
     texto = ""
     conn = conecta_db()
@@ -262,7 +263,11 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
 def juego_ver(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text = 'Para ver información de un juego, escribí parte del nombre.', parse_mode = "Markdown")
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = 'Para ver información de un juego, escribí parte del nombre.', parse_mode = "Markdown", reply_markup=reply_markup)
     return JUEGO_ELECCION
 
 ######### Muestra un menú con los juegos que coinciden con el texto
@@ -273,7 +278,7 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',['%'+nombre_juego+'%'])
     juegos = cursor.fetchall()
     if len(juegos) > 10:
-        update.message.reply_text("Demasiados resultados, escribí más letras")    
+        update.message.reply_text("Demasiados resultados, escribí más letras")
         return JUEGO_ELECCION
     if len(juegos) == 0:
         update.message.reply_text("Ningún resultado, escribí otra cosa. Recordá que podés sugerir juegos a monitorear.")
@@ -292,7 +297,7 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
 def juego_info(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id   
+    usuario_id = update.callback_query.from_user.id
     BGG_id = query.data.split("_")[1]
     conn = conecta_db()
     cursor = conn.cursor()
@@ -392,9 +397,13 @@ def texto_info_juego(BGG_id):
 def alarmas_agregar_precio(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id   
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    usuario_id = update.callback_query.from_user.id
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    context.bot.send_message(chat_id=update.effective_chat.id, text = "Escribí el precio *final* (incluyendo Aduana y correo), para que si cuesta menos que eso *en cualquier sitio* te llegue la alarma.", parse_mode = "Markdown")
+    context.bot.send_message(chat_id=update.effective_chat.id, text = "Escribí el precio *final* (incluyendo Aduana y correo), para que si cuesta menos que eso *en cualquier sitio* te llegue la alarma.", parse_mode = "Markdown", reply_markup=reply_markup)
     return ALARMAS_NUEVA_PRECIO
 
 ######### Guarda la alarma agregada
@@ -419,9 +428,13 @@ def alarmas_agregar(update: Update, context: CallbackContext) -> int:
 def alarmas_cambiar_precio(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id   
+    usuario_id = update.callback_query.from_user.id
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    context.bot.send_message(chat_id=update.effective_chat.id, text = "Escribí el precio *final* (incluyendo Aduana y correo), para que si cuesta menos que eso *en cualquier sitio* te llegue la alarma.", parse_mode = "Markdown")
+    context.bot.send_message(chat_id=update.effective_chat.id, text = "Escribí el precio *final* (incluyendo Aduana y correo), para que si cuesta menos que eso *en cualquier sitio* te llegue la alarma.", parse_mode = "Markdown", reply_markup=reply_markup)
     return ALARMAS_CAMBIAR_PRECIO
 
 ######### Cambia una alarma
@@ -448,7 +461,7 @@ def alarmas_cambiar(update: Update, context: CallbackContext) -> int:
 def alarmas_borrar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id 
+    usuario_id = update.callback_query.from_user.id
     BGG_id = context.chat_data["BGG_id"]
     nombre = context.chat_data["BGG_nombre"]
     conn = conecta_db()
@@ -469,7 +482,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Ayuda*\n\n' + \
-    '@Monitor\_Juegos\_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios  (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land) con una frecuencia de 30 minutos. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
+    '@Monitor\_Juegos\_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios  (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
     'Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio *FINAL EN ARGENTINA* de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.\n\n' + \
     'Para ver la información de un juego en particular, elegí la opción _Ver un juego y poner/scar alarmas_ y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio, o borrarla si lo querés.\n\n' + \
     'Si no está el juego que te interesa, o si encontraste otro lugar donde lo venden, elegí en el menú la opción _Sugerir juego a monitorear_. Este agregado *no* es automático.\n\n' + \
@@ -489,12 +502,11 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '17/08/2021: Agregada la posibilidad de aportes a través de [un cafecito](https://cafecito.app/lolcese).\n\n' + \
     '17/08/2021: Cambia la frecuencia de bajada dependiendo de la prioridad.\n\n' + \
     '11/08/2021: Agregada la dependencia del idioma.\n\n' + \
     '11/08/2021: Agregado el gráfico a la alarma.\n\n' + \
-    '10/08/2021: Acceso a una planilla con todos los precios.\n\n' + \
-    '08/08/2021: Monitorea Grooves.land.\n\n' + \
-    '08/08/2021: Monitorea Deepdiscount.\n\n'
+    '10/08/2021: Acceso a una planilla con todos los precios.\n\n'
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -582,7 +594,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     dat = update.message.text.split(",")
 
     if len(dat) < 2:
-        update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el ID de BGG, el URL del juego.")    
+        update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el ID de BGG, el URL del juego.")
         return JUEGO_AGREGAR
 
     url = dat[1]
@@ -592,7 +604,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         return JUEGO_AGREGAR
 
     if len(dat) == 2 and re.search("deepdiscount", url):
-        update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")    
+        update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")
         return JUEGO_AGREGAR
 
     if len(dat) == 2:
@@ -621,7 +633,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 def ofertas_restock(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id 
+    usuario_id = update.callback_query.from_user.id
 
     conn = conecta_db()
     cursor = conn.cursor()
@@ -677,7 +689,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
 def mensaje_oferta_agregar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id 
+    usuario_id = update.callback_query.from_user.id
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('INSERT INTO alarmas_ofertas (id_usuario) VALUES (?)',[usuario_id])
@@ -693,7 +705,7 @@ def mensaje_oferta_agregar(update: Update, context: CallbackContext) -> int:
 def mensaje_oferta_borrar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario_id = update.callback_query.from_user.id 
+    usuario_id = update.callback_query.from_user.id
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('DELETE FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
@@ -703,6 +715,18 @@ def mensaje_oferta_borrar(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = f"No vas a recibir más mensajes cuando cualquier juego esté de oferta o reposición", parse_mode = "Markdown", reply_markup=reply_markup)
+    return PRINCIPAL
+
+######### Invitame a un cafecito
+def cafecito(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    texto = "*Invitame a un cafecito*\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. De todos modos, hay costos de electricidad para mantenerlo funcionando y muchas horas de trabajo encima, así que dejo abierta la posibilidad de quien quiera y pueda haga un aporte monetario.\n\n*No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.*\n\n\U00002615 [Invitame a un cafecito](https://cafecito.app/lolcese) \U00002615"
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = texto, parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
 ######### Responde directamente a las consultas inline
@@ -745,7 +769,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 def main() -> PRINCIPAL:
     updater = Updater(bot_token)
     dispatcher = updater.dispatcher
-    
+
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
         states={
@@ -763,6 +787,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(estadistica,            pattern='^estadistica$'),
                 CallbackQueryHandler(mensaje_oferta_agregar, pattern='^mensaje_oferta_agregar$'),
                 CallbackQueryHandler(mensaje_oferta_borrar,  pattern='^mensaje_oferta_borrar$'),
+                CallbackQueryHandler(cafecito,               pattern='^cafecito$'),
             ],
             LISTA_JUEGOS: [
                 CallbackQueryHandler(juegos_lista_TODO,    pattern='^juegos_lista_TODO$'),
@@ -772,17 +797,20 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(inicio,               pattern='^inicio$'),
             ],
             JUEGO_ELECCION: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, juego_nom)
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, juego_nom),
+                CallbackQueryHandler(inicio,               pattern='^inicio$'),
             ],
             JUEGO: [
                 CallbackQueryHandler(juego_info,        pattern='^BGG_'),
                 CallbackQueryHandler(inicio,            pattern='^inicio$'),
             ],
             ALARMAS_NUEVA_PRECIO: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, alarmas_agregar)
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, alarmas_agregar),
+                CallbackQueryHandler(inicio,               pattern='^inicio$'),
             ],
             ALARMAS_CAMBIAR_PRECIO: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, alarmas_cambiar)
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, alarmas_cambiar),
+                CallbackQueryHandler(inicio,               pattern='^inicio$'),
             ],
             ALARMAS: [
                 CallbackQueryHandler(alarmas_agregar_precio,   pattern='^alarmas_agregar_precio$'),
