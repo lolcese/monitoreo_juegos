@@ -30,6 +30,7 @@ for j in juegos_id:
             min_precio = "-"
         csv_lineas.append([nombre, constantes.sitio_URL['BGG']+str(BGG_id), constantes.sitio_nom[sitio], constantes.sitio_URL[sitio]+sitio_ID, precio, fecha, min_precio, constantes.dependencia_len[dependencia_leng]])
 
+cursor.close()
 ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
 juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 for c in csv_lineas:
