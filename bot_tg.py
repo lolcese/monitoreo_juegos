@@ -359,7 +359,7 @@ def texto_info_juego(BGG_id):
         ult_precio = cursor.fetchone()
         if ult_precio == None:
             precio_ju.append(999999)
-            texto_ju.append(f"[{nombre_sitio}]({url_sitio}): Está en la base de datos del bot pero todavía no intenté buscar el precio, en los próximos 60 minutos debería aparecer.\n")
+            texto_ju.append(f"[{nombre_sitio}]({url_sitio}): Está en la base de datos del bot pero todavía no intenté buscar el precio, dentro de las próxim1s 2 horas debería aparecer.\n")
         else:
             ult_precio = ult_precio[0]
             if ult_precio == None:
