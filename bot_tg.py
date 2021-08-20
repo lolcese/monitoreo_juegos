@@ -502,6 +502,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '20/08/2021: Muestra las ofertas ordenadas por descuento.\n\n' + \
     '17/08/2021: Agregada la posibilidad de aportes a través de [un cafecito](https://cafecito.app/lolcese).\n\n' + \
     '17/08/2021: Cambia la frecuencia de bajada dependiendo de la prioridad.\n\n' + \
     '11/08/2021: Agregada la dependencia del idioma.\n\n' + \
@@ -641,13 +642,35 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     texto_of = ""
     cursor.execute('SELECT id_juego,precio_prom,precio_actual FROM ofertas WHERE activa = "Sí"')
     ofertas = cursor.fetchall()
+    ofertas_10 = []
+    ofertas_15 = []
+    ofertas_20 = []
+    porc_10 = []
+    porc_15 = []
+    porc_20 = []
     for o in ofertas:
         cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id FROM juegos WHERE id_juego = ?',[o[0]])
         nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
         precio_prom = o[1]
         precio_actual = o[2]
         porc = (precio_prom - precio_actual) / precio_prom * 100
-        texto_of += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n"
+        if porc >= 20:
+            ofertas_20.append(f"\U0001F381 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
+            porc_20.append(porc)
+        elif porc >= 15:
+            ofertas_15.append(f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
+            porc_15.append(porc)
+        elif porc >= 10:
+            ofertas_10.append(f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
+            porc_10.append(porc)
+
+    if ofertas_20:
+        texto_of += "*Juegos con descuento >20%*\n" + "".join([x for _, x in sorted(zip(porc_20,ofertas_20), reverse=True)])+"\n"
+    if ofertas_15:
+        texto_of += "*Juegos con descuento >15%*\n" + "".join([x for _, x in sorted(zip(porc_15,ofertas_15), reverse=True)])+"\n"
+    if ofertas_10:
+        texto_of += "*Juegos con descuento >10%*\n" + "".join([x for _, x in sorted(zip(porc_10,ofertas_10), reverse=True)])+"\n"
+
     if texto_of == "":
         texto_of = "No hay ningún juego en oferta\n"
 
