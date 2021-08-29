@@ -668,6 +668,9 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_of += "*Juegos con descuento >20%*\n" + "".join([x for _, x in sorted(zip(porc_20,ofertas_20), reverse=True)])+"\n"
     if ofertas_15:
         texto_of += "*Juegos con descuento >15%*\n" + "".join([x for _, x in sorted(zip(porc_15,ofertas_15), reverse=True)])+"\n"
+    context.bot.send_message(chat_id = usuario_id, text = f"*Juegos en oferta*\n\n{texto_of}", parse_mode = "Markdown", disable_web_page_preview = True)
+
+    texto_of = ""
     if ofertas_10:
         texto_of += "*Juegos con descuento >10%*\n" + "".join([x for _, x in sorted(zip(porc_10,ofertas_10), reverse=True)])+"\n"
 
@@ -705,7 +708,8 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = f"*Juegos en oferta*\n\n{texto_of}\n*Juegos en reposición*\n\n{texto_st}\n{texto_al}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
+    context.bot.send_message(chat_id = usuario_id, text = f"{texto_of}\n*Juegos en reposición*\n\n{texto_st}\n{texto_al}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
+
     return PRINCIPAL
 
 ######### Agregar al aviso de ofertas

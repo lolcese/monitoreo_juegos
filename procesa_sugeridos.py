@@ -41,12 +41,12 @@ def procesa():
             send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
             response = requests.get(send_text)
     else:
-        conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
-        conn.commit()
         if usuario_id != 0:
             razon = input("Razón: ")
             send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste *NO* fue agregado al monitoreo.\n{razon}\nMuchas gracias.'
             response = requests.get(send_text)
+        conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
+        conn.commit()
     return
 
 def ninguno():
@@ -145,7 +145,6 @@ for j in juegos:
         procesa()
         continue
 
-    sitio_id = re.search('buscalibre\.com\.ar\/(.*?)(\s|$|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "BLIB"
         sitio_id = sitio_id[1]
