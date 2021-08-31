@@ -503,6 +503,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '31/08/2021: Agregado el monitoreo de Tiendamia Macys.\n\n' + \
     '20/08/2021: Muestra las ofertas ordenadas por descuento.\n\n' + \
     '17/08/2021: Agregada la posibilidad de aportes a través de [un cafecito](https://cafecito.app/lolcese).\n\n' + \
     '17/08/2021: Cambia la frecuencia de bajada dependiendo de la prioridad.\n\n' + \
