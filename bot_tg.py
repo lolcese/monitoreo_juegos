@@ -98,6 +98,7 @@ def juegos_lista(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U0001F4D8 Tiendamia Amazon", callback_data='juegos_lista_sitio_TMAM')],
         [InlineKeyboardButton("\U0001F4D8 Tiendamia Walmart", callback_data='juegos_lista_sitio_TMWM')],
         [InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_lista_sitio_TMEB')],
+        [InlineKeyboardButton("\U0001F4D8 Tiendamia Macy", callback_data='juegos_lista_sitio_TMMA')],
         [InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_lista_sitio_BOOK')],
         [InlineKeyboardButton("\U0001F4D2 365games", callback_data='juegos_lista_sitio_365')],
         [InlineKeyboardButton("\U0001F4D2 shop4es", callback_data='juegos_lista_sitio_shop4es')],

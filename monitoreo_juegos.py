@@ -136,6 +136,29 @@ def lee_pagina_tmeb(ju_id):
     pr_tm = precio_tm(peso,precio_ar)
     return pr_tm
 
+######### Lee información de TMMA
+def lee_pagina_tmma(ju_id):
+    url = "https://tiendamia.com/ar/product/mcy/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
+
+    peso = re.search('"weight":(\d*\.?\d*)',text)
+    if not peso:
+        return None
+    peso = float(peso[1])
+
+    precio_ar = re.search('"local":(.*?),"cur":"ARS"',text)
+    stock = 'product\.setVariations.*?"available":false,' in text
+    if not precio_ar or stock == 1:
+        return None
+    precio_ar = float(re.sub("\.", "", precio_ar[1]))
+    if precio_ar < 100:
+        return None
+
+    pr_tm = precio_tm(peso,precio_ar)
+    return pr_tm
+
 ######### Calcula precio para TM
 def precio_tm(peso,precio_ar):
     costo_peso = peso * constantes.var['precio_kg']
@@ -311,6 +334,8 @@ def main():
                 precio = lee_pagina_tmwm(sitio_ID) 
             elif sitio == "TMEB":
                 precio = lee_pagina_tmeb(sitio_ID) 
+            elif sitio == "TMMA":
+                precio = lee_pagina_tmma(sitio_ID) 
             elif sitio == "BOOK":
                 precio = lee_pagina_book(sitio_ID)
             elif sitio == "365":

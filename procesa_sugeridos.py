@@ -180,6 +180,13 @@ for j in juegos:
         procesa()
         continue
 
+    sitio_id = re.search('tiendamia\.com(\/|.)ar\/product\/mcy\/(.*?)(\s|$|\/|\?|&)',sitio_url)
+    if sitio_id:
+        sitio_nom = "TMMA"
+        sitio_id = sitio_id[2]
+        procesa()
+        continue
+
     sitio_id = re.search('365games\.co\.uk\/(.*?)(\?|&|$)',sitio_url)
     if sitio_id:
         sitio_nom = "365"
