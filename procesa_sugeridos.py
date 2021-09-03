@@ -145,7 +145,7 @@ for j in juegos:
         procesa()
         continue
 
-    sitio_id = re.search('buscalibre\.com\.ar\/(.*?)(\s|$|\/|\?|&)',sitio_url)
+    sitio_id = re.search('buscalibre\.com\.ar\/(.*?)(\s|$|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "BLIB"
         sitio_id = sitio_id[1]
