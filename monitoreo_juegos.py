@@ -38,7 +38,13 @@ def baja_pagina(url):
         return "Error"
     except URLError as e:
         return "Error"
-    return data.read().decode(data.headers.get_content_charset())
+
+    if data.headers.get_content_charset() is None:
+        encoding='utf-8'
+    else:
+        encoding = data.headers.get_content_charset()
+
+    return data.read().decode(encoding, errors='ignore')
 
 ######### Lee información de BLAM
 def lee_pagina_blam(ju_id):
