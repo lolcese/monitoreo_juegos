@@ -217,19 +217,22 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     cursor = conn.cursor()
     cursor.execute('SELECT BGG_id, precio_alarma FROM alarmas WHERE id_persona = ?',[usuario_id])
     alarmas = cursor.fetchall()
-    alar = []
-    for a in alarmas:
-        cursor.execute('SELECT DISTINCT nombre FROM juegos WHERE BGG_id = ?',[a[0]])
-        juegos = cursor.fetchone()
-        alar.append("\U000027A1 {0} (${1:.0f})\n".format(juegos[0],a[1]))
-    alar.sort()
-    cont = 0
-    for a in alar:
-        texto += a
-        if cont % 100 == 0 and cont != 0:
-            context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
-            texto = ""
-        cont += 1
+    if alarmas == None:
+        texto = "No tenés alarmas"
+    else:
+        alar = []
+        for a in alarmas:
+            cursor.execute('SELECT DISTINCT nombre FROM juegos WHERE BGG_id = ?',[a[0]])
+            juegos = cursor.fetchone()
+            alar.append("\U000027A1 {0} (${1:.0f})\n".format(juegos[0],a[1]))
+        alar.sort()
+        cont = 0
+        for a in alar:
+            texto += a
+            if cont % 100 == 0 and cont != 0:
+                context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
+                texto = ""
+            cont += 1
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
