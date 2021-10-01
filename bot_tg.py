@@ -229,7 +229,7 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
         cont = 0
         for a in alar:
             texto += a
-            if cont % 80 == 0 and cont != 0:
+            if cont % 100 == 0 and cont != 0:
                 context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
                 texto = ""
             cont += 1

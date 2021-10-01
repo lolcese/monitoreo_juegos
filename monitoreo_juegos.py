@@ -102,14 +102,13 @@ def lee_pagina_tmwm(ju_id):
     text = baja_pagina(url)
     if text == "Error":
         return None
-
-    peso = re.search('<span id="weight_producto_ajax">(.*?)</span>',text)
+    peso = re.search('Peso con empaque: <span>(.*?)kg</span>',text)
     if not peso or peso[1] == "":
         return None
     peso = float(peso[1])
 
-    precio_ar = re.search('<span id="finalpricecountry_producto_ajax">AR\$ (.*)</span>',text)
-    stock = '"availability": "https://schema.org/OutOfStock"' in text
+    precio_ar = re.search('<span class="currency_price">AR\$ (.*)</span>',text)
+    stock = 'Disponibilidad: <span>Fuera de stock</span>' in text
     if not precio_ar or stock == 1:
         return None
     precio_ar = float(re.sub("\.", "", precio_ar[1]))
