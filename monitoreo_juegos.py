@@ -205,7 +205,7 @@ def lee_pagina_365(ju_id):
     if text == "Error":
         return None
 
-    precio_lb = re.search('\"price\": \"(.*?)"',text)
+    precio_lb = re.search('<span class=\"uk-text-large uk-text-primary\">&pound(.*?)<',text)
     if not precio_lb:
         return None
     precio_ar = (float(precio_lb[1]) + constantes.var['envio_365']) * constantes.var['libra'] * constantes.var['impuesto_compras_exterior']
@@ -225,7 +225,7 @@ def lee_pagina_shop4es(ju_id):
     if text == "Error":
         return None
 
-    precio_eu = re.search('\"price\": \"(.*?)"',text)
+    precio_eu = re.search('<span class=\"uk-text-large uk-text-primary\">(.*?)&euro',text)
     if not precio_eu:
         return None
     precio_ar = (float(re.sub("\,", ".", precio_eu[1])) + constantes.var['envio_shop4es']) * constantes.var['euro'] * constantes.var['impuesto_compras_exterior']
@@ -245,7 +245,7 @@ def lee_pagina_shop4world(ju_id):
     if text == "Error":
         return None
 
-    precio_lb = re.search('\"price\": \"(.*?)"',text)
+    precio_lb = re.search('span class=\"uk-text-large uk-text-primary\">&pound;(.*?)<',text)
     if not precio_lb:
         return None
     precio_ar = (float(precio_lb[1]) + constantes.var['envio_shop4world']) * constantes.var['libra'] * constantes.var['impuesto_compras_exterior']
