@@ -412,12 +412,12 @@ def alarmas_agregar_precio(update: Update, context: CallbackContext) -> int:
 
 ######### Guarda la alarma agregada
 def alarmas_agregar(update: Update, context: CallbackContext) -> int:
-    precio = float(re.sub("\D", "", update.message.text))
+    precio = re.sub("\D", "", update.message.text)
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if (precio <= 0):
+    if (precio <= 0 or precio == ""):
         update.message.reply_text(text = 'El precio de la alarma debe ser un número positivo.', parse_mode = "Markdown", reply_markup=reply_markup)
         return PRINCIPAL
     usuario_id = update.message.from_user.id
