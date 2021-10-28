@@ -205,7 +205,7 @@ def lee_pagina_365(ju_id):
     if text == "Error":
         return None
 
-    precio_lb = re.search('<span class=\"uk-text-large uk-text-primary\">&pound(.*?)<',text)
+    precio_lb = re.search('<span class=\"uk-text-large uk-text-primary\">&pound;(.*?)<',text)
     if not precio_lb:
         return None
     precio_ar = (float(precio_lb[1]) + constantes.var['envio_365']) * constantes.var['libra'] * constantes.var['impuesto_compras_exterior']
