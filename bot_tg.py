@@ -407,12 +407,19 @@ def alarmas_agregar_precio(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     usuario_id = update.callback_query.from_user.id
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    context.bot.send_message(chat_id=update.effective_chat.id, text = "Escribí el precio *final* (incluyendo Aduana y correo), para que si cuesta menos que eso *en cualquier sitio* te llegue la alarma.", parse_mode = "Markdown", reply_markup=reply_markup)
+    context.bot.send_message(chat_id=update.effective_chat.id, text = "Escribí el precio *final* (incluyendo Aduana y correo), para que si cuesta menos que eso *en cualquier sitio*, te llegue la alarma.", parse_mode = "Markdown", reply_markup=reply_markup)
     return ALARMAS_NUEVA_PRECIO
 
 ######### Guarda la alarma agregada
 def alarmas_agregar(update: Update, context: CallbackContext) -> int:
-    precio = re.sub("\D", "", update.message.text)
+    precio = float(re.sub("\D", "", update.message.text))
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    if (precio < 0):
+        update.message.reply_text(text = 'El precio de la alarma debe ser mayor a $0.', parse_mode = "Markdown", reply_markup=reply_markup)
+        return PRINCIPAL
     usuario_id = update.message.from_user.id
     BGG_id = context.chat_data["BGG_id"]
     nombre = context.chat_data["BGG_nombre"]
@@ -421,10 +428,6 @@ def alarmas_agregar(update: Update, context: CallbackContext) -> int:
     fecha = datetime.now()
     cursor.execute('INSERT INTO alarmas (id_persona, BGG_id, precio_alarma, fecha, sitio) VALUES (?,?,?,?,?)',[usuario_id,BGG_id,precio,fecha,"TODO"])
     conn.commit()
-    keyboard = [
-        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(text = f'Agregaste una alarma para {nombre}. Si el precio es menor a ${precio}, te voy a mandar un mensaje.', parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
