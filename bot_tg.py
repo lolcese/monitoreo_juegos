@@ -722,7 +722,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     return PRINCIPAL
 
 def dividir_texto(texto):
-    n = 150
+    n = 100
     lineas = texto.split("\n")
     for i in range(0, len(lineas), n):
         yield lineas[i:i + n]
