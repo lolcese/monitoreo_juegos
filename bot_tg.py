@@ -716,9 +716,16 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    context.bot.send_message(chat_id = usuario_id, text = f"{texto_of}\n*Juegos en reposición*\n\n{texto_st}\n{texto_al}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
-
+    texto_mensaje_div = dividir_texto(f"{texto_of}\n*Juegos en reposición*\n\n{texto_st}\n{texto_al}")
+    for t in texto_mensaje_div:
+        context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
+
+def dividir_texto(texto):
+    n = 150
+    lineas = texto.split("\n")
+    for i in range(0, len(lineas), n):
+        yield lineas[i:i + n]
 
 ######### Agregar al aviso de ofertas
 def mensaje_oferta_agregar(update: Update, context: CallbackContext) -> int:
