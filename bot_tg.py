@@ -417,7 +417,7 @@ def alarmas_agregar(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if (precio <= 0 or precio == ""):
+    if (precio <= 0):
         update.message.reply_text(text = 'El precio de la alarma debe ser un número positivo.', parse_mode = "Markdown", reply_markup=reply_markup)
         return PRINCIPAL
     usuario_id = update.message.from_user.id
