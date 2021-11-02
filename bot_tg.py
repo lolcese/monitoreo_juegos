@@ -520,7 +520,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
-    '28/10/2021: Corregido error en el monitoreo de 365 y shop4*.\n\n' + \
+    '28/10/2021: Corregido error en el monitoreo de 365 y shop4es/shopworld.\n\n' + \
     '31/08/2021: Agregado el monitoreo de Tiendamia Macys.\n\n' + \
     '20/08/2021: Muestra las ofertas ordenadas por descuento.\n\n' + \
     '17/08/2021: Agregada la posibilidad de aportes a través de [un cafecito](https://cafecito.app/lolcese).\n\n' + \
@@ -709,9 +709,6 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     if texto_st == "":
         texto_st = "No hay ningún juego en reposición\n"
 
-    # keyboard = [
-    #     [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-    # ]
     cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
     alarmas_ofertas = cursor.fetchone()
     if alarmas_ofertas == None:
