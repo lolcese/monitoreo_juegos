@@ -718,7 +718,8 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto_mensaje_div = dividir_texto(f"{texto_of}\n*Juegos en reposición*\n\n{texto_st}\n{texto_al}")
     for t in texto_mensaje_div:
-        context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
+        context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "Markdown", disable_web_page_preview = True)
+    context.bot.send_message(chat_id = usuario_id, text = "", reply_markup=reply_markup)
     return PRINCIPAL
 
 def dividir_texto(texto):
