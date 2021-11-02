@@ -658,7 +658,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    texto_of = ""
+    texto_of = "*Juegos en oferta*\n\n"
     cursor.execute('SELECT id_juego,precio_prom,precio_actual FROM ofertas WHERE activa = "Sí"')
     ofertas = cursor.fetchall()
     ofertas_10 = []
@@ -687,9 +687,9 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_of += "*Juegos con descuento >20%*\n" + "".join([x for _, x in sorted(zip(porc_20,ofertas_20), reverse=True)])+"\n"
     if ofertas_15:
         texto_of += "*Juegos con descuento >15%*\n" + "".join([x for _, x in sorted(zip(porc_15,ofertas_15), reverse=True)])+"\n"
-    context.bot.send_message(chat_id = usuario_id, text = f"*Juegos en oferta*\n\n{texto_of}", parse_mode = "Markdown", disable_web_page_preview = True)
+    # context.bot.send_message(chat_id = usuario_id, text = f"*Juegos en oferta*\n\n{texto_of}", parse_mode = "Markdown", disable_web_page_preview = True)
 
-    texto_of = ""
+    # texto_of = ""
     if ofertas_10:
         texto_of += "*Juegos con descuento >10%*\n" + "".join([x for _, x in sorted(zip(porc_10,ofertas_10), reverse=True)])+"\n"
 
@@ -709,9 +709,9 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     if texto_st == "":
         texto_st = "No hay ningún juego en reposición\n"
 
-    keyboard = [
-        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-    ]
+    # keyboard = [
+    #     [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    # ]
     cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
     alarmas_ofertas = cursor.fetchone()
     if alarmas_ofertas == None:
@@ -727,18 +727,18 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    texto_mensaje_div = dividir_texto(f"{texto_of}\n*Juegos en reposición*\n\n{texto_st}\n{texto_al}")
+    texto_mensaje_div = dividir_texto(f"{texto_of}\n*Juegos en reposición*\n\n{texto_st}\n")
     for t in texto_mensaje_div:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "Markdown", disable_web_page_preview = True)
-    context.bot.send_message(chat_id = usuario_id, text = "", reply_markup=reply_markup)
+    context.bot.send_message(chat_id = usuario_id, text = f"{texto_al}", parse_mode = "Markdown", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
 def dividir_texto(texto):
-    n = 100
+    n = 25
     lineas = texto.split("\n")
     bloque = []
     for i in range(0, len(lineas), n):
-        bloque.append("".join(lineas[i:i + n]))
+        bloque.append("\n".join(lineas[i:i + n]))
     return bloque
 
 ######### Agregar al aviso de ofertas
