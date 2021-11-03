@@ -354,8 +354,11 @@ def main():
             elif sitio == "grooves":
                 precio = lee_pagina_grooves(sitio_ID)
 
-            cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',(id_juego, precio, fecha)) 
-            conn.commit()
+            try:
+                cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',(id_juego, precio, fecha)) 
+                conn.commit()
+            except sqlite3.Error as er:
+                print("Error con ", id_juego, precio, fecha)
 
             cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND fecha > datetime("now", "-15 days", "localtime")',[id_juego])
             datos = cursor.fetchall()
