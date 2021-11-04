@@ -11,7 +11,7 @@ os.chdir(path.actual)
 db_file = 'monitoreo_juegos.db'
 exporta_file = 'precios_exporta.csv'
 
-conn = sqlite3.connect(db_file, timeout = 30, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+conn = sqlite3.connect(db_file, timeout = 5= 3, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 cursor = conn.cursor()
 
 sitio_nom = {}
