@@ -25,7 +25,7 @@ PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, A
 
 ######### Conecta con la base de datos
 def conecta_db():
-    conn = sqlite3.connect(constantes.db_file, timeout = 5= 30, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    conn = sqlite3.connect(constantes.db_file, timeout = 5, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     return conn
 
 ######### Cuando se elige la opción Inicio
