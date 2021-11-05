@@ -9,3 +9,4 @@ consultas.sqlite
 bot_token.txt
 sugeridos.txt
 crontab.txt
+analizachats.py
