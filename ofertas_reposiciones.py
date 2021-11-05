@@ -10,7 +10,7 @@ import requests
 os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
 
-conn = sqlite3.connect(constantes.db_file, timeout = 5, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+conn = sqlite3.connect(constantes.db_file, timeout = 10, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 cursor = conn.cursor()
 cursor.execute('SELECT id_juego, avg(precio) FROM precios WHERE fecha > datetime("now", "-15 days", "localtime") GROUP BY id_juego HAVING avg(precio) NOT NULL')
 prom = cursor.fetchall()

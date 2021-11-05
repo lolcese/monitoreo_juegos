@@ -7,7 +7,7 @@ import sqlite3
 import csv
 
 os.chdir(path.actual)
-conn = sqlite3.connect(constantes.db_file, timeout = 5, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+conn = sqlite3.connect(constantes.db_file, timeout = 10, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 cursor = conn.cursor()
 csv_lineas = []
 cursor.execute('SELECT nombre, BGG_id, id_juego, sitio, sitio_ID, dependencia_leng FROM juegos ORDER BY nombre')

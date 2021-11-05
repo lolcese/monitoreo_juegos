@@ -317,7 +317,7 @@ def lee_pagina_grooves(ju_id):
 ######### Programa principal
 def main():
     plt.ioff()
-    conn = sqlite3.connect(constantes.db_file, timeout = 5, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    conn = sqlite3.connect(constantes.db_file, timeout = 10, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = conn.cursor()
     cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos WHERE prioridad = ? ORDER BY nombre',[prioridad])
     juegos_BGG = cursor.fetchall()
@@ -358,7 +358,7 @@ def main():
                 cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',(id_juego, precio, fecha)) 
                 conn.commit()
             except sqlite3.Error as er:
-                print("Error con ", id_juego, precio, fecha)
+                print("Error de SQLite con ", id_juego, precio, fecha)
 
             cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND fecha > datetime("now", "-15 days", "localtime")',[id_juego])
             datos = cursor.fetchall()

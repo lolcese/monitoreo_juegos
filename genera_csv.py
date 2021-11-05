@@ -16,7 +16,7 @@ os.chdir(path.actual)
 
 ######### Programa principal
 def main():
-    conn = sqlite3.connect(constantes.db_file, timeout = 5, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    conn = sqlite3.connect(constantes.db_file, timeout = 10, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = conn.cursor()
 
     # Exporta el archivo
