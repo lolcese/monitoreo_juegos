@@ -12,6 +12,7 @@ db_file = 'monitoreo_juegos.db'
 exporta_file = 'precios_exporta.csv'
 
 conn = sqlite3.connect(db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+conn.execute("PRAGMA journal_mode=WAL")
 cursor = conn.cursor()
 
 sitio_nom = {}

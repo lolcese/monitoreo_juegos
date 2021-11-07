@@ -13,6 +13,7 @@ os.chdir(path.actual)
 fecha = datetime.now()
 
 conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+conn.execute("PRAGMA journal_mode=WAL")
 cursor = conn.cursor()
 
 ######### Baja ranking de BGG

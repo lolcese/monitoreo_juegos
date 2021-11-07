@@ -17,6 +17,7 @@ bot_token = os.environ.get('bot_token')
 ######### Conecta con la base de datos
 def conecta_db():
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    conn.execute("PRAGMA journal_mode=WAL")
     return conn
 
 def procesa():
