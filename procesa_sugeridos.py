@@ -78,7 +78,7 @@ if os.path.exists('sugeridos.txt'):
     resp = input("¿Importa sugeridos.txt? (S/N): ")
     if resp == "S":
         with open('sugeridos.txt') as file:
-            arch = csv.reader(file, delimiter='\t')
+            arch = csv.reader(file, delimiter=',')
             for row in arch:
                 BGG_URL, url, peso = row
                 if peso == "":
