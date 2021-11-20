@@ -747,15 +747,15 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     elif (alarmas_ofertas[1] == 3):
         texto_al = "Cuando haya una oferta o reposición, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
         keyboard = [
-            [InlineKeyboardButton("\U00002212 No mandarme más para ofertas", callback_data='mensaje_oferta_2')],
-            [InlineKeyboardButton("\U00002212 No mandarme más para reposiciones", callback_data='mensaje_oferta_1')],
-            [InlineKeyboardButton("\U00002212 No mandarme más para ambas", callback_data='mensaje_oferta_0')],
+            [InlineKeyboardButton("\U00002796 No mandarme más para ofertas", callback_data='mensaje_oferta_2')],
+            [InlineKeyboardButton("\U00002796 No mandarme más para reposiciones", callback_data='mensaje_oferta_1')],
+            [InlineKeyboardButton("\U00002796 No mandarme más para ambas", callback_data='mensaje_oferta_0')],
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
     elif (alarmas_ofertas[1] == 1):
         texto_al = "Cuando haya una oferta, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
         keyboard = [
-            [InlineKeyboardButton("\U00002212 No mandarme más para ofertas", callback_data='mensaje_oferta_0')],
+            [InlineKeyboardButton("\U00002796 No mandarme más para ofertas", callback_data='mensaje_oferta_0')],
             [InlineKeyboardButton("\U00002795 Mandarme también para reposiciones", callback_data='mensaje_oferta_3')],
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
@@ -763,7 +763,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_al = "Cuando haya una reposición, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
         keyboard = [
             [InlineKeyboardButton("\U00002795 Mandarme también para ofertas", callback_data='mensaje_oferta_3')],
-            [InlineKeyboardButton("\U00002212 No mandarme más para reposiciones", callback_data='mensaje_oferta_0')],
+            [InlineKeyboardButton("\U00002796 No mandarme más para reposiciones", callback_data='mensaje_oferta_0')],
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
     reply_markup = InlineKeyboardMarkup(keyboard)
