@@ -547,6 +547,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '20/11/2021: Separación de alarmas por ofertas y reposiciones.\n\n' + \
     '20/11/2021: Botón para volver a una búsqueda.\n\n' + \
     '20/11/2021: Muestra el botón de inicio después de búsquedas.\n\n' + \
     '20/11/2021: Posibilidad de continuar viendo más que los 30 juegos más baratos.\n\n' + \
