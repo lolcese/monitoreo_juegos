@@ -85,7 +85,7 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
 def menu():
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Lista de juegos monitoreados", callback_data='juegos_lista')],
-        [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos')],
+        [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos_0')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego y poner/borrar alarmas", callback_data='juego_ver')],
         [InlineKeyboardButton("\U000023F0 Ver mis alarmas", callback_data='alarmas_muestra')],
         [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
@@ -256,11 +256,12 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
 def juegos_baratos(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
+    num = int(query.data.split("_")[2])
 
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT id_juego, min(precio) FROM precios WHERE (precio NOT NULL AND fecha > datetime("now", "-1 days", "localtime")) group by id_juego ORDER BY min(precio) LIMIT 30')
+    cursor.execute('SELECT id_juego, min(precio) FROM precios WHERE (precio NOT NULL AND fecha > datetime("now", "-1 days", "localtime")) group by id_juego ORDER BY min(precio) LIMIT 30 OFFSET ?',[num])
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
@@ -269,6 +270,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
         nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
         barato += f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio:.0f}\n"
     keyboard = [
+        [InlineKeyboardButton("\U00002795 Más juegos", callback_data='juegos_baratos_'+str(num+30))],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -521,13 +523,13 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = '*Novedades*\n\n' + \
+    '20/11/2021: Posibilidad de continuar viendo más que los 30 juegos más baratos.\n\n' + \
+    '07/11/2021: Modificado el acceso a la base de datos para aumentar la velocidad de las consultas.\n\n' + \
     '28/10/2021: Corregido error en el monitoreo de 365 y shop4es/shopworld.\n\n' + \
     '31/08/2021: Agregado el monitoreo de Tiendamia Macys.\n\n' + \
     '20/08/2021: Muestra las ofertas ordenadas por descuento.\n\n' + \
     '17/08/2021: Agregada la posibilidad de aportes a través de [un cafecito](https://cafecito.app/lolcese).\n\n' + \
-    '17/08/2021: Cambia la frecuencia de bajada dependiendo de la prioridad.\n\n' + \
-    '11/08/2021: Agregada la dependencia del idioma.\n\n' + \
-    '11/08/2021: Agregado el gráfico a la alarma.\n\n'
+    '17/08/2021: Cambia la frecuencia de bajada dependiendo de la prioridad.\n\n'
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -832,7 +834,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(alarmas_muestra,        pattern='^alarmas_muestra$'),
                 CallbackQueryHandler(juego_ver,              pattern='^juego_ver$'),
                 CallbackQueryHandler(novedades,              pattern='^novedades$'),
-                CallbackQueryHandler(juegos_baratos,         pattern='^juegos_baratos$'),
+                CallbackQueryHandler(juegos_baratos,         pattern='^juegos_baratos_'),
                 CallbackQueryHandler(ofertas_restock,        pattern='^ofertas_restock$'),
                 CallbackQueryHandler(sugerir_juego_datos,    pattern='^sugerir_juego_datos$'),
                 CallbackQueryHandler(comentarios_texto,      pattern='^comentarios_texto$'),

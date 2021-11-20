@@ -2,7 +2,7 @@ __pycache__/
 .vscode/
 graficos/
 extras/
-monitoreo_juegos.db
+monitoreo_juegos.db*
 *.sh
 desarollo.md
 consultas.sqlite
@@ -10,3 +10,4 @@ bot_token.txt
 sugeridos.txt
 crontab.txt
 analizachats.py
+test.*

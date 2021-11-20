@@ -79,7 +79,7 @@ if texto_st_me != "":
 if texto_of_me != "" or texto_st_me != "":
     cursor.execute('SELECT id_usuario FROM alarmas_ofertas')
     mensa = cursor.fetchall()
-    texto = f"\U0001F381\U0001F381\U0001F381\n\n{texto_of_me}{texto_st_me}\n\U0001F381\U0001F381\U0001F381"
+    texto = f"\U0001F381\U0001F381\U0001F381\n\n{texto_of_me}\n{texto_st_me}\n\U0001F381\U0001F381\U0001F381"
     for m in mensa:
         id_usuario = m[0]
         requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_usuario}&disable_web_page_preview=True&parse_mode=Markdown&text={texto}')
