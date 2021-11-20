@@ -749,7 +749,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         keyboard = [
             [InlineKeyboardButton("\U00002796 No mandarme más para ofertas", callback_data='mensaje_oferta_2')],
             [InlineKeyboardButton("\U00002796 No mandarme más para reposiciones", callback_data='mensaje_oferta_1')],
-            [InlineKeyboardButton("\U00002796 No mandarme más para ambas", callback_data='mensaje_oferta_0')],
+            [InlineKeyboardButton("\U00002796 No mandarme más ninguna", callback_data='mensaje_oferta_0')],
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
     elif (alarmas_ofertas[1] == 1):
