@@ -157,7 +157,7 @@ def juegos_planilla(update: Update, context: CallbackContext) -> int:
     texto = '*Planilla con todos los juegos*\n\n' + \
     'Si querés ver una planilla con todos los precios de los juegos, andá ' + \
     '[acá](https://docs.google.com/spreadsheets/d/1eh5ckbIl5td0B8aRScxkIZU62MfeMplXxGdlsAWPoVA/edit?usp=sharing)\n' + \
-    'Tené en cuenta que, si bien se actualiza automáticamente, puede tener un desfasaje de hasta 2 horas con los precios reales.'
+    'Tené en cuenta que, si bien se actualiza automáticamente, puede tener un desfasaje de 2-3 horas con los precios reales (y 1 hora con los precions que muestra el bot).'
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]

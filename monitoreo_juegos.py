@@ -208,13 +208,14 @@ def lee_pagina_365(ju_id):
     precio_lb = re.search('<span class=\"uk-text-large uk-text-primary\">&pound;(.*?)<',text)
     if not precio_lb:
         return None
-    precio_ar = (float(precio_lb[1]) + constantes.var['envio_365']) * constantes.var['libra'] * constantes.var['impuesto_compras_exterior']
+    precio_pesos = (float(precio_lb[1]) + constantes.var['envio_365']) * constantes.var['libra'] 
+    precio_dol = precio_pesos / constantes.var['dolar']
 
-    precio_dol = precio_ar / constantes.var['dolar']
-    imp = 0
+    imp_aduana = 0
     if precio_dol > 50:
-        imp = (precio_dol - 50) * 0.5
-    precio_final_ad = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
+        imp_aduana = (precio_dol - 50) * 0.5
+
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
 
     return precio_final_ad
 
@@ -228,13 +229,14 @@ def lee_pagina_shop4es(ju_id):
     precio_eu = re.search('<span class=\"uk-text-large uk-text-primary\">(.*?)&euro',text)
     if not precio_eu:
         return None
-    precio_ar = (float(re.sub("\,", ".", precio_eu[1])) + constantes.var['envio_shop4es']) * constantes.var['euro'] * constantes.var['impuesto_compras_exterior']
+    precio_pesos = (float(precio_eu[1]) + constantes.var['envio_shop4es']) * constantes.var['euro'] 
+    precio_dol = precio_pesos / constantes.var['dolar']
 
-    precio_dol = precio_ar / constantes.var['dolar']
-    imp = 0
+    imp_aduana = 0
     if precio_dol > 50:
-        imp = (precio_dol - 50) * 0.5
-    precio_final_ad = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
+        imp_aduana = (precio_dol - 50) * 0.5
+
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
 
     return precio_final_ad
 
@@ -245,16 +247,17 @@ def lee_pagina_shop4world(ju_id):
     if text == "Error":
         return None
 
-    precio_lb = re.search('span class=\"uk-text-large uk-text-primary\">&pound;(.*?)<',text)
+    precio_lb = re.search('<span class=\"uk-text-large uk-text-primary\">&pound;(.*?)<',text)
     if not precio_lb:
         return None
-    precio_ar = (float(precio_lb[1]) + constantes.var['envio_shop4world']) * constantes.var['libra'] * constantes.var['impuesto_compras_exterior']
+    precio_pesos = (float(precio_lb[1]) + constantes.var['envio_365']) * constantes.var['libra'] 
+    precio_dol = precio_pesos / constantes.var['dolar']
 
-    precio_dol = precio_ar / constantes.var['dolar']
-    imp = 0
+    imp_aduana = 0
     if precio_dol > 50:
-        imp = (precio_dol - 50) * 0.5
-    precio_final_ad = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
+        imp_aduana = (precio_dol - 50) * 0.5
+
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
 
     return precio_final_ad
 
@@ -278,17 +281,16 @@ def lee_pagina_deep(ju_id, peso):
 
     precio_dol = float(precio_dol[1]) + costo_envio
 
+    imp_aduana = 0
     if precio_dol > 50:
-        imp = (precio_dol - 50) * 0.5
-    else:
-        imp = 0
+        imp_aduana = (precio_dol - 50) * 0.5
 
     precio_ar = precio_dol * constantes.var['dolar'] * constantes.var['impuesto_compras_exterior']
-    precio_final_ad = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
+    precio_final_ad = precio_ar + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
 
     return precio_final_ad
 
-######### Lee información de deepdiscount
+######### Lee información de grooves
 def lee_pagina_grooves(ju_id):
     url = "https://www.grooves.land/"+ju_id
     text = baja_pagina(url)
@@ -302,15 +304,14 @@ def lee_pagina_grooves(ju_id):
     precio_eur = float(re.sub(",", ".", precio_eur[1]))
     if precio_eur < constantes.var['limite_envio_gratis_grooves']:
         precio_eur += constantes.var['envio_grooves']
-    precio_dol = precio_eur * constantes.var['euro'] / constantes.var['dolar']
-    precio_ar = precio_dol * constantes.var['dolar'] * constantes.var['impuesto_compras_exterior']
+    precio_pesos = precio_eur * constantes.var['euro'] 
+    precio_dol = precio_pesos / constantes.var['dolar']
 
+    imp_aduana = 0
     if precio_dol > 50:
-        imp = (precio_dol - 50) * 0.5
-    else:
-        imp = 0
+        imp_aduana = (precio_dol - 50) * 0.5
 
-    precio_final_ad = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
 
     return precio_final_ad
 
