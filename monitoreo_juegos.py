@@ -229,8 +229,7 @@ def lee_pagina_shop4es(ju_id):
     precio_eu = re.search('<span class=\"uk-text-large uk-text-primary\">(.*?)&euro',text)
     if not precio_eu:
         return None
-    precio_eu = float(re.sub(",", ".", precio_eu[1]))
-    precio_pesos = (float(precio_eu[1]) + constantes.var['envio_shop4es']) * constantes.var['euro'] 
+    precio_pesos = (float(re.sub("\,", ".", precio_eu[1])) + constantes.var['envio_shop4es']) * constantes.var['euro'] 
     precio_dol = precio_pesos / constantes.var['dolar']
 
     imp_aduana = 0
