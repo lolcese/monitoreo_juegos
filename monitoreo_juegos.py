@@ -250,7 +250,7 @@ def lee_pagina_shop4world(ju_id):
     precio_lb = re.search('<span class=\"uk-text-large uk-text-primary\">&pound;(.*?)<',text)
     if not precio_lb:
         return None
-    precio_pesos = (float(precio_lb[1]) + constantes.var['envio_365']) * constantes.var['libra'] 
+    precio_pesos = (float(precio_lb[1]) + constantes.var['envio_shop4world']) * constantes.var['libra'] 
     precio_dol = precio_pesos / constantes.var['dolar']
 
     imp_aduana = 0
