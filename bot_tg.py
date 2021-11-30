@@ -786,7 +786,7 @@ def dividir_texto(texto):
 def mensaje_oferta(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    tipo_of = query.data.split("_")[2]
+    tipo_of = int(query.data.split("_")[2])
     usuario_id = update.callback_query.from_user.id
 
     if (tipo_of == 0):
