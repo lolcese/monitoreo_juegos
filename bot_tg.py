@@ -103,7 +103,7 @@ def juegos_lista(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     keyboard = [
-        [InlineKeyboardButton("\U0001F4DA Todos", callback_data='juegos_lista_TODO')],
+#        [InlineKeyboardButton("\U0001F4DA Todos", callback_data='juegos_lista_TODO')],
         [InlineKeyboardButton("\U0001F4DC Planilla con todos los juegos", callback_data='juegos_planilla')],
         [InlineKeyboardButton("\U0001F4D5 Buscalibre", callback_data='juegos_lista_sitio_BLIB')],
         [InlineKeyboardButton("\U0001F4D5 Buscalibre Amazon", callback_data='juegos_lista_sitio_BLAM')],
@@ -126,29 +126,29 @@ def juegos_lista(update: Update, context: CallbackContext) -> int:
     return LISTA_JUEGOS
 
 ######### Lista de todos los juegos
-def juegos_lista_TODO(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    query.answer()
-    usuario_id = update.callback_query.from_user.id
-    texto = "*Todos los juegos monitoreados*\n\n"
-    conn = conecta_db()
-    cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre FROM juegos ORDER BY nombre')
-    juegos = cursor.fetchall()
-    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    cont = 0
-    for j in juegos:
-        texto += f"\U000027A1 {j[0]}\n"
-        if cont % 150 == 0 and cont != 0:
-            context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
-            texto = ""
-        cont += 1
-    keyboard = [
-        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
-    return PRINCIPAL
+# def juegos_lista_TODO(update: Update, context: CallbackContext) -> int:
+#     query = update.callback_query
+#     query.answer()
+#     usuario_id = update.callback_query.from_user.id
+#     texto = "*Todos los juegos monitoreados*\n\n"
+#     conn = conecta_db()
+#     cursor = conn.cursor()
+#     cursor.execute('SELECT DISTINCT nombre FROM juegos ORDER BY nombre')
+#     juegos = cursor.fetchall()
+#     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
+#     cont = 0
+#     for j in juegos:
+#         texto += f"\U000027A1 {j[0]}\n"
+#         if cont % 150 == 0 and cont != 0:
+#             context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown")
+#             texto = ""
+#         cont += 1
+#     keyboard = [
+#         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+#     ]
+#     reply_markup = InlineKeyboardMarkup(keyboard)
+#     context.bot.send_message(chat_id = usuario_id, text = texto, parse_mode = "Markdown", reply_markup=reply_markup)
+#     return PRINCIPAL
 
 ######### Link a la planilla con todos los juegos
 def juegos_planilla(update: Update, context: CallbackContext) -> int:
