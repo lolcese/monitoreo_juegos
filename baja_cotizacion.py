@@ -58,4 +58,26 @@ else:
     cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "euro"',(euro, fecha))
     conn.commit()
 
+######### Baja datos de costos de TM
+url = 'https://tiendamia.com/ar/tarifas'
+
+# req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'},ssl_verify=True) 
+# data = urllib.request.urlopen(req).read()
+# data = data.decode('utf-8')
+
+# datos1 = re.search('el shipping internacional tiene un costo de <span class="price dollar_price">\nU\$S (.*?) .*?\n.*?\nAR\$ (.*?) ',data)
+# env_int_dol = datos1[1]
+# env_int_int = datos1[2]
+
+# cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "env_int_dol"',(env_int_dol, fecha))
+# cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "tasa_tm"',(env_int_int, fecha))
+# conn.commit()
+
+# datos2 = re.search('<td class="indent">0.1</td>\n.*?\n.*?\n.*?\n.*?\n.*?\nAR\$ (.*?) ',data)
+# tasa_kg = datos2[1]
+# tasa_kg = float(re.sub("\.", "", tasa_kg))
+
+# cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "precio_kg"',(dolar, fecha))
+# conn.commit()
+
 cursor.close()

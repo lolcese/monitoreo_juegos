@@ -878,7 +878,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(cafecito,               pattern='^cafecito$'),
             ],
             LISTA_JUEGOS: [
-                CallbackQueryHandler(juegos_lista_TODO,    pattern='^juegos_lista_TODO$'),
+                # CallbackQueryHandler(juegos_lista_TODO,    pattern='^juegos_lista_TODO$'),
                 CallbackQueryHandler(juegos_planilla,      pattern='^juegos_planilla$'),
                 CallbackQueryHandler(juegos_lista_sitio,   pattern='^juegos_lista_sitio_'),
                 CallbackQueryHandler(juegos_lista_ULT,     pattern='^juegos_lista_ULT$'),
