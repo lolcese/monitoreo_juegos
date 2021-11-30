@@ -737,7 +737,6 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
 
     cursor.execute('SELECT id_usuario, tipo_alarma FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
     alarmas_ofertas = cursor.fetchone()
-    print("----",alarmas_ofertas[1],"++++++")
     if alarmas_ofertas == None:
         texto_al = "Cuando haya una oferta o reposición, te puedo mandar un mensaje (solo la primera vez que esté en ese estado).\n"
         keyboard = [
