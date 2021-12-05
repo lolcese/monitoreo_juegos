@@ -108,5 +108,6 @@ precio_us = float(precio_us[1])
 dolar_tm = precio_ar / precio_us
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "dolar_tm"',(dolar_tm, fecha))
+conn.commit()
 
 cursor.close()
