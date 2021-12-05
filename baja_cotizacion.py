@@ -8,6 +8,8 @@ import constantes
 import path
 from datetime import datetime
 import requests
+from requests import get
+from urllib.error import URLError, HTTPError
 
 os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
@@ -18,6 +20,22 @@ fecha = datetime.now()
 conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 conn.execute("PRAGMA journal_mode=WAL")
 cursor = conn.cursor()
+
+def baja_pagina(url):
+    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
+    try:
+        data = urllib.request.urlopen(req)
+    except HTTPError as e:
+        return "Error"
+    except URLError as e:
+        return "Error"
+
+    if data.headers.get_content_charset() is None:
+        encoding='utf-8'
+    else:
+        encoding = data.headers.get_content_charset()
+
+    return data.read().decode(encoding, errors='ignore')
 
 ######### Baja cotización de monedas de BNA
 url = 'https://www.bna.com.ar/Personas'
@@ -60,24 +78,35 @@ else:
 
 ######### Baja datos de costos de TM
 url = 'https://tiendamia.com/ar/tarifas'
+response = get(url)
+data = response.content.decode('utf-8', errors='ignore')
 
-# req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'},ssl_verify=True) 
-# data = urllib.request.urlopen(req).read()
-# data = data.decode('utf-8')
+datos1 = re.search('el shipping internacional tiene un costo de <span class="price dollar_price">\nU\$S (.*?) .*?\n.*?\nAR\$ (.*?) ',data)
+env_int_dol = datos1[1]
+env_int_int = datos1[2]
 
-# datos1 = re.search('el shipping internacional tiene un costo de <span class="price dollar_price">\nU\$S (.*?) .*?\n.*?\nAR\$ (.*?) ',data)
-# env_int_dol = datos1[1]
-# env_int_int = datos1[2]
+cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "env_int_dol"',(env_int_dol, fecha))
+cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "tasa_tm"',(env_int_int, fecha))
+conn.commit()
 
-# cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "env_int_dol"',(env_int_dol, fecha))
-# cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "tasa_tm"',(env_int_int, fecha))
-# conn.commit()
+datos2 = re.search('<td class="indent">0.1</td>\n.*?\n.*?\n.*?\n.*?\n.*?\nAR\$ (.*?) ',data)
+tasa_kg = datos2[1]
+tasa_kg = float(re.sub("\.", "", tasa_kg))
 
-# datos2 = re.search('<td class="indent">0.1</td>\n.*?\n.*?\n.*?\n.*?\n.*?\nAR\$ (.*?) ',data)
-# tasa_kg = datos2[1]
-# tasa_kg = float(re.sub("\.", "", tasa_kg))
+cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "precio_kg"',(tasa_kg, fecha))
+conn.commit()
 
-# cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "precio_kg"',(dolar, fecha))
-# conn.commit()
+######### Baja dólar TM
+id_prod_ref = "B000FZX93K"
+url = "https://tiendamia.com/ar/producto?amz="+id_prod_ref
+response = get(url)
+text = response.content.decode('utf-8', errors='ignore')
+precio_ar = re.search('ecomm_totalvalue: (.*?),',text)
+precio_ar = float(re.sub("\.", "", precio_ar[1]))
+precio_us = re.search('data-price=\"U\$S (.*?)\"',text)
+precio_us = float(precio_us[1])
+dolar_tm = precio_ar / precio_us
+
+cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "dolar_tm"',(dolar_tm, fecha))
 
 cursor.close()
