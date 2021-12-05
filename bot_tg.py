@@ -39,11 +39,7 @@ def start(update: Update, context: CallbackContext) -> int:
     conn.commit()
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if (usuario.first_name == ""):
-        nom = "Anónimo"
-    else:
-        nom = usuario.first_name
-    update.message.reply_text(f'Hola {nom}, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start. ¿Qué querés hacer?', parse_mode = "Markdown", reply_markup=reply_markup)
+    update.message.reply_text(f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start. ¿Qué querés hacer?', parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Cuando se elige la opción Inicio (es diferente al anterior porque viene de una query)
@@ -58,11 +54,7 @@ def inicio(update: Update, context: CallbackContext) -> int:
     conn.commit()
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if (usuario.first_name == ""):
-        nom = "Anónimo"
-    else:
-        nom = usuario.first_name
-    query.edit_message_text(f'Hola {nom}, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start. ¿Qué querés hacer?', parse_mode = "Markdown", reply_markup=reply_markup)
+    query.edit_message_text(f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start. ¿Qué querés hacer?', parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Cuando se elige la opción Inicio (es diferente al anterior porque tiene que borrar el mensaje)
@@ -73,12 +65,8 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
     usuario_id = update.callback_query.from_user.id
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if (usuario.first_name == ""):
-        nom = "Anónimo"
-    else:
-        nom = usuario.first_name
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    context.bot.send_message(chat_id=update.effective_chat.id, text = f'Hola {nom}, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start. ¿Qué querés hacer?', parse_mode = "Markdown", reply_markup=reply_markup)
+    context.bot.send_message(chat_id=update.effective_chat.id, text = f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start. ¿Qué querés hacer?', parse_mode = "Markdown", reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Menú principal
