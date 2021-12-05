@@ -53,12 +53,12 @@ cursor.execute('UPDATE restock SET activa = "No"')
 conn.commit()
 for s in stock:
     id_juego = s[1]
+    print (id_juego)
     cursor.execute('SELECT nombre, BGG_id, sitio, sitio_id, fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?',[id_juego])
     nombre, bgg_id, sitio, sitio_id, fecha_ag = cursor.fetchone()
     cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
     precio_actual = cursor.fetchall()[0][0]
     fecha = datetime.now()
-    print (nombre,bgg_id,precio_actual)
     tx_of = f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
     if (fecha - fecha_ag).days >= 7:
         cursor.execute('SELECT * FROM restock WHERE id_juego = ?',[id_juego])
