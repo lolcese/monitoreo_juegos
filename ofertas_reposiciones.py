@@ -53,7 +53,6 @@ cursor.execute('UPDATE restock SET activa = "No"')
 conn.commit()
 for s in stock:
     id_juego = s[1]
-    print (id_juego)
     cursor.execute('SELECT nombre, BGG_id, sitio, sitio_id, fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?',[id_juego])
     nombre, bgg_id, sitio, sitio_id, fecha_ag = cursor.fetchone()
     cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
