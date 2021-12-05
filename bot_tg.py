@@ -797,8 +797,14 @@ def mensaje_oferta(update: Update, context: CallbackContext) -> int:
     else:
         conn = conecta_db()
         cursor = conn.cursor()
-        cursor.execute('UPDATE alarmas_ofertas SET tipo_alarma = ? WHERE id_usuario = ?',[tipo_of, usuario_id])
-        conn.commit()
+        cursor.execute('SELECT id_usuario, tipo_alarma FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
+        alarmas_ofertas = cursor.fetchone()
+        if alarmas_ofertas == None:
+            cursor.execute('INSERT INTO alarmas_ofertas (tipo_alarma, id_usuario)',[tipo_of, usuario_id])
+            conn.commit()
+        else:
+            cursor.execute('UPDATE alarmas_ofertas SET tipo_alarma = ? WHERE id_usuario = ?',[tipo_of, usuario_id])
+            conn.commit()
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
