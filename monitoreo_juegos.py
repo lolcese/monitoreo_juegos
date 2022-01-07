@@ -44,7 +44,11 @@ def baja_pagina(url):
     else:
         encoding = data.headers.get_content_charset()
 
-    return data.read().decode(encoding, errors='ignore')
+    try: 
+        pag = data.read().decode(encoding, errors='ignore')
+    except:
+        return "Error"
+    return pag
 
 ######### Lee información de BLAM
 def lee_pagina_blam(ju_id):
