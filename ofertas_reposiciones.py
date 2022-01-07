@@ -57,20 +57,21 @@ for s in stock:
     nombre, bgg_id, sitio, sitio_id, fecha_ag = cursor.fetchone()
     cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
     precio_actual = cursor.fetchall()[0][0]
-    fecha = datetime.now()
-    tx_of = f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
-    if (fecha - fecha_ag).days >= 7:
-        cursor.execute('SELECT * FROM restock WHERE id_juego = ?',[id_juego])
-        restock_act = cursor.fetchone()
-        if restock_act == None: # Si no está en el listado de restock actuales
-            cursor.execute('INSERT INTO restock (id_juego, fecha_inicial, activa) VALUES (?,?,?)',(id_juego, fecha, "Sí"))
-            conn.commit()
-            texto_st_me += tx_of
-            texto_st += tx_of
-        else:
-            cursor.execute('UPDATE restock SET activa = "Sí" WHERE id_juego = ?',[id_juego])
-            conn.commit()
-            texto_st += tx_of
+    if (precio_actual > 0):
+        fecha = datetime.now()
+        tx_of = f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
+        if (fecha - fecha_ag).days >= 7:
+            cursor.execute('SELECT * FROM restock WHERE id_juego = ?',[id_juego])
+            restock_act = cursor.fetchone()
+            if restock_act == None: # Si no está en el listado de restock actuales
+                cursor.execute('INSERT INTO restock (id_juego, fecha_inicial, activa) VALUES (?,?,?)',(id_juego, fecha, "Sí"))
+                conn.commit()
+                texto_st_me += tx_of
+                texto_st += tx_of
+            else:
+                cursor.execute('UPDATE restock SET activa = "Sí" WHERE id_juego = ?',[id_juego])
+                conn.commit()
+                texto_st += tx_of
 
 if texto_of_me != "":
     texto_of_me = f"\U0001F381\U0001F381\U0001F381\n\n*Juegos en oferta*\n\n{texto_of_me}\n\U0001F381\U0001F381\U0001F381"
