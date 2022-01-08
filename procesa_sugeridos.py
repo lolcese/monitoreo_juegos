@@ -9,6 +9,7 @@ import os
 import constantes
 import path
 import csv
+import urllib.parse
 
 os.chdir(path.actual)
 
@@ -91,6 +92,8 @@ cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, BGG_URL, URL,
 juegos = cursor.fetchall()
 for j in juegos:
     id_juego_sugerido, usuario_nom, usuario_id, bgg_url, sitio_url, peso, fecha = j
+
+    sitio_url = urllib.parse.unquote(sitio_url)
 
     bgg_url = re.sub("bgg\.cc","boardgamegeek.com",bgg_url)
 
