@@ -984,7 +984,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
                     InlineQueryResultArticle(
                     id=str(uuid4()),
                     title=nombre,
-                    input_message_content = InputTextMessageContent(f"[ ]({imagen})\n{texto}\nPara más información y la posibilidad de poner alarmas, andá a @Monitor\_Juegos\_bot y escribí /start",
+                    input_message_content = InputTextMessageContent(f"<a href={imagen}> </a>\n{texto}\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
                                             parse_mode="HTML",
                                             disable_web_page_preview = False)
                     )
