@@ -180,15 +180,15 @@ def juegos_todos_sitio(update: Update, context: CallbackContext) -> int:
     texto = f"<b>Juegos en {constantes.sitio_nom[sitio]}</b>\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio_id, ult_precio FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
+    cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
     juegos = cursor.fetchall()
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     for j in juegos:
-        nombre, sitio_id, ult_precio = j
-        if ult_precio == None:
+        nombre, sitio_id, precio_actual = j
+        if precio_actual == None:
             texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (No disponible)\n"
         else:
-            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${ult_precio:.0f})\n"
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_todos'),
@@ -250,12 +250,12 @@ def juegos_stockalfab_sitio(update: Update, context: CallbackContext) -> int:
     texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio_id, ult_precio FROM juegos WHERE sitio = ? AND ult_precio NOT NULL ORDER BY nombre',[sitio])
+    cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY nombre',[sitio])
     juegos = cursor.fetchall()
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     for j in juegos:
-        nombre, sitio_id, ult_precio = j
-        texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${ult_precio:.0f})\n"
+        nombre, sitio_id, precio_actual = j
+        texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_stockalfab'),
@@ -317,12 +317,12 @@ def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
     texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio_id, ult_precio FROM juegos WHERE sitio = ? AND ult_precio NOT NULL ORDER BY ult_precio',[sitio])
+    cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY precio_actual',[sitio])
     juegos = cursor.fetchall()
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     for j in juegos:
-        nombre, sitio_id, ult_precio = j
-        texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${ult_precio:.0f})\n"
+        nombre, sitio_id, precio_actual = j
+        texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_stockprecio'),
@@ -344,16 +344,16 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
     texto = "<b>Últimos 30 juegos agregados</b>\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio, sitio_id, ult_precio FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
+    cursor.execute('SELECT nombre, sitio, sitio_id, precio_actual FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
     juegos = cursor.fetchall()
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     cont = 0
     for j in juegos:
-        nombre, sitio, sitio_id, ult_precio = j
-        if ult_precio == None:
+        nombre, sitio, sitio_id, precio_actual = j
+        if precio_actual == None:
             texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (No disponible)\n"
         else:
-            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${ult_precio:.0f})\n"
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -370,7 +370,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, min(ult_precio) FROM juegos WHERE ult_precio NOT NULL ORDER BY min(ult_precio) LIMIT 30 OFFSET ?',[num])
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, min(precio_actual) FROM juegos WHERE precio_actual NOT NULL ORDER BY min(precio_actual) LIMIT 30 OFFSET ?',[num])
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
