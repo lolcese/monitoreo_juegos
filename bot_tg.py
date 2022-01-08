@@ -986,7 +986,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
                     title=nombre,
                     # input_message_content = InputTextMessageContent(f"<a href={imagen}>{texto}\n</a>\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
                     input_message_content = InputTextMessageContent(
-                                            message_text = f"<a href={imagen}>{nombre}</a>{texto}\n\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
+                                            message_text = f"{texto}\n\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
                                             parse_mode="HTML",
                                             disable_web_page_preview = False)
                     )
