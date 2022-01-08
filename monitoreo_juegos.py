@@ -360,10 +360,17 @@ def main():
             elif sitio == "grooves":
                 precio = lee_pagina_grooves(sitio_ID)
 
+            if precio != None:
+                cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
             cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
-            conn.commit()
-            cursor.execute('UPDATE juegos SET ult_precio = ?, fecha_precio = ? WHERE id_juego = ?',[precio, fecha, id_juego])
-            conn.commit()
+                cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
+                conn.commit()
+
+                cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio IS NULL, fecha DESC LIMIT 1', [id_juego])
+                precio_mejor, fecha_mejor = cursor.fetchone()
+
+                cursor.execute('UPDATE juegos SET ult_precio = ?, fecha_precio = ?, precio_mejor = ?, fecha_mejor = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, id_juego])
+                conn.commit()
 
             cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND fecha > datetime("now", "-15 days", "localtime")',[id_juego])
             datos = cursor.fetchall()
