@@ -361,8 +361,9 @@ def main():
                 precio = lee_pagina_grooves(sitio_ID)
 
             try:
-                cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',(id_juego, precio, fecha)) 
-                cursor.execute('UPDATE precios SET ult_precio = ?, fecha_precio = ? WHERE id_juego = ?',[precio, fecha, id_juego])
+                cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
+                conn.commit()
+                cursor.execute('UPDATE juegos SET ult_precio = ?, fecha_precio = ? WHERE id_juego = ?',[precio, fecha, id_juego])
                 conn.commit()
             except sqlite3.Error as er:
                 print("Error de SQLite con ", id_juego, precio, fecha)
