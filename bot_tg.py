@@ -195,7 +195,7 @@ def juegos_todos_sitio(update: Update, context: CallbackContext) -> int:
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    texto_mensaje_div = dividir_texto(f"{texto}\n", 15)
+    texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
     for t in texto_mensaje_div[0:-2]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = texto_mensaje_div[-1], parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
@@ -261,7 +261,8 @@ def juegos_stockalfab_sitio(update: Update, context: CallbackContext) -> int:
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    texto_mensaje_div = dividir_texto(f"{texto}\n", 15)
+    texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
+    print(texto_mensaje_div[-1])
     for t in texto_mensaje_div[0:-2]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = texto_mensaje_div[-1], parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
@@ -327,7 +328,7 @@ def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    texto_mensaje_div = dividir_texto(f"{texto}\n", 15)
+    texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
     for t in texto_mensaje_div[0:-2]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = texto_mensaje_div[-1], parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
@@ -365,7 +366,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE precio_actual NOT NULL ORDER BY precio_actual LIMIT 20 OFFSET ?',[num])
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE precio_actual NOT NULL ORDER BY precio_actual LIMIT 30 OFFSET ?',[num])
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
@@ -373,7 +374,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
         barato += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en <a href='{constantes.sitio_URL[sitio]+sitio_id}'>{constantes.sitio_nom[sitio]}</a> a ${precio:.0f}\n"
     keyboard = [
         [
-            InlineKeyboardButton("\U00002795 Siguientes 20 juegos", callback_data='juegos_baratos_'+str(num + 20)),
+            InlineKeyboardButton("\U00002795 Siguientes 20 juegos", callback_data='juegos_baratos_'+str(num+20)),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
     ]
@@ -405,7 +406,7 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    texto_mensaje_div = dividir_texto(f"{texto}\n", 15)
+    texto_mensaje_div = dividir_texto(f"{texto}\n", 30)
     for t in texto_mensaje_div[0:-1]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = texto_mensaje_div[-1], parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
