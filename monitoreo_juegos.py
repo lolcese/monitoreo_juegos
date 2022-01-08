@@ -362,17 +362,15 @@ def main():
 
             if precio != None:
                 cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
-            cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
-                cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
                 conn.commit()
+                
+            cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio, fecha DESC LIMIT 1', [id_juego])
+            precio_mejor, fecha_mejor = cursor.fetchone()
 
-                cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio IS NULL, fecha DESC LIMIT 1', [id_juego])
-                precio_mejor, fecha_mejor = cursor.fetchone()
+            cursor.execute('UPDATE juegos SET ult_precio = ?, fecha_precio = ?, precio_mejor = ?, fecha_mejor = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, id_juego])
+            conn.commit()
 
-                cursor.execute('UPDATE juegos SET ult_precio = ?, fecha_precio = ?, precio_mejor = ?, fecha_mejor = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, id_juego])
-                conn.commit()
-
-            cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? AND fecha > datetime("now", "-15 days", "localtime")',[id_juego])
+            cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
             datos = cursor.fetchall()
             precio_hi = [sub[0] for sub in datos]
             fecha_hi = [sub[1] for sub in datos]
