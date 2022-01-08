@@ -13,7 +13,7 @@ bot_token = os.environ.get('bot_token')
 conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 conn.execute("PRAGMA journal_mode=WAL")
 cursor = conn.cursor()
-cursor.execute('SELECT id_juego, avg(precio) FROM precios WHERE fecha > datetime("now", "-15 days", "localtime") GROUP BY id_juego HAVING avg(precio) NOT NULL')
+cursor.execute('SELECT id_juego, avg(precio) FROM precios GROUP BY id_juego HAVING avg(precio) NOT NULL')
 prom = cursor.fetchall()
 texto_of = ""
 texto_of_me = ""
