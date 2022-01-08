@@ -365,8 +365,12 @@ def main():
                 conn.commit()
 
             cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio, fecha DESC LIMIT 1', [id_juego])
-            precio_mejor, fecha_mejor = cursor.fetchone()
-
+            mejor = cursor.fetchone()
+            if mejor != None:
+                precio_mejor, fecha_mejor = mejor
+            else:
+                precio_mejor = None
+                fecha_mejor = None
             cursor.execute('UPDATE juegos SET precio_actual = ?, fecha_actual = ?, precio_mejor = ?, fecha_mejor = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, id_juego])
             conn.commit()
 
