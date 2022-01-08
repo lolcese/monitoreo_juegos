@@ -103,8 +103,8 @@ def juegos_lista_menu(update: Update, context: CallbackContext) -> int:
     keyboard = [
         [InlineKeyboardButton("\U0001F4DC Planilla con todos los juegos", callback_data='juegos_planilla')],
         [InlineKeyboardButton("\U0001F4D4 Todos los juegos", callback_data='juegos_todos')],
-        [InlineKeyboardButton("\U0001F520 Todos los juegos disponibles (alfabéticamente)", callback_data='juegos_stockalfab')],
-        [InlineKeyboardButton("\U0001F522 Todos los juegos disponibles (por precio)", callback_data='juegos_stockprecio')],
+        [InlineKeyboardButton("\U0001F520 Juegos disp. (alfabéticamente)", callback_data='juegos_stockalfab')],
+        [InlineKeyboardButton("\U0001F522 Juegos disp. (por precio)", callback_data='juegos_stockprecio')],
         [InlineKeyboardButton("\U0001F5DE Últimos 30 agregados", callback_data='juegos_lista_ULT')],
         [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos_0')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -182,7 +182,6 @@ def juegos_todos_sitio(update: Update, context: CallbackContext) -> int:
     cursor = conn.cursor()
     cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
     juegos = cursor.fetchall()
-    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     for j in juegos:
         nombre, sitio_id, precio_actual = j
         if precio_actual == None:
@@ -252,7 +251,6 @@ def juegos_stockalfab_sitio(update: Update, context: CallbackContext) -> int:
     cursor = conn.cursor()
     cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY nombre',[sitio])
     juegos = cursor.fetchall()
-    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     for j in juegos:
         nombre, sitio_id, precio_actual = j
         texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
@@ -319,7 +317,6 @@ def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
     cursor = conn.cursor()
     cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY precio_actual',[sitio])
     juegos = cursor.fetchall()
-    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     for j in juegos:
         nombre, sitio_id, precio_actual = j
         texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
@@ -346,8 +343,6 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
     cursor = conn.cursor()
     cursor.execute('SELECT nombre, sitio, sitio_id, precio_actual FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
     juegos = cursor.fetchall()
-    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    cont = 0
     for j in juegos:
         nombre, sitio, sitio_id, precio_actual = j
         if precio_actual == None:
@@ -370,7 +365,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, min(precio_actual) FROM juegos WHERE precio_actual NOT NULL ORDER BY min(precio_actual) LIMIT 30 OFFSET ?',[num])
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE precio_actual NOT NULL ORDER BY precio_actual LIMIT 30 OFFSET ?',[num])
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
@@ -471,7 +466,6 @@ def juego_nom_otra(update: Update, context: CallbackContext) -> int:
         keyboard.append([InlineKeyboardButton(f'\U000027A1 {j[0]}', callback_data='BGG_'+str(j[1]))])
     keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
     reply_markup = InlineKeyboardMarkup(keyboard)
-    # context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     id = context.bot.send_message(chat_id = usuario_id, text = "Elegí el juego", reply_markup=reply_markup)
     context.chat_data["mensaje_id"] = id.message_id
     return JUEGO
