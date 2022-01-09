@@ -38,7 +38,7 @@ def dividir_texto(texto, n):
     bloque = []
     for i in range(0, len(lineas), n):
         bloque.append("\n".join(lineas[i:i + n]))
-    if bloque[-1] == "":
+    if bloque[-1] == "" or bloque[-1] == "\n":
         bloque[-1] = "."
     return bloque
 
