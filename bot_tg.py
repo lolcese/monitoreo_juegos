@@ -199,8 +199,7 @@ def juegos_todos_sitio(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
-    for x in range(len(texto_mensaje_div)):
-        print (texto_mensaje_div[x],"\n\n")
+    print(*texto_mensaje_div, sep = "\n\n\n") 
 
     for t in texto_mensaje_div[0:-2]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
