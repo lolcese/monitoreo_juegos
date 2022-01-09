@@ -702,7 +702,7 @@ Todos los precios que se muestran acá son finales, considerando los impuestos d
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
+    query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
 ######### Muestra las novedades
@@ -1033,7 +1033,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
                     id=str(uuid4()),
                     title=nombre,
                     input_message_content = InputTextMessageContent(
-                                            message_text = f"{texto}\n\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
+                                            message_text = f"<a href='{imagen}'> </a>{texto}\n\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
                                             parse_mode="HTML",
                                             disable_web_page_preview = False)
                     )
