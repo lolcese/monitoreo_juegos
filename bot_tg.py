@@ -121,10 +121,11 @@ def juegos_lista_menu(update: Update, context: CallbackContext) -> int:
 def juegos_planilla(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = '<b>Planilla con todos los juegos</b>\n\n' + \
-    'Si querés ver una planilla con todos los precios de los juegos, andá ' + \
-    '<a href="https://docs.google.com/spreadsheets/d/1eh5ckbIl5td0B8aRScxkIZU62MfeMplXxGdlsAWPoVA/edit?usp=sharing">acá</a>.\n' + \
-    'Tené en cuenta que, si bien se actualiza automáticamente, puede tener un desfasaje de 2-3 horas con los precios reales (y 1 hora con los precios que muestra el bot).'
+    texto = """<b>Planilla con todos los juegos</b>
+    
+    Si querés ver una planilla con todos los precios de los juegos, andá <a href="https://docs.google.com/spreadsheets/d/1eh5ckbIl5td0B8aRScxkIZU62MfeMplXxGdlsAWPoVA/edit?usp=sharing">acá</a>.
+    
+    Tené en cuenta que, si bien se actualiza automáticamente, puede tener un desfasaje de 2-3 horas con los precios reales (y 1 hora con los precios que muestra el bot)."""
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -660,15 +661,22 @@ def alarmas_borrar(update: Update, context: CallbackContext) -> int:
 def ayuda(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = '<b>Ayuda</b>\n\n' + \
-    '@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.\n\n' + \
-    'Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.\n\n' + \
-    'Para ver la información de un juego en particular, elegí la opción <i>Ver un juego y poner/sacar alarmas</i> y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio, o borrarla si lo querés.\n\n' + \
-    'Si no está el juego que te interesa, o si encontraste otro lugar donde lo venden, elegí en el menú la opción <i>Sugerir juego a monitorear</i>. Este agregado <b>no</b> es automático.\n\n' + \
-    'En <i>Ofertas y juegos en reposición</i> vas a ver todos los juegos que han bajado de precio más del 10% respecto a su promedio de 15 días, y los juegos que ahora están disponibles pero no lo estuvieron por más de 15 días.\n\n' + \
-    'Desde cualquier chat o grupo, escribí @Monitor_Juegos_bot y parte del nombre de un juego para ver la información sin salir del chat.\n\n' + \
-    'Si un menú no responde, escribí nuevamente /start.\n\n' + \
-    'Cualquier duda, mandame un mensaje a @Luis_Olcese.'
+    texto = """<b>Ayuda</b>
+    
+    @Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
+    
+    Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
+    
+    Para ver la información de un juego en particular, elegí la opción <i>Ver un juego y poner/sacar alarmas</i> y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio, o borrarla si lo querés.
+    
+    Si no está el juego que te interesa, o si encontraste otro lugar donde lo venden, elegí en el menú la opción <i>Sugerir juego a monitorear</i>. Este agregado <b>no</b> es automático.
+    
+    En <i>Ofertas y juegos en reposición</i> vas a ver todos los juegos que han bajado de precio más del 10% respecto a su promedio de 15 días, y los juegos que ahora están disponibles pero no lo estuvieron por más de 15 días.
+
+    Desde cualquier chat o grupo, escribí @Monitor_Juegos_bot y parte del nombre de un juego para ver la información de ese juego sin salir del chat.
+    Si un menú no responde, escribí nuevamente /start.
+
+    Cualquier duda, mandame un mensaje a @Luis_Olcese."""
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -699,13 +707,14 @@ def consejos(update: Update, context: CallbackContext) -> int:
 def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = '<b>Novedades</b>\n\n' + \
-    '08/01/2022: La búsqueda online funciona correctamente.\n\n' + \
-    '08/01/2022: Reorganización en los menúes.\n\n' + \
-    '08/01/2022: Muestra precios en los listados.\n\n' + \
-    '08/01/2022: Cambio en la base de datos que debería acelerar todo.\n\n' + \
-    '05/12/2021: Automatizada la descarga de todos los costos de Tiendamia.\n\n' + \
-    '23/11/2021: Corrección de error grave en precios que no son originalmente en pesos.\n\n'
+    texto = """<b>Novedades</b>
+    
+    '08/01/2022: La búsqueda online funciona correctamente.
+    '08/01/2022: Reorganización en los menúes.
+    '08/01/2022: Muestra precios en los listados.
+    '08/01/2022: Cambio en la base de datos que debería acelerar todo.
+    '05/12/2021: Automatizada la descarga de todos los costos de Tiendamia.
+    '23/11/2021: Corrección de error grave en precios que no son originalmente en pesos."""
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -788,7 +797,26 @@ def comentarios_mandar(update: Update, context: CallbackContext) -> int:
 def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text = '<b>LEER, HAY CAMBIOS</b>\nEscribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land).\nEn el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).\n\nEjemplos:\n\nhttps://www.boardgamegeek.com/boardgame/220/high-society\nhttps://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777\n\nhttps://www.boardgamegeek.com/boardgame/293296/splendor-marvel\nhttps://www.deepdiscount.com/splendor-marvel/3558380055334\n2.43', parse_mode = "HTML", disable_web_page_preview = True)
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    texto = """"<b>Sugerir juego a monitorear</b>
+    
+    <b>LEER, HAY CAMBIOS</b>
+    
+    Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land).
+    En el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).
+    
+    Ejemplos:
+    https://www.boardgamegeek.com/boardgame/220/high-society
+    https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777
+    
+    https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
+    https://www.deepdiscount.com/splendor-marvel/3558380055334
+    2.43"""
+
+    query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
     return JUEGO_AGREGAR
 
 ######### Guarda el juego sugerido
@@ -1002,7 +1030,6 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
                     InlineQueryResultArticle(
                     id=str(uuid4()),
                     title=nombre,
-                    # input_message_content = InputTextMessageContent(f"<a href={imagen}>{texto}\n</a>\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
                     input_message_content = InputTextMessageContent(
                                             message_text = f"{texto}\n\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
                                             parse_mode="HTML",
