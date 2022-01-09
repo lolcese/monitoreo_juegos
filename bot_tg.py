@@ -91,11 +91,11 @@ def menu():
         [InlineKeyboardButton("\U0000270F Sugerir juego a monitorear", callback_data='sugerir_juego_datos')],
         [InlineKeyboardButton("\U000023F0 Ver mis alarmas", callback_data='alarmas_muestra')],
         [InlineKeyboardButton("\U00002757 Novedades", callback_data='novedades')],
-        [InlineKeyboardButton("\U0001F4A1 Consejos", callback_data='consejos')]
-        [InlineKeyboardButton("\U00002753 Ayuda", callback_data='ayuda')]
+        [InlineKeyboardButton("\U0001F4A1 Consejos", callback_data='consejos')],
+        [InlineKeyboardButton("\U00002753 Ayuda", callback_data='ayuda')],
         [InlineKeyboardButton("\U0001F4AC Enviar comentarios y sugerencias", callback_data='comentarios_texto')],
         [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
-        [InlineKeyboardButton("\U00002615 Invitame a un cafecito", callback_data='cafecito')],
+        [InlineKeyboardButton("\U00002615 Invitame a un cafecito", callback_data='cafecito')]
     ]
     return keyboard
 
