@@ -847,11 +847,11 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
             porc_10.append(porc)
 
     if ofertas_20:
-        texto_of += "<b>Juegos con descuento >20%</b>\n" + "".join([x for _, x in sorted(zip(porc_20,ofertas_20), reverse=True)])+"\n"
+        texto_of += "<b>Juegos con descuento &gt; 20%</b>\n" + "".join([x for _, x in sorted(zip(porc_20,ofertas_20), reverse=True)])+"\n"
     if ofertas_15:
-        texto_of += "<b>Juegos con descuento >15%</b>\n" + "".join([x for _, x in sorted(zip(porc_15,ofertas_15), reverse=True)])+"\n"
+        texto_of += "<b>Juegos con descuento &gt; 15%</b>\n" + "".join([x for _, x in sorted(zip(porc_15,ofertas_15), reverse=True)])+"\n"
     if ofertas_10:
-        texto_of += "<b>Juegos con descuento >10%</b>\n" + "".join([x for _, x in sorted(zip(porc_10,ofertas_10), reverse=True)])+"\n"
+        texto_of += "<b>Juegos con descuento &gt; 10%</b>\n" + "".join([x for _, x in sorted(zip(porc_10,ofertas_10), reverse=True)])+"\n"
 
     if texto_of == "<b>Juegos en oferta</b>\n\n":
         texto_of += "No hay ningún juego en oferta\n"
@@ -911,7 +911,6 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto_mensaje_div = dividir_texto(f"{texto_of}\n{texto_st}\n", 25)
     for t in texto_mensaje_div:
-        print("-------------\n"+t+"-------------\n")
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = f"{texto_al}", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
