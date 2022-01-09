@@ -837,13 +837,13 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         precio_actual = o[2]
         porc = (precio_prom - precio_actual) / precio_prom * 100
         if porc >= 20:
-            ofertas_20.append(f"\U0001F381 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{nombre}</a> está en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
+            ofertas_20.append(f"\U0001F381 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
             porc_20.append(porc)
         elif porc >= 15:
-            ofertas_15.append(f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{nombre}</a> está en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
+            ofertas_15.append(f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
             porc_15.append(porc)
         elif porc >= 10:
-            ofertas_10.append(f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{nombre}</a> está en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
+            ofertas_10.append(f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
             porc_10.append(porc)
 
     if ofertas_20:
@@ -864,7 +864,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE id_juego = ?',[id_juego])
         nombre, sitio, sitio_id, bgg_id, precio_actual = cursor.fetchone()
         if precio_actual != None:
-            texto_st += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{nombre}</a> está en stock en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} (y antes no lo estaba)\n"
+            texto_st += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en stock en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} (y antes no lo estaba)\n"
     if texto_st == "<b>Juegos en reposición</b>\n\n":
         texto_st = "No hay ningún juego en reposición\n"
 
