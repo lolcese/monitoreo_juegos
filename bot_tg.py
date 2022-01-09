@@ -36,10 +36,13 @@ def conecta_db():
 def dividir_texto(texto, n):
     lineas = texto.split("\n")
     bloque = []
-    for i in range(0, len(lineas)-1, n):
+    for i in range(0, len(lineas), n):
+        print(i)
         bloque.append("\n".join(lineas[i:i + n]))
+    if bloque[-1] == "":
+        bloque.pop()
     return bloque
-
+    
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
     usuario = update.message.from_user
@@ -860,7 +863,8 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         id_juego = r[0]
         cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE id_juego = ?',[id_juego])
         nombre, sitio, sitio_id, bgg_id, precio_actual = cursor.fetchone()
-        texto_st += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{nombre}</a> está en stock en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} (y antes no lo estaba)\n"
+        if precio_actual != None:
+            texto_st += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{nombre}</a> está en stock en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} (y antes no lo estaba)\n"
     if texto_st == "<b>Juegos en reposición</b>\n\n":
         texto_st = "No hay ningún juego en reposición\n"
 
