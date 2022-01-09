@@ -692,7 +692,7 @@ def consejos(update: Update, context: CallbackContext) -> int:
     
 Todos los precios que se muestran acá son finales, considerando los impuestos del 35%, 30% y aduana.
 \U000027A1 Buscalibre: Los precios en la página son finales, y los juegos llegan directamente a tu casa sin trámite de aduana. Podés pagar en Ahora 3.
-\U000027A1 Tiendamía: Siempre hay cupones que se pueden usar para bajar el precio.
+\U000027A1 Tiendamía: Siempre hay cupones que se pueden usar para bajar el precio. Buscalos en los mensajes fijados de https://t.me/comprasjuegosexterior.
 \U000027A1 Bookdepository: Si sacás tarjeta de débito de Mercadopago y pagás con eso, no te cobra el 65% de impuestos.
 \U000027A1 365games / shop4es / shop4world: A algunos juegos los mandan por courier, por lo que tenés que pagar un extra al recibirlos.
 \U000027A1 Grooves.land: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.
