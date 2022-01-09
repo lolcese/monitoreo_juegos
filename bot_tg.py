@@ -39,7 +39,7 @@ def dividir_texto(texto, n):
     for i in range(0, len(lineas), n):
         bloque.append("\n".join(lineas[i:i + n]))
     if bloque[-1] == "" or bloque[-1] == "\n":
-        bloque[-1] = "."
+        bloque.pop()
     return bloque
 
 ######### Cuando se elige la opción Inicio
@@ -199,7 +199,7 @@ def juegos_todos_sitio(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
 
-    for t in texto_mensaje_div[0:-2]:
+    for t in texto_mensaje_div[0:-1]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = texto_mensaje_div[-1], parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return LISTA_JUEGOS
@@ -265,9 +265,7 @@ def juegos_stockalfab_sitio(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
-    for t in texto_mensaje_div:
-        print("----------------"+t+"----------------\n\n")
-    for t in texto_mensaje_div[0:-2]:
+    for t in texto_mensaje_div[0:-1]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = texto_mensaje_div[-1], parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return LISTA_JUEGOS
@@ -333,7 +331,7 @@ def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
-    for t in texto_mensaje_div[0:-2]:
+    for t in texto_mensaje_div[0:-1]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = texto_mensaje_div[-1], parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return LISTA_JUEGOS
