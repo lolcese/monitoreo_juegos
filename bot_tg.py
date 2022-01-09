@@ -691,12 +691,12 @@ def consejos(update: Update, context: CallbackContext) -> int:
     texto = """<b>Consejos</b>
     
 Todos los precios que se muestran acá son finales, considerando los impuestos del 35%, 30% y aduana.
-\U000027A1 Buscalibre: Los precios en la página son finales, y los juegos llegan directamente a tu casa sin trámite de aduana. Podés pagar en Ahora 3.
-\U000027A1 Tiendamía: Siempre hay cupones que se pueden usar para bajar el precio. Buscalos en los mensajes fijados de https://t.me/comprasjuegosexterior.
-\U000027A1 Bookdepository: Si sacás tarjeta de débito de Mercadopago y pagás con eso, no te cobra el 65% de impuestos.
-\U000027A1 365games / shop4es / shop4world: A algunos juegos los mandan por courier, por lo que tenés que pagar un extra al recibirlos.
-\U000027A1 Grooves.land: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.
-\U000027A1 Deepdiscount: El envío es caro, pero a veces aparecen ofertas."""
+\U000027A1 <a href='https://www.buscalibre.com.ar/'>Buscalibre</a>: Los precios en la página son finales, y los juegos llegan directamente a tu casa sin trámite de aduana. Podés pagar en Ahora 3.
+\U000027A1 <a href='https://www.tiendamia.com/'>Tiendamía</a>: Siempre hay cupones que se pueden usar para bajar el precio. Buscalos en los mensajes fijados de https://t.me/comprasjuegosexterior.
+\U000027A1 <a href='https://www.bookdepository.com/'>Bookdepository</a>: Si sacás tarjeta de débito de Mercadopago y pagás con eso, no te cobra el 65% de impuestos.
+\U000027A1 <a href='https://www.365games.co.uk/'>365games</a> / <a href='https://www.shop4es.com/'>shop4es</a> / <a href='https://www.shop4world.com/'>shop4world</a>: A algunos juegos los mandan por courier, por lo que tenés que pagar un extra al recibirlos.
+\U000027A1 <a href='http://grooves.land/'>Grooves.land</a>: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.
+\U000027A1 <a href='https://www.deepdiscount.com/'>Deepdiscount</a>: El envío es caro, pero a veces aparecen ofertas."""
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
