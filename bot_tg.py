@@ -39,7 +39,7 @@ def dividir_texto(texto, n):
     for i in range(0, len(lineas), n):
         bloque.append("\n".join(lineas[i:i + n]))
     if bloque[-1] == "":
-        bloque.pop()
+        bloque[-1] = "."
     return bloque
 
 ######### Cuando se elige la opción Inicio
