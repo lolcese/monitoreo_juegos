@@ -90,15 +90,16 @@ def menu():
         [InlineKeyboardButton("\U0001F3B2 Ver un juego y poner/borrar alarmas", callback_data='juego_ver')],
         [InlineKeyboardButton("\U0000270F Sugerir juego a monitorear", callback_data='sugerir_juego_datos')],
         [InlineKeyboardButton("\U000023F0 Ver mis alarmas", callback_data='alarmas_muestra')],
-        [InlineKeyboardButton("\U0001F4AC Enviar comentarios y sugerencias", callback_data='comentarios_texto')],
         [InlineKeyboardButton("\U00002757 Novedades", callback_data='novedades')],
+        [InlineKeyboardButton("\U0001F4A1 Consejos", callback_data='consejos')]
+        [InlineKeyboardButton("\U00002753 Ayuda", callback_data='ayuda')]
+        [InlineKeyboardButton("\U0001F4AC Enviar comentarios y sugerencias", callback_data='comentarios_texto')],
         [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
         [InlineKeyboardButton("\U00002615 Invitame a un cafecito", callback_data='cafecito')],
-        [InlineKeyboardButton("\U00002753 Ayuda", callback_data='ayuda')]
     ]
     return keyboard
 
-######### Manú de listas de juegos
+######### Menú de listas de juegos
 def juegos_lista_menu(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
@@ -675,6 +676,25 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
     return PRINCIPAL
 
+######### Muestra consejos
+def consejos(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    texto = '<b>Consejos</b>\n\n' + \
+    'Todos los precios que se muestran acá son finales, considerando los impuestos del 35%, 30% y aduana.\n' + \
+    '\U000027A1 Buscalibre: Los precios en la página son finales, y los juegos llegan directamente a tu casa sin trámite de aduana. Podés pagar en Ahora 3.\n' + \
+    '\U000027A1 Tiendamía: Siempre hay cupones que se pueden usar para bajar el precio.\n' + \
+    '\U000027A1 Bookdepository: Si sacás tarjeta de débito de Mercadopago y pagás con eso, no te cobra el 65% de impuestos.\n' + \
+    '\U000027A1 365games / shop4es / shop4world: A algunos juegos los mandan por courier, por lo que tenés que pagar un extra al recibirlos.\n' + \
+    '\U000027A1 Grooves.land: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.\n' + \
+    '\U000027A1 Deepdiscount: El envío es caro, pero a veces aparecen ofertas.\n'
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
+    return PRINCIPAL
+
 ######### Muestra las novedades
 def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
@@ -1013,6 +1033,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(estadistica,            pattern='^estadistica$'),
                 CallbackQueryHandler(cafecito,               pattern='^cafecito$'),
                 CallbackQueryHandler(ayuda,                  pattern='^ayuda$'),
+                CallbackQueryHandler(consejos,               pattern='^consejos$'),
                 CallbackQueryHandler(inicio,                 pattern='^inicio$'),
                 CallbackQueryHandler(mensaje_oferta,         pattern='^mensaje_oferta_'),
             ],
@@ -1072,3 +1093,4 @@ def main() -> PRINCIPAL:
 
 if __name__ == '__main__':
     main()
+
