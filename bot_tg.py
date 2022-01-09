@@ -107,8 +107,8 @@ def juegos_lista_menu(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U0001F4D4 Todos los juegos", callback_data='juegos_todos')],
         [InlineKeyboardButton("\U0001F520 Juegos disp. (alfabéticamente)", callback_data='juegos_stockalfab')],
         [InlineKeyboardButton("\U0001F522 Juegos disp. (por precio)", callback_data='juegos_stockprecio')],
-        [InlineKeyboardButton("\U0001F5DE Últimos 20 agregados", callback_data='juegos_lista_ULT')],
-        [InlineKeyboardButton("\U0001F4B2 20 juegos baratos", callback_data='juegos_baratos_0')],
+        [InlineKeyboardButton("\U0001F5DE Últimos 30 agregados", callback_data='juegos_lista_ULT')],
+        [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos_0')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -197,7 +197,7 @@ def juegos_todos_sitio(update: Update, context: CallbackContext) -> int:
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
+    texto_mensaje_div = dividir_texto(f"{texto}\n", 30)
 
     for t in texto_mensaje_div[0:-1]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
@@ -264,7 +264,7 @@ def juegos_stockalfab_sitio(update: Update, context: CallbackContext) -> int:
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
+    texto_mensaje_div = dividir_texto(f"{texto}\n", 30)
     for t in texto_mensaje_div[0:-1]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = texto_mensaje_div[-1], parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
@@ -330,7 +330,7 @@ def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    texto_mensaje_div = dividir_texto(f"{texto}\n", 20)
+    texto_mensaje_div = dividir_texto(f"{texto}\n", 30)
     for t in texto_mensaje_div[0:-1]:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = texto_mensaje_div[-1], parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
@@ -341,10 +341,10 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     usuario_id = update.callback_query.from_user.id
-    texto = "<b>Últimos 20 juegos agregados</b>\n\n"
+    texto = "<b>Últimos 30 juegos agregados</b>\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio, sitio_id, precio_actual FROM juegos ORDER BY fecha_agregado DESC LIMIT 20')
+    cursor.execute('SELECT nombre, sitio, sitio_id, precio_actual FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
     juegos = cursor.fetchall()
     for j in juegos:
         nombre, sitio, sitio_id, precio_actual = j
@@ -376,7 +376,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
         barato += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en <a href='{constantes.sitio_URL[sitio]+sitio_id}'>{constantes.sitio_nom[sitio]}</a> a ${precio:.0f}\n"
     keyboard = [
         [
-            InlineKeyboardButton("\U00002795 Siguientes 20 juegos", callback_data='juegos_baratos_'+str(num+20)),
+            InlineKeyboardButton("\U00002795 Siguientes 30 juegos", callback_data='juegos_baratos_'+str(num+30)),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
     ]
@@ -864,7 +864,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE id_juego = ?',[id_juego])
         nombre, sitio, sitio_id, bgg_id, precio_actual = cursor.fetchone()
         if precio_actual != None:
-            texto_st += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en stock en <a href='{constantes.sitio_URL[sitio]+sitio_id}'{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} (y antes no lo estaba)\n"
+            texto_st += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en stock en <a href='{constantes.sitio_URL[sitio]+sitio_id}'>{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} (y antes no lo estaba)\n"
     if texto_st == "<b>Juegos en reposición</b>\n\n":
         texto_st = "No hay ningún juego en reposición\n"
 
