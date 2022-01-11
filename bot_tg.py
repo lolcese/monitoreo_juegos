@@ -853,8 +853,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha) VALUES (?,?,?,?,?,?)',[usuario_nom, usuario_id, BGG_URL, url, peso, fecha])
     conn.commit()
     texto = f"{usuario_nom} sugirió el juego {url}"
-    send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}text={texto}'
-    response = requests.get(send_text)
+    requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&disable_web_page_preview=False&text={texto}')
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
