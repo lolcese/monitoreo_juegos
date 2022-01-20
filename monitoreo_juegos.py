@@ -71,11 +71,11 @@ def lee_pagina_blib(ju_id):
     if text == "Error":
         return None
 
-    precio_ar = re.search('<p class="precioAhora margin-0 font-weight-strong"><span>\$ (.*?)</span>',text)
-    if not precio_ar:
+    precio_ar = re.search("'ecomm_totalvalue' : '(.*?)'",text)
+    if not precio_ar or float(precio_ar[1]) == 0:
         return None
-    precio_ar = float(re.sub("\.", "", precio_ar[1])) + constantes.var['envio_BL']
-
+    precio_ar = float(precio_ar[1]) + constantes.var['envio_BL']
+    print(url,precio_ar)
     return precio_ar
 
 ######### Lee información de TMAM
