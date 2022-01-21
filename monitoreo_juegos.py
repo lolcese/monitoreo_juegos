@@ -27,6 +27,7 @@ import sys
 prioridad = str(sys.argv[1])
 os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
+
 updater = Updater(bot_token)
 
 ######### Baja una página cualquiera
@@ -75,7 +76,6 @@ def lee_pagina_blib(ju_id):
     if not precio_ar or float(precio_ar[1]) == 0:
         return None
     precio_ar = float(precio_ar[1]) + constantes.var['envio_BL']
-    print(url,precio_ar)
     return precio_ar
 
 ######### Lee información de TMAM

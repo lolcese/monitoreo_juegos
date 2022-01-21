@@ -142,6 +142,12 @@ for j in juegos:
 
     sitio_url = re.sub("%7C","|",sitio_url)
 
+    sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=.*?\/dp\/(.*?)\/',sitio_url)
+    if sitio_id:
+        sitio_nom = "BLAM"
+        sitio_id = sitio_id[1]
+        procesa()
+        continue
     sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "BLAM"
