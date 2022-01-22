@@ -844,6 +844,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         return JUEGO_AGREGAR
 
     sitio_nom, sitio_id = extrae_sitio(url)
+    print(sitio_nom, sitio_id)
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute ('SELECT * FROM juegos WHERE sitio = ? AND sitio_ID = ?',[sitio_nom, sitio_id])
