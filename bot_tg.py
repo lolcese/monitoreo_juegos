@@ -895,7 +895,8 @@ def extrae_sitio(sitio_url):
         sitio_id = sitio_id[1]
 
     sitio_id = re.search('bookdepository.com\/..\/.*?\/(.*?)(\s|$|\/|\?|&)',sitio_url)
-    print(sitio_id)
+    print(sitio_id[0])
+    print(sitio_id[1])
     if sitio_id:
         sitio_nom = "BOOK"
         sitio_id = sitio_id[1]
