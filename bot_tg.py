@@ -943,6 +943,7 @@ def extrae_sitio(sitio_url):
         sitio_nom = "grooves"
         sitio_id = sitio_id[1]
 
+    print(sitio_nom, sitio_id)
     return [sitio_nom, sitio_id]
 
 ######### Muestra los juegos en oferta y restock
