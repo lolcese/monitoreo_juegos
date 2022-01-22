@@ -711,12 +711,13 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
     
+22/01/2022: Chequea automáticamente si es un duplicado al agregar un juego.
 08/01/2022: La búsqueda online funciona correctamente.
 08/01/2022: Reorganización en los menúes.
 08/01/2022: Muestra precios en los listados.
 08/01/2022: Cambio en la base de datos que debería acelerar todo.
 05/12/2021: Automatizada la descarga de todos los costos de Tiendamia.
-23/11/2021: Corrección de error grave en precios que no son originalmente en pesos."""
+"""
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -807,7 +808,7 @@ def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     
 <b>LEER, HAY CAMBIOS</b>
 
-Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitidonde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land).
+Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land).
 En el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).
 
 Ejemplos:
@@ -828,14 +829,28 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     dat = update.message.text.split("\n")
 
     if len(dat) < 2:
-        update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el ID de BGG, el URL del juego.")
+        update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de BGG y en el renglón siguiente el URL del juego.")
         return JUEGO_AGREGAR
 
+    bgg_url = dat[0]
     url = dat[1]
+
+    if not re.search('boardgamegeek\.com/boardgame.*?/(.*?)($|/)',bgg_url):
+        update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
+        return JUEGO_AGREGAR
 
     if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves", url):
         update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount o Grooves.land")
         return JUEGO_AGREGAR
+
+    sitio_nom, sitio_id = extrae_sitio
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute ('SELECT * FROM juegos WHERE sitio = ? AND sitio_ID = ?',[sitio_nom, sitio_id])
+    moni = cursor.fetchall()
+    if moni:
+        update.message.reply_text("Ese juego ya está siendo monitoreado desde ese sitio.")
+        return PRINCIPAL
 
     if len(dat) == 2 and re.search("deepdiscount", url):
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")
@@ -843,14 +858,13 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
     if len(dat) == 2:
         peso = None
-    BGG_URL = dat[0]
     if len(dat) > 2:
         peso = dat[2]
 
     conn = conecta_db()
     cursor = conn.cursor()
     fecha = datetime.now()
-    cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha) VALUES (?,?,?,?,?,?)',[usuario_nom, usuario_id, BGG_URL, url, peso, fecha])
+    cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha) VALUES (?,?,?,?,?,?)',[usuario_nom, usuario_id, bgg_url, url, peso, fecha])
     conn.commit()
     texto = f"{usuario_nom} sugirió el juego {url}"
     requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&disable_web_page_preview=False&text={texto}')
@@ -860,6 +874,75 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(text = 'Gracias por agregar el juego. Va a ser revisado y vas a recibir un mensaje si es aprobado o rechazado.', reply_markup=reply_markup)
     return PRINCIPAL
+
+######### Extrae ID del sitio
+def extrae_sitio(sitio_url):
+    sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=.*?\/dp\/(.*?)\/',sitio_url)
+    if sitio_id:
+        sitio_nom = "BLAM"
+        sitio_id = sitio_id[1]
+
+    sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&)',sitio_url)
+    if sitio_id:
+        sitio_nom = "BLAM"
+        sitio_id = sitio_id[1]
+
+    sitio_id = re.search('buscalibre\.com\.ar\/(.*?)(\s|$|\?|&)',sitio_url)
+    if sitio_id:
+        sitio_nom = "BLIB"
+        sitio_id = sitio_id[1]
+
+    sitio_id = re.search('bookdepository.com\/..\/.*?\/(.*?)(\s|$|\/|\?|&)',sitio_url)
+    if sitio_id:
+        sitio_nom = "BOOK"
+        sitio_id = sitio_id[1]
+
+    sitio_id = re.search('tiendamia\.com(\/|.)ar\/producto\?amz=(.*?)(\s|$|\/|\?|&)',sitio_url)
+    if sitio_id:
+        sitio_nom = "TMAM"
+        sitio_id = sitio_id[2]
+
+    sitio_id = re.search('tiendamia\.com(\/|.)ar\/productow\?wrt=(.*?)(\s|$|\/|\?|&)',sitio_url)
+    if sitio_id:
+        sitio_nom = "TMWM"
+        sitio_id = sitio_id[2]
+
+    sitio_id = re.search('tiendamia\.com(\/|.)ar\/e-?producto?\?ebay=(.*?)(\s|$|\/|\?|&)',sitio_url)
+    if sitio_id:
+        sitio_nom = "TMEB"
+        sitio_id = sitio_id[2]
+
+    sitio_id = re.search('tiendamia\.com(\/|.)ar\/product\/mcy\/(.*?)(\s|$|\/|\?|&)',sitio_url)
+    if sitio_id:
+        sitio_nom = "TMMA"
+        sitio_id = sitio_id[2]
+
+    sitio_id = re.search('365games\.co\.uk\/(.*?)(\?|&|$)',sitio_url)
+    if sitio_id:
+        sitio_nom = "365"
+        sitio_id = sitio_id[1]
+
+    sitio_id = re.search('shop4es\.com\/(.*?)(\?|&|$)',sitio_url)
+    if sitio_id:
+        sitio_nom = "shop4es"
+        sitio_id = sitio_id[1]
+
+    sitio_id = re.search('shop4world\.com\/(.*?)(\?|&|$)',sitio_url)
+    if sitio_id:
+        sitio_nom = "shop4world"
+        sitio_id = sitio_id[1]
+
+    sitio_id = re.search('deepdiscount\.com\/(.*?)(\?|&|$)',sitio_url)
+    if sitio_id:
+        sitio_nom = "deep"
+        sitio_id = sitio_id[1]
+
+    sitio_id = re.search('grooves\.land\/(.*?html)',sitio_url)
+    if sitio_id:
+        sitio_nom = "grooves"
+        sitio_id = sitio_id[1]
+
+    return [sitio_nom, sitio_id]
 
 ######### Muestra los juegos en oferta y restock
 def ofertas_restock(update: Update, context: CallbackContext) -> int:
