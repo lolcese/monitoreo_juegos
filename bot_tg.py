@@ -878,6 +878,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
 ######### Extrae ID del sitio
 def extrae_sitio(sitio_url):
+    print(sitio_url)
     sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=.*?\/dp\/(.*?)\/',sitio_url)
     if sitio_id:
         sitio_nom = "BLAM"
@@ -894,6 +895,7 @@ def extrae_sitio(sitio_url):
         sitio_id = sitio_id[1]
 
     sitio_id = re.search('bookdepository.com\/..\/.*?\/(.*?)(\s|$|\/|\?|&)',sitio_url)
+    print(sitio_id)
     if sitio_id:
         sitio_nom = "BOOK"
         sitio_id = sitio_id[1]
