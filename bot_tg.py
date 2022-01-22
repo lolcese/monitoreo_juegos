@@ -878,76 +878,83 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
 ######### Extrae ID del sitio
 def extrae_sitio(sitio_url):
-    print(sitio_url)
     sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=.*?\/dp\/(.*?)\/',sitio_url)
     if sitio_id:
         sitio_nom = "BLAM"
         sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "BLAM"
         sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('buscalibre\.com\.ar\/(.*?)(\s|$|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "BLIB"
         sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('bookdepository.com\/..\/.*?\/(.*?)(\s|$|\/|\?|&)',sitio_url)
-    print(sitio_id[0])
-    print(sitio_id[1])
     if sitio_id:
         sitio_nom = "BOOK"
         sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('tiendamia\.com(\/|.)ar\/producto\?amz=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "TMAM"
         sitio_id = sitio_id[2]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('tiendamia\.com(\/|.)ar\/productow\?wrt=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "TMWM"
         sitio_id = sitio_id[2]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('tiendamia\.com(\/|.)ar\/e-?producto?\?ebay=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "TMEB"
         sitio_id = sitio_id[2]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('tiendamia\.com(\/|.)ar\/product\/mcy\/(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "TMMA"
         sitio_id = sitio_id[2]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('365games\.co\.uk\/(.*?)(\?|&|$)',sitio_url)
     if sitio_id:
         sitio_nom = "365"
         sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('shop4es\.com\/(.*?)(\?|&|$)',sitio_url)
     if sitio_id:
         sitio_nom = "shop4es"
         sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('shop4world\.com\/(.*?)(\?|&|$)',sitio_url)
     if sitio_id:
         sitio_nom = "shop4world"
         sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('deepdiscount\.com\/(.*?)(\?|&|$)',sitio_url)
     if sitio_id:
         sitio_nom = "deep"
         sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
 
     sitio_id = re.search('grooves\.land\/(.*?html)',sitio_url)
     if sitio_id:
         sitio_nom = "grooves"
         sitio_id = sitio_id[1]
-
-    print(sitio_nom, sitio_id)
-    return [sitio_nom, sitio_id]
+        return [sitio_nom, sitio_id]
 
 ######### Muestra los juegos en oferta y restock
 def ofertas_restock(update: Update, context: CallbackContext) -> int:
