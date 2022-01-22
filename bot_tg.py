@@ -843,7 +843,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount o Grooves.land")
         return JUEGO_AGREGAR
 
-    sitio_nom, sitio_id = extrae_sitio
+    sitio_nom, sitio_id = extrae_sitio(url)
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute ('SELECT * FROM juegos WHERE sitio = ? AND sitio_ID = ?',[sitio_nom, sitio_id])
