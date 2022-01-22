@@ -844,13 +844,16 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         return JUEGO_AGREGAR
 
     sitio_nom, sitio_id = extrae_sitio(url)
-    print(sitio_nom, sitio_id)
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute ('SELECT * FROM juegos WHERE sitio = ? AND sitio_ID = ?',[sitio_nom, sitio_id])
     moni = cursor.fetchall()
     if moni:
-        update.message.reply_text("Ese juego ya está siendo monitoreado desde ese sitio.")
+        keyboard = [
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(text = 'Ese juego ya está siendo monitoreado desde ese sitio.', reply_markup=reply_markup)
         return PRINCIPAL
 
     if len(dat) == 2 and re.search("deepdiscount", url):
