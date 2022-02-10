@@ -24,11 +24,11 @@ from telegram.ext import (Updater)
 import requests
 import sys
 
-prioridad = '3'  # str(sys.argv[1])
+prioridad = str(sys.argv[1])
 os.chdir(path.actual)
-#bot_token = os.environ.get('bot_token')
+bot_token = os.environ.get('bot_token')
 
-# updater = Updater(bot_token)
+updater = Updater(bot_token)
 
 ######### Baja una página cualquiera
 def baja_pagina(url):
