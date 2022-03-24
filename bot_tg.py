@@ -513,7 +513,6 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     arch = f"graficos/{BGG_id}.png"
     if not os.path.exists(arch):
         arch = "graficos/0000.png"
-    arch += f"?f={datetime.now().total_seconds()}" # Para evitar que una imagen quede en cache
     timestamp = datetime.datetime.now().isoformat()
     ima = constantes.sitio_URL["base"]+arch
     ima_url = '{0}?a={1}'.format(ima, timestamp)
