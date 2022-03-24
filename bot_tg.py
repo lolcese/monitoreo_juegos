@@ -513,14 +513,18 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     arch = f"graficos/{BGG_id}.png"
     if not os.path.exists(arch):
         arch = "graficos/0000.png"
-    arch += f"?f={datetime.now().isoformat()}" # Para evitar que una imagen quede en cache
+    arch += f"?f={datetime.now().total_seconds()}" # Para evitar que una imagen quede en cache
+    timestamp = datetime.datetime.now().isoformat()
+    ima = constantes.sitio_URL["base"]+arch
+    ima_url = '{0}?a={1}'.format(ima, timestamp)
+    
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     print("-------------------"+BGG_id)
     print("-------------------"+constantes.sitio_URL["base"]+arch)
     print("-------------------"+nombre)
     print("-------------------"+texto)
     print("-------------------",update.effective_chat.id)
-    id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = "https://images.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png") #constantes.sitio_URL["base"]+arch)
+    id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = ima_url)
     context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
 
     fecha = datetime.now()
