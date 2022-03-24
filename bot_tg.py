@@ -520,7 +520,7 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     print("-------------------"+nombre)
     print("-------------------"+texto)
     print("-------------------",update.effective_chat.id)
-    id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = constantes.sitio_URL["base"]+arch)
+    id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = "https://images.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png") #constantes.sitio_URL["base"]+arch)
     context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
 
     fecha = datetime.now()
