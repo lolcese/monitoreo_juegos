@@ -515,7 +515,11 @@ def juego_info(update: Update, context: CallbackContext) -> int:
         arch = "graficos/0000.png"
     arch += f"?f={datetime.now().isoformat()}" # Para evitar que una imagen quede en cache
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    id = context.bot.sendPhoto(chat_id=update.effective_chat.id, photo = constantes.sitio_URL["base"]+arch)
+    print("-------------------"+BGG_id)
+    print("-------------------"+constantes.sitio_URL["base"]+arch)
+    print("-------------------"+nombre)
+    print("-------------------"+texto)
+    id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = constantes.sitio_URL["base"]+arch)
     context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
 
     fecha = datetime.now()
