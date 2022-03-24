@@ -519,6 +519,7 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     print("-------------------"+constantes.sitio_URL["base"]+arch)
     print("-------------------"+nombre)
     print("-------------------"+texto)
+    print("-------------------"+update.effective_chat.id)
     id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = constantes.sitio_URL["base"]+arch)
     context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
 
