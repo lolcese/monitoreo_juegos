@@ -513,16 +513,16 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     arch = f"graficos/{BGG_id}.png"
     if not os.path.exists(arch):
         arch = "graficos/0000.png"
-    ima = constantes.sitio_URL["base"]+arch
-    timestamp = datetime.now().isoformat()
-    ima_url = '{0}?a={1}'.format(ima, timestamp)
+    # ima = constantes.sitio_URL["base"]+arch
+    # timestamp = datetime.now().isoformat()
+    # ima_url = '{0}?a={1}'.format(ima, timestamp)
     
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    print("-------------------"+BGG_id)
-    print("-------------------"+ima_url)
-    print("-------------------"+nombre)
-    print("-------------------"+texto)
-    print("-------------------",update.effective_chat.id)
+    # print("-------------------"+BGG_id)
+    # print("-------------------"+ima_url)
+    # print("-------------------"+nombre)
+    # print("-------------------"+texto)
+    # print("-------------------",update.effective_chat.id)
     id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
     # id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = ima_url)
     id = context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
