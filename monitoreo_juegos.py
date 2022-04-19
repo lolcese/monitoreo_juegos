@@ -412,6 +412,8 @@ def main():
         alarmas = cursor.fetchall()
         for alarma in alarmas:
             id_persona, precio_al = alarma
+            if int(precio_al) <= 0:
+                continue
             arch = f"{bgg_id}.png"
             if not os.path.exists(f"graficos/{arch}"):
                 arch = "0000.png"
