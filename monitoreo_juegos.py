@@ -197,6 +197,9 @@ def lee_pagina_book(ju_id):
     precio_ar = re.search('<span class=\"sale-price\">ARS\$(.*?)</span>',text)
     if not precio_ar:
         return None
+    no_stock = re.search('<p class="red-text bold">Actualmente no disponible</p>',text)
+    if no_stock:
+        return None
     precio_ar = re.sub("\.", "", precio_ar[1])
     precio_ar = float(re.sub(",", ".", precio_ar)) * constantes.var['impuesto_compras_exterior']
 
