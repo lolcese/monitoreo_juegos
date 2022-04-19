@@ -110,4 +110,15 @@ dolar_tm = precio_ar / precio_us
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "dolar_tm"',(dolar_tm, fecha))
 conn.commit()
 
+######### Baja envío BL
+url = "https://www.buscalibre.com.ar/despacho-ar_st.html"
+response = get(url)
+text = response.content.decode('utf-8', errors='ignore')
+datos1 = re.search('<span class="region">CABA</span><span class="valor">.*?</span><span class="despacho">\$ 300</span></li><li><span class="region">PROVINCIA DE BUENOS AIRES </span><span class="valor">\$ (.*?)</span>',text)
+print(datos1)
+env_bl = float(datos1[1])
+
+cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "envio_BL"',(env_bl, fecha))
+conn.commit()
+
 cursor.close()

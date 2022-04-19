@@ -601,6 +601,10 @@ def alarmas_agregar(update: Update, context: CallbackContext) -> int:
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
+    if precio == "":
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text("El precio tiene que ser un número", reply_markup=reply_markup)        
+        return ALARMAS_NUEVA_PRECIO
     reply_markup = InlineKeyboardMarkup(keyboard)
     usuario_id = update.message.from_user.id
     BGG_id = context.chat_data["BGG_id"]
@@ -720,6 +724,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
     
+19/04/2022: Actualiza automáticamente el costo de envío de Buscalibre.
 22/01/2022: Chequea automáticamente si es un duplicado al agregar un juego.
 08/01/2022: La búsqueda online funciona correctamente.
 08/01/2022: Reorganización en los menúes.
