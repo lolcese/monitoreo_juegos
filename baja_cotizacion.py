@@ -101,13 +101,22 @@ id_prod_ref = "B000FZX93K"
 url = "https://tiendamia.com/ar/producto?amz="+id_prod_ref
 response = get(url)
 text = response.content.decode('utf-8', errors='ignore')
-precio_ar = re.search('ecomm_totalvalue: (.*?),',text)
-precio_ar = float(re.sub("\.", "", precio_ar[1]))
-precio_us = re.search('data-price=\"U\$S (.*?)\"',text)
-precio_us = float(precio_us[1])
+precios = re.search('"currencies":{\n\s+"ARS":(.*?),\n\s+"USD":(.*?),',text)
+precio_ar = float(precios[1])
+precio_us = float(precios[2])
 dolar_tm = precio_ar / precio_us
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "dolar_tm"',(dolar_tm, fecha))
+conn.commit()
+
+######### Baja envío BL
+url = "https://www.buscalibre.com.ar/despacho-ar_st.html"
+response = get(url)
+text = response.content.decode('utf-8', errors='ignore')
+datos1 = re.search('<span class="region">CABA</span><span class="valor">.*?</span><span class="despacho">.*?</span></li><li><span class="region">PROVINCIA DE BUENOS AIRES </span><span class="valor">\$ (.*?)</span>',text)
+env_bl = float(datos1[1])
+
+cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "envio_BL"',(env_bl, fecha))
 conn.commit()
 
 cursor.close()
