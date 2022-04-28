@@ -85,12 +85,12 @@ def lee_pagina_tmam(ju_id):
     if text == "Error":
         return None
 
-    peso = re.search('data-weight="(.*?)"',text)
+    peso = re.search('product.*?weight="(.*?)"',text)
     if not peso or peso[1] == "":
         return None
     peso = float(peso[1])
  
-    precio_ar = re.search('ecomm_totalvalue: (.*?),',text)
+    precio_ar = re.search('<meta property="product:price:amount" content="(.*?)"',text)
     if not precio_ar:
         return None
     precio_ar = float(re.sub("\.", "", precio_ar[1]))
