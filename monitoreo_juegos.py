@@ -85,7 +85,7 @@ def lee_pagina_tmam(ju_id):
     if text == "Error":
         return None
 
-    peso = re.search('product.*?weight="(.*?)"',text)
+    peso = re.search('"weight":{"type":"normal","value":"(.*?) kg"',text)
     if not peso or peso[1] == "":
         return None
     peso = float(peso[1])
