@@ -35,7 +35,7 @@ def main():
         if precio_min == None:
             min_precio = "-"
         else:
-            min_precio = f"${precio_min[0]:.0f}"
+            min_precio = f"${precio_min:.0f}"
         if min_fecha == None:
             min_fecha = "-"
         juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, min_fecha, min_precio, constantes.dependencia_len[dependencia_leng]])
