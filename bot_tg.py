@@ -684,7 +684,10 @@ Si no está el juego que te interesa, o si encontraste otro lugar donde lo vende
 En <i>Ofertas y juegos en reposición</i> vas a ver todos los juegos que han bajado de precio más del 10% respecto a su promedio de 15 días, y los juegos que ahora están disponibles pero no lo estuvieron por más de 15 días.
 
 Desde cualquier chat o grupo, escribí @Monitor_Juegos_bot y parte del nombre de un juego para ver la información de ese juego sin salir del chat.
-    Si un menú no responde, escribí nuevamente /start.
+
+Si un menú no responde, escribí nuevamente /start.
+
+<b>@matiliza armó un tutorial sobre todas las funciones del bot, miralo <a href='https://www.dropbox.com/s/15abm8a78x1jcwf/tuto-bot.mov?dl=0'>acá.</a></b>
 
 Cualquier duda, mandame un mensaje a @Luis_Olcese."""
     keyboard = [
@@ -721,6 +724,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
     
+18/05/2022: Agregado un tutorial por @matiliza.
 18/05/2022: Muestra precios actuales en las alarmas.
 18/05/2022: Resuelta la actualización automática de la planilla.
 19/04/2022: Actualiza automáticamente el costo de envío de Buscalibre.
@@ -812,7 +816,7 @@ def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    texto = """"<b>Sugerir juego a monitorear</b>
+    texto = """<b>Sugerir juego a monitorear</b>
     
 <b>LEER, HAY CAMBIOS</b>
 
