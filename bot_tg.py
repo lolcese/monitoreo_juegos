@@ -5,6 +5,7 @@
 # de ver datos de juegos, fijar alarmas, sugerir nuevos juegos a monitorear, etc.
 ############################################################################################
 
+from asyncio.windows_events import NULL
 from ntpath import join
 from sqlite3.dbapi2 import version
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
@@ -401,11 +402,15 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     else:
         alar = []
         for a in alarmas:
-            cursor.execute('SELECT DISTINCT nombre FROM juegos WHERE BGG_id = ?',[a[0]])
+            cursor.execute('SELECT DISTINCT nombre, precio_actual FROM juegos WHERE BGG_id = ?',[a[0]])
             juegos = cursor.fetchone()
-            alar.append(f"\U000027A1 {html.escape(juegos[0])} (${a[1]:.0f})\n")
+            if juegos[1] == None:
+                pre_act = "No disponible"
+            else:
+                pre_act = f"${juegos[1]:.0f}"
+            alar.append(f"\U000027A1 {html.escape(juegos[0])}: {pre_act} / {a[1]:.0f}\n")
         alar.sort()
-    texto = "<b>Mis alarmas</b>\n\n"+''.join(alar)
+    texto = "<b>Mis alarmas (precio actual / alarma)</b>\n\n"+''.join(alar)
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -518,11 +523,6 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     # ima_url = '{0}?a={1}'.format(ima, timestamp)
     
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    # print("-------------------"+BGG_id)
-    # print("-------------------"+ima_url)
-    # print("-------------------"+nombre)
-    # print("-------------------"+texto)
-    # print("-------------------",update.effective_chat.id)
     id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
     # id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = ima_url)
     id = context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
@@ -724,13 +724,10 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
     
+18/05/2022: Muestra precios actuales en las alarmas.
+18/05/2022: Resuelta la actualización automática de la planilla.
 19/04/2022: Actualiza automáticamente el costo de envío de Buscalibre.
 22/01/2022: Chequea automáticamente si es un duplicado al agregar un juego.
-08/01/2022: La búsqueda online funciona correctamente.
-08/01/2022: Reorganización en los menúes.
-08/01/2022: Muestra precios en los listados.
-08/01/2022: Cambio en la base de datos que debería acelerar todo.
-05/12/2021: Automatizada la descarga de todos los costos de Tiendamia.
 """
 
     keyboard = [
