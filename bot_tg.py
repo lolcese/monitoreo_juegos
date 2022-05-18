@@ -405,9 +405,9 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
                 pre_act = "No disponible"
             else:
                 pre_act = f"${juegos[1]:.0f}"
-            alar.append(f"\U000027A1 {html.escape(juegos[0])}: {pre_act} / {a[1]:.0f}\n")
+            alar.append(f"\U000027A1 {html.escape(juegos[0])}: ${a[1]:.0f} (<i>{pre_act}</i>) \n")
         alar.sort()
-    texto = "<b>Mis alarmas (precio actual / alarma)</b>\n\n"+''.join(alar)
+    texto = "<b>Mis alarmas - alarma (precio actual))</b>\n\n"+''.join(alar)
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
