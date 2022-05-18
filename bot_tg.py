@@ -5,9 +5,6 @@
 # de ver datos de juegos, fijar alarmas, sugerir nuevos juegos a monitorear, etc.
 ############################################################################################
 
-from asyncio.windows_events import NULL
-from ntpath import join
-from sqlite3.dbapi2 import version
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import (Updater,InlineQueryHandler,CommandHandler,CallbackQueryHandler,ConversationHandler,CallbackContext,MessageHandler,Filters)
 from datetime import datetime
