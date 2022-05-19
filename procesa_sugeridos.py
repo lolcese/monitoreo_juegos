@@ -35,7 +35,7 @@ def procesa():
             send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
             response = requests.get(send_text)
     elif resp == "S":
-        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio) VALUES (?,?,?,?,?,?,?,?,?,?)',(int(BGG_id), nombre, sitio_nom, id_n, fecha, ranking, peso, dependencia_leng, "3", precio_envio))
+        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio) VALUES (?,?,?,?,?,?,?,?,?,?)',(int(BGG_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3", precio_envio))
         conn.commit()
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
         conn.commit()
