@@ -330,7 +330,8 @@ def lee_pagina_planeton(ju_id, precio_envio):
         return None
 
     precio_eur = re.search('<span itemprop="price" content="(.*?)">',text)
-    if not precio_eur:
+    stock = '<span class="nostock_txt"> Sin Stock </span>' in text
+    if not precio_eur or stock == 1:
         return None
 
     precio_eur = float(precio_eur[1])
