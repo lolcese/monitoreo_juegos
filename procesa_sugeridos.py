@@ -130,8 +130,6 @@ for j in juegos:
         print("** No tiene peso y es de deepdiscount **")
     
     if precio_envio != None:
-        if re.search(",", precio_envio):
-            precio_envio = float(precio_envio.replace(",","."))
         print("Precio envío: ",precio_envio)
 
     cursor.execute ('SELECT sitio, sitio_ID FROM juegos WHERE BGG_id = ?',[int(BGG_id)])
