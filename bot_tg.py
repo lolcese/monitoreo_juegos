@@ -149,7 +149,7 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_todos_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Macys", callback_data='juegos_todos_sitio_TMMA')
+            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_todos_sitio_grooves')
         ],
         [
             InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_todos_sitio_BOOK'),
@@ -161,9 +161,6 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_todos_sitio_deep'),
-            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_todos_sitio_grooves')
-        ],
-        [
             InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_todos_sitio_planeton'),
         ],
         [
@@ -222,7 +219,7 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_stockalfab_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Macys", callback_data='juegos_stockalfab_sitio_TMMA')
+            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockalfab_sitio_grooves')
         ],
         [
             InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_stockalfab_sitio_BOOK'),
@@ -234,9 +231,6 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_stockalfab_sitio_deep'),
-            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockalfab_sitio_grooves')
-        ],
-        [
             InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_stockalfab_sitio_planeton'),
         ],
         [
@@ -291,7 +285,7 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_stockprecio_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Macys", callback_data='juegos_stockprecio_sitio_TMMA')
+            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockprecio_sitio_grooves')
         ],
         [
             InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_stockprecio_sitio_BOOK'),
@@ -303,9 +297,6 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
-            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockprecio_sitio_grooves')
-        ],
-        [
             InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_stockprecio_sitio_planeton'),
         ],
         [
@@ -959,12 +950,6 @@ def extrae_sitio(sitio_url):
     sitio_id = re.search('tiendamia\.com(\/|.)ar\/e-?producto?\?ebay=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "TMEB"
-        sitio_id = sitio_id[2]
-        return [sitio_nom, sitio_id]
-
-    sitio_id = re.search('tiendamia\.com(\/|.)ar\/product\/mcy\/(.*?)(\s|$|\/|\?|&)',sitio_url)
-    if sitio_id:
-        sitio_nom = "TMMA"
         sitio_id = sitio_id[2]
         return [sitio_nom, sitio_id]
 
