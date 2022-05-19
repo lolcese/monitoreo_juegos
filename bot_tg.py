@@ -820,16 +820,25 @@ def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     
 <b>LEER, HAY CAMBIOS</b>
 
-Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount y Grooves.land).
+Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land y Planeton).
 En el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).
+<b>En el caso que agregues un juego de Planeton, poné también el costo (en euros) del envío a Argentina que aparece cuando lo agregás al carrito.</b>
 
 Ejemplos:
-https://www.boardgamegeek.com/boardgame/220/high-society
-https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777
-
+<i>Deepdiscount</i>
 https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
 https://www.deepdiscount.com/splendor-marvel/3558380055334
-2.43"""
+2.43
+
+<i>Planeton</i>
+https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
+https://www.planetongames.com/es/wingspan-p-8175.html
+34.85
+
+<i>Otros</i>
+https://www.boardgamegeek.com/boardgame/220/high-society
+https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777
+"""
 
     query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
     return JUEGO_AGREGAR
@@ -847,12 +856,12 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     bgg_url = dat[0]
     url = dat[1]
 
-    if not re.search('boardgamegeek\.com/boardgame.*?/(.*?)($|/)',bgg_url):
+    if not re.search('boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)',bgg_url):
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
         return JUEGO_AGREGAR
 
-    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves", url):
-        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount o Grooves.land")
+    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves|planeton", url):
+        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land o Planeton")
         return JUEGO_AGREGAR
 
     sitio_nom, sitio_id = extrae_sitio(url)
@@ -872,15 +881,22 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")
         return JUEGO_AGREGAR
 
-    if len(dat) == 2:
-        peso = None
-    if len(dat) > 2:
+    if len(dat) == 2 and re.search("planeton", url):
+        update.message.reply_text("Cuando agregás un juego de Planeton, tenés que poner el monto del envío.")
+        return JUEGO_AGREGAR
+
+    peso = None
+    precio_envio = None
+
+    if len(dat) > 2 and re.search("deepdiscount", url):
         peso = dat[2]
+    if len(dat) > 2 and re.search("planeton", url):
+        precio_envio = dat[2]
 
     conn = conecta_db()
     cursor = conn.cursor()
     fecha = datetime.now()
-    cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha) VALUES (?,?,?,?,?,?)',[usuario_nom, usuario_id, bgg_url, url, peso, fecha])
+    cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha, precio_envio) VALUES (?,?,?,?,?,?,?)',[usuario_nom, usuario_id, bgg_url, url, peso, fecha, precio_envio])
     conn.commit()
     texto = f"{usuario_nom} sugirió el juego {url}"
     requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&disable_web_page_preview=False&text={texto}')
@@ -969,6 +985,12 @@ def extrae_sitio(sitio_url):
     if sitio_id:
         sitio_nom = "grooves"
         sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
+
+    sitio_id = re.search('planeton\/(es\/)?(.*?html)',sitio_url)
+    if sitio_id:
+        sitio_nom = "planeton"
+        sitio_id = sitio_id[2]
         return [sitio_nom, sitio_id]
 
 ######### Muestra los juegos en oferta y restock

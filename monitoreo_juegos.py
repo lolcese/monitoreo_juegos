@@ -322,6 +322,33 @@ def lee_pagina_grooves(ju_id):
 
     return precio_final_ad
 
+######### Lee información de planeton
+def lee_pagina_grooves(ju_id, precio_envio):
+    url = "https://www.planetongames.com/es/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
+
+    precio_eur = re.search('<span itemprop="price" content="(.*)?">',text)
+    if not precio_eur:
+        return None
+
+    precio_eur = float(re.sub(",", ".", precio_eur[1]))
+    if precio_eur > constantes.var['limite_descuento_planeton']:
+        precio_eur -= constantes.var['descuento_montoalto_planeton']
+    precio_eur *= constantes.var['descuento_iva_planeton']  
+    precio_eur += precio_envio
+    precio_pesos = precio_eur * constantes.var['euro'] 
+    precio_dol = precio_pesos / constantes.var['dolar']
+
+    imp_aduana = 0
+    if precio_dol > 50:
+        imp_aduana = (precio_dol - 50) * 0.5
+
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
+
+    return precio_final_ad
+
 ######### Programa principal
 def main():
     plt.ioff()
@@ -333,11 +360,11 @@ def main():
     for jb in juegos_BGG: # Cada juego diferente
         bgg_id, nombre = jb
         hacer_grafico = False
-        cursor.execute('SELECT id_juego, sitio, sitio_ID, peso FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
+        cursor.execute('SELECT id_juego, sitio, sitio_ID, peso, precio_envio FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
         juegos_id = cursor.fetchall()
         for j in juegos_id: # Cada repetición del mismo juego
             fecha = datetime.now()
-            id_juego, sitio, sitio_ID, peso = j
+            id_juego, sitio, sitio_ID, peso, precio_envio = j
             if   sitio == "BLAM":
                 precio = lee_pagina_blam(sitio_ID)
             elif sitio == "BLIB":
@@ -362,6 +389,8 @@ def main():
                 precio = lee_pagina_deep(sitio_ID, peso)
             elif sitio == "grooves":
                 precio = lee_pagina_grooves(sitio_ID)
+            elif sitio == "planeton":
+                precio = lee_pagina_grooves(sitio_ID, precio_envio)
 
             if precio != None:
                 cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
