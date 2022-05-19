@@ -399,7 +399,7 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     else:
         alar = []
         for a in alarmas:
-            cursor.execute('SELECT DISTINCT nombre, precio_actual FROM juegos WHERE BGG_id = ?',[a[0]])
+            cursor.execute('SELECT nombre, precio_actual FROM juegos WHERE BGG_id = ? ORDER BY precio_actual NULLS LAST',[a[0]])
             juegos = cursor.fetchone()
             if juegos[1] == None:
                 pre_act = "No disponible"
