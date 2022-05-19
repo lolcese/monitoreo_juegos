@@ -719,7 +719,8 @@ Todos los precios que se muestran acá son finales, considerando los impuestos d
 \U000027A1 <a href='https://www.365games.co.uk/'>365games</a> / <a href='https://www.shop4es.com/'>shop4es</a> / <a href='https://www.shop4world.com/'>shop4world</a>: A algunos juegos los mandan por courier, por lo que tenés que pagar un extra al recibirlos.
 \U000027A1 <a href='http://grooves.land/'>Grooves.land</a>: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.
 \U000027A1 <a href='http://www.planeton.com/'>Planeton</a>: Los juegos son en español, pero los precios son aproximados (por el envío).
-\U000027A1 <a href='https://www.deepdiscount.com/'>Deepdiscount</a>: El envío es caro, pero a veces aparecen ofertas."""
+\U000027A1 <a href='https://www.deepdiscount.com/'>Deepdiscount</a>: El envío es caro, pero a veces aparecen ofertas.
+\U000027A1 <a href='https://www.planeton.com/'>Planeton</a>: Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato."""
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -1141,7 +1142,7 @@ def mensaje_oferta(update: Update, context: CallbackContext) -> int:
 def cafecito(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = "<b>Invitame a un cafecito</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. De todos modos, hay costos de electricidad para mantenerlo funcionando y muchas horas de trabajo encima, así que dejo abierta la posibilidad de quien quiera y pueda haga un aporte monetario.\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>\n\n\U00002615 <a href='https://cafecito.app/lolcese'>Invitame a un cafecito</a> \U00002615"
+    texto = "<b>Invitame a un cafecito</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. De todos modos, hay costos de electricidad para mantenerlo funcionando y muchas horas de trabajo encima, así que dejo abierta la posibilidad de quien quiera y pueda haga un aporte monetario.\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>\n\n\U00002615 Alias: luis.olcese.mp \U00002615"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
