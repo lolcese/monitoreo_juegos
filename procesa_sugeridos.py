@@ -27,7 +27,7 @@ def procesa():
     resp = input("¿Agregar? (M/S/N): ")
     if resp == "M":
         id_n = input("Ingrese la nueva id: ")
-        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad) VALUES (?,?,?,?,?,?,?,?,?)',(int(BGG_id), nombre, sitio_nom, id_n, fecha, ranking, peso, dependencia_leng, "3"))
+        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio) VALUES (?,?,?,?,?,?,?,?,?,?)',(int(BGG_id), nombre, sitio_nom, id_n, fecha, ranking, peso, dependencia_leng, "3", precio_envio))
         conn.commit()
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
         conn.commit()
@@ -35,7 +35,7 @@ def procesa():
             send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
             response = requests.get(send_text)
     elif resp == "S":
-        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad) VALUES (?,?,?,?,?,?,?,?,?)',(int(BGG_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3"))
+        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio) VALUES (?,?,?,?,?,?,?,?,?,?)',(int(BGG_id), nombre, sitio_nom, id_n, fecha, ranking, peso, dependencia_leng, "3", precio_envio))
         conn.commit()
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
         conn.commit()
@@ -55,13 +55,6 @@ def ninguno():
     resp = input("¿Ignorar / Rechazar? (I/R): ")
     if resp == "C":
         return
-        # id_n = input("Ingrese el ling de BGG, una coma y el sitio: ")
-        # conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking) VALUES (?,?,?,?,?,?)',(int(BGG_id),nombre,sitio_nom,id_n,fecha, ranking))
-        # conn.commit()
-        # conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
-        # conn.commit()
-        # send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={usuario_id}&parse_mode=Markdown&text=El juego {nombre} que sugeriste fue agregado al monitoreo. Muchas gracias.'
-        # response = requests.get(send_text)
     elif resp == "R":
         razon = input("Ingrese la razón del rechazo: ")
         conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sugerido])
@@ -81,17 +74,19 @@ if os.path.exists('sugeridos.txt'):
         with open('sugeridos.txt') as file:
             arch = csv.reader(file, delimiter=',')
             for row in arch:
-                BGG_URL, url, peso = row
+                BGG_URL, url, peso, precio_envio = row
                 if peso == "":
                     peso = None
-                cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha) VALUES (?,?,?,?,?,?)',["-", 0, BGG_URL, url, peso, fecha])
+                if precio_envio == "":
+                    precio_envio = None
+                cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha, precio_envio) VALUES (?,?,?,?,?,?,?)',["-", 0, BGG_URL, url, peso, fecha, precio_envio])
                 conn.commit()
         os.remove('sugeridos.txt')
 
-cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, BGG_URL, URL, peso, fecha FROM juegos_sugeridos')
+cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, BGG_URL, URL, peso, fecha, precio_envio FROM juegos_sugeridos')
 juegos = cursor.fetchall()
 for j in juegos:
-    id_juego_sugerido, usuario_nom, usuario_id, bgg_url, sitio_url, peso, fecha = j
+    id_juego_sugerido, usuario_nom, usuario_id, bgg_url, sitio_url, peso, fecha, precio_envio = j
 
     sitio_url = urllib.parse.unquote(sitio_url)
 
@@ -133,8 +128,10 @@ for j in juegos:
         print("Peso: ",peso)
     elif re.search('deepdiscount\.com\/(.*?)(\?|&|$)',sitio_url):
         print("** No tiene peso y es de deepdiscount **")
+    if precio_envio != None:
+        print("Precio envío: ",precio_envio)
 
-    cursor.execute ('SELECT sitio,sitio_ID FROM juegos WHERE BGG_id = ?',[int(BGG_id)])
+    cursor.execute ('SELECT sitio, sitio_ID FROM juegos WHERE BGG_id = ?',[int(BGG_id)])
     moni = cursor.fetchall()
     for m in moni:
         sitio, sitio_ID = m
@@ -229,6 +226,13 @@ for j in juegos:
     if sitio_id:
         sitio_nom = "grooves"
         sitio_id = sitio_id[1]
+        procesa()
+        continue
+
+    sitio_id = re.search('planetongames\.com\/(es\/)?(.*?html)',sitio_url)
+    if sitio_id:
+        sitio_nom = "planeton"
+        sitio_id = sitio_id[2]
         procesa()
         continue
 
