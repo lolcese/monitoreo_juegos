@@ -336,7 +336,7 @@ def lee_pagina_planeton(ju_id, precio_envio):
     precio_eur = float(precio_eur[1])
     if precio_eur > constantes.var['limite_descuento_planeton']:
         precio_eur -= constantes.var['descuento_montoalto_planeton']
-    precio_eur *= constantes.var['descuento_iva_planeton']  
+    precio_eur /= constantes.var['descuento_iva_planeton']  
     precio_eur += precio_envio
     precio_pesos = precio_eur * constantes.var['euro'] 
     precio_dol = precio_pesos / constantes.var['dolar']
