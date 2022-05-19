@@ -164,6 +164,9 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_todos_sitio_grooves')
         ],
         [
+            InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_todos_sitio_planeton'),
+        ],
+        [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
@@ -234,6 +237,9 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockalfab_sitio_grooves')
         ],
         [
+            InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_stockalfab_sitio_planeton'),
+        ],
+        [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
@@ -298,6 +304,9 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         [
             InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
             InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockprecio_sitio_grooves')
+        ],
+        [
+            InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_stockprecio_sitio_planeton'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
