@@ -831,7 +831,7 @@ https://www.deepdiscount.com/splendor-marvel/3558380055334
 2.43
 
 <i>Planeton</i>
-https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
+https://boardgamegeek.com/boardgame/266192/wingspan
 https://www.planetongames.com/es/wingspan-p-8175.html
 34.85
 
@@ -987,7 +987,7 @@ def extrae_sitio(sitio_url):
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('planeton\/(es\/)?(.*?html)',sitio_url)
+    sitio_id = re.search('planetongames\.com\/(es\/)?(.*?html)',sitio_url)
     if sitio_id:
         sitio_nom = "planeton"
         sitio_id = sitio_id[2]
