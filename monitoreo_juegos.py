@@ -323,7 +323,7 @@ def lee_pagina_grooves(ju_id):
     return precio_final_ad
 
 ######### Lee información de planeton
-def lee_pagina_grooves(ju_id, precio_envio):
+def lee_pagina_planeton(ju_id, precio_envio):
     url = "https://www.planetongames.com/es/"+ju_id
     text = baja_pagina(url)
     if text == "Error":
@@ -390,7 +390,7 @@ def main():
             elif sitio == "grooves":
                 precio = lee_pagina_grooves(sitio_ID)
             elif sitio == "planeton":
-                precio = lee_pagina_grooves(sitio_ID, precio_envio)
+                precio = lee_pagina_planeton(sitio_ID, precio_envio)
 
             if precio != None:
                 cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
