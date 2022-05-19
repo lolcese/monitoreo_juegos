@@ -329,11 +329,11 @@ def lee_pagina_planeton(ju_id, precio_envio):
     if text == "Error":
         return None
 
-    precio_eur = re.search('<span itemprop="price" content="(.*)?">',text)
+    precio_eur = re.search('<span itemprop="price" content="(.*)?"',text)
     if not precio_eur:
         return None
 
-    precio_eur = float(re.sub(",", ".", precio_eur[1]))
+    precio_eur = float(precio_eur[1])
     if precio_eur > constantes.var['limite_descuento_planeton']:
         precio_eur -= constantes.var['descuento_montoalto_planeton']
     precio_eur *= constantes.var['descuento_iva_planeton']  
