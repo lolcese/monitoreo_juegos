@@ -329,7 +329,7 @@ def lee_pagina_planeton(ju_id, precio_envio):
     if text == "Error":
         return None
 
-    precio_eur = re.search('<span itemprop="price" content="(.*)?"',text)
+    precio_eur = re.search('<span itemprop="price" content="(.*?)">',text)
     if not precio_eur:
         return None
 
