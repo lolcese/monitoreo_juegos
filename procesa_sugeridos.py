@@ -230,6 +230,13 @@ for j in juegos:
         procesa()
         continue
 
+    sitio_id = re.search('miniaturemarket\.com\/(.*?html)',sitio_url)
+    if sitio_id:
+        sitio_nom = "MM"
+        sitio_id = sitio_id[1]
+        procesa()
+        continue
+
     ninguno()
 
 cursor.close()
