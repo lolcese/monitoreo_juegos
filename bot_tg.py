@@ -802,6 +802,8 @@ def comentarios_mandar(update: Update, context: CallbackContext) -> int:
     fecha = datetime.now()
     cursor.execute('INSERT INTO comentarios (usuario, comentario,fecha) VALUES (?,?,?)',[usuario,comentario,fecha])
     conn.commit()
+    texto = f"{usuario} dejó el comentario:\n{comentario}"
+    requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&disable_web_page_preview=False&text={texto}')
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
