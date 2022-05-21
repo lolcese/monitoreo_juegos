@@ -1005,7 +1005,7 @@ def extrae_sitio(sitio_url):
     sitio_id = re.search('miniaturemarket\.com\/(.*?html)',sitio_url)
     if sitio_id:
         sitio_nom = "MM"
-        sitio_id = sitio_id[2]
+        sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
 ######### Muestra los juegos en oferta y restock
