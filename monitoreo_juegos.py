@@ -350,6 +350,30 @@ def lee_pagina_planeton(ju_id, precio_envio):
 
     return precio_final_ad
 
+######### Lee información de Miniature Market
+def lee_pagina_mm(ju_id, precio_envio):
+    url = "https://www.miniaturemarket.com/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
+
+    precio_dol = re.search("price: '(.*?)',",text)
+    stock = '<div class="availability out-of-stock">Out of stock</div>' in text
+    if not precio_dol or stock == 1:
+        return None
+
+    precio_dol = float(precio_dol[1])
+    precio_dol += precio_envio
+    precio_pesos = precio_dol * constantes.var['dolar'] 
+
+    imp_aduana = 0
+    if precio_dol > 50:
+        imp_aduana = (precio_dol - 50) * 0.5
+
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
+
+    return precio_final_ad
+
 ######### Programa principal
 def main():
     plt.ioff()
@@ -392,6 +416,8 @@ def main():
                 precio = lee_pagina_grooves(sitio_ID)
             elif sitio == "planeton":
                 precio = lee_pagina_planeton(sitio_ID, precio_envio)
+            elif sitio == "MM":
+                precio = lee_pagina_mm(sitio_ID, precio_envio)
 
             if precio != None:
                 cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
