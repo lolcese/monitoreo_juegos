@@ -11,9 +11,8 @@ import path
 import csv
 import urllib.parse
 
-os.chdir(path.actual)
 
-bot_token = os.environ.get('bot_token')
+bot_token = os.environ.get('bot_token', '1072014433:AAEwiGMrvaYE03wFSJjjgpIxFF4WmcKja0o')
 
 ######### Conecta con la base de datos
 def conecta_db():

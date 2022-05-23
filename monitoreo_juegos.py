@@ -20,15 +20,15 @@ from matplotlib.ticker import FormatStrFormatter
 import constantes
 import os.path
 import path
-from telegram.ext import (Updater)
+# from telegram.ext import (Updater)
 import requests
 import sys
 
-prioridad = str(sys.argv[1])
-os.chdir(path.actual)
-bot_token = os.environ.get('bot_token')
+# prioridad = str(sys.argv[1])
+# os.chdir(path.actual)
 
-updater = Updater(bot_token)
+
+# updater = Updater(bot_token)
 
 ######### Baja una página cualquiera
 def baja_pagina(url):
@@ -375,7 +375,10 @@ def lee_pagina_mm(ju_id, precio_envio):
     return precio_final_ad
 
 ######### Programa principal
-def main():
+def main(prioridad):
+    print(f"Monitoreo de prioridad {prioridad} ejecutandose!")
+    bot_token = os.environ.get('bot_token', '1072014433:AAEwiGMrvaYE03wFSJjjgpIxFF4WmcKja0o')
+    
     plt.ioff()
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.execute("PRAGMA journal_mode=WAL")
