@@ -2,4 +2,4 @@
 ##### path
 ########################################################
 
-actual = "/home/lolcese/monitoreo_juegos"
+actual = "/bd"
