@@ -3,9 +3,9 @@ import os.path
 import path
 import constantes
 import sqlite3
-
+from datetime import datetime
 def main():
-    print("Actualiza prioridades ejecutandose")
+    print(f"Actualiza prioridades ejecutandose {datetime.now()}")
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.execute("PRAGMA journal_mode=WAL")
     cursor = conn.cursor()

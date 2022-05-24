@@ -10,8 +10,9 @@ from datetime import datetime
 import requests
 from requests import get
 from urllib.error import URLError, HTTPError
+from datetime import datetime
 
-bot_token = os.environ.get('bot_token', '1072014433:AAEwiGMrvaYE03wFSJjjgpIxFF4WmcKja0o')
+bot_token = os.environ.get('bot_token', '1072014433:AAE2yxd4kFgYM-hVl9ysMzsQDTqiK1CKss8')
 id_aviso = os.environ.get('id_aviso', 387393551)
 
 fecha = datetime.now()
@@ -37,7 +38,7 @@ def baja_pagina(url):
     return data.read().decode(encoding, errors='ignore')
 
 def main():
-    print("Baja cotizaciones ejecutandose")
+    print(f"Baja cotizaciones ejecutandose {datetime.now()}")
     ######### Baja cotización de monedas de BNA
     url = 'https://www.bna.com.ar/Personas'
     req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 

@@ -11,10 +11,10 @@ import constantes
 import os.path
 import path
 import csv
-
+from datetime import datetime
 ######### Programa principal
 def main():
-    print("Genera CSV ejecutandose")
+    print(f"Genera CSV ejecutandose {datetime.now()}")
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.execute("PRAGMA journal_mode=WAL")
     cursor = conn.cursor()

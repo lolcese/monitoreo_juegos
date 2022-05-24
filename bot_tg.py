@@ -18,7 +18,7 @@ from uuid import uuid4
 import requests
 import html
 
-bot_token = os.environ.get('bot_token', '1072014433:AAEwiGMrvaYE03wFSJjjgpIxFF4WmcKja0o')
+bot_token = os.environ.get('bot_token', '1072014433:AAE2yxd4kFgYM-hVl9ysMzsQDTqiK1CKss8')
 id_aviso = os.environ.get('id_aviso', 387393551)
 
 PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, JUEGO_AGREGAR = range(9)

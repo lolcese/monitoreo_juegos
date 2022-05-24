@@ -12,7 +12,7 @@ import csv
 import urllib.parse
 
 
-bot_token = os.environ.get('bot_token', '1072014433:AAEwiGMrvaYE03wFSJjjgpIxFF4WmcKja0o')
+bot_token = os.environ.get('bot_token', '1072014433:AAE2yxd4kFgYM-hVl9ysMzsQDTqiK1CKss8')
 
 ######### Conecta con la base de datos
 def conecta_db():

@@ -8,8 +8,8 @@ from datetime import datetime
 import requests
 
 def main():
-    print("Oferta Reposiciones executandose")
-    bot_token = os.environ.get('bot_token', '1072014433:AAEwiGMrvaYE03wFSJjjgpIxFF4WmcKja0o')
+    print(f"Oferta Reposiciones executandose {datetime.now()}")
+    bot_token = os.environ.get('bot_token', '1072014433:AAE2yxd4kFgYM-hVl9ysMzsQDTqiK1CKss8')
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.execute("PRAGMA journal_mode=WAL")
     cursor = conn.cursor()

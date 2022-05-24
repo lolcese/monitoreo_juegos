@@ -23,6 +23,7 @@ import path
 # from telegram.ext import (Updater)
 import requests
 import sys
+from datetime import datetime
 
 # prioridad = str(sys.argv[1])
 # os.chdir(path.actual)
@@ -376,8 +377,8 @@ def lee_pagina_mm(ju_id, precio_envio):
 
 ######### Programa principal
 def main(prioridad):
-    print(f"Monitoreo de prioridad {prioridad} ejecutandose!")
-    bot_token = os.environ.get('bot_token', '1072014433:AAEwiGMrvaYE03wFSJjjgpIxFF4WmcKja0o')
+    print(f"Monitoreo de prioridad {prioridad} ejecutandose! {datetime.now()}")
+    bot_token = os.environ.get('bot_token', '1072014433:AAE2yxd4kFgYM-hVl9ysMzsQDTqiK1CKss8')
     
     plt.ioff()
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)

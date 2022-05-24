@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 
 def main():
-    print("Baja ranking ejecutandose")
+    print(f"Baja ranking ejecutandose {datetime.now()}")
     fecha = datetime.now()
 
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
