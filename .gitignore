@@ -4,6 +4,7 @@ graficos/
 extras/
 monitoreo_juegos.db*
 *.sh
+!backup.sh
 desarollo.md
 consultas.sqlite
 bot_token.txt
