@@ -135,7 +135,7 @@ def lee_pagina_tmeb(ju_id):
     peso = float(peso[1])
 
     precio_ar = re.search('<span id="finalpricecountry_producto_ajax" class="notranslate">AR\$ (.*)</span>',text)
-    stock = '"availability": "https://schema.org/OutOfStock"' in text
+    stock = '<span id="stock_producto_ajax">Sin Stock</span>' in text
     if not precio_ar or stock == 1:
         return None
     precio_ar = float(re.sub("\.", "", precio_ar[1]))

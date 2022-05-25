@@ -554,7 +554,7 @@ def texto_info_juego(BGG_id):
     texto = f"<b>{html.escape(nombre)}</b>\n\n"
     texto += f"<a href= '{link_BGG}'>Enlace BGG</a> - Ranking: {ranking}\n"
     texto += f"Dependencia del idioma: {dependencia_leng}\n\n"
-    texto += "Los precios indicados son <b>finales</b> (incluyen Aduana y correo).\n\n"
+    texto += "Los precios indicados son <b>finales</b> (incluyen envío, aduana y correo).\n\n"
     texto_ju = []
     precio_ju = []
     ju = 0
@@ -1198,20 +1198,20 @@ def main() -> PRINCIPAL:
         entry_points=[CommandHandler('start', start)],
         states={
             PRINCIPAL: [
-                CallbackQueryHandler(juegos_lista_menu,      pattern='^juegos_lista_menu$'),
-                CallbackQueryHandler(ofertas_restock,        pattern='^ofertas_restock$'),
-                CallbackQueryHandler(juego_ver,              pattern='^juego_ver$'),
-                CallbackQueryHandler(sugerir_juego_datos,    pattern='^sugerir_juego_datos$'),
-                CallbackQueryHandler(alarmas_muestra,        pattern='^alarmas_muestra$'),
-                CallbackQueryHandler(comentarios_texto,      pattern='^comentarios_texto$'),
-                CallbackQueryHandler(novedades,              pattern='^novedades$'),
-                CallbackQueryHandler(estadistica,            pattern='^estadistica$'),
-                CallbackQueryHandler(cafecito,               pattern='^cafecito$'),
-                CallbackQueryHandler(ayuda,                  pattern='^ayuda$'),
-                CallbackQueryHandler(consejos,               pattern='^consejos$'),
-                CallbackQueryHandler(inicio,                 pattern='^inicio$'),
-                CallbackQueryHandler(mensaje_oferta,         pattern='^mensaje_oferta_'),
-            ],
+                CallbackQueryHandler(juegos_lista_menu,        pattern='^juegos_lista_menu$'),
+                CallbackQueryHandler(ofertas_restock,          pattern='^ofertas_restock$'),
+                CallbackQueryHandler(juego_ver,                pattern='^juego_ver$'),
+                CallbackQueryHandler(sugerir_juego_datos,      pattern='^sugerir_juego_datos$'),
+                CallbackQueryHandler(alarmas_muestra,          pattern='^alarmas_muestra$'),
+                CallbackQueryHandler(comentarios_texto,        pattern='^comentarios_texto$'),
+                CallbackQueryHandler(novedades,                pattern='^novedades$'),
+                CallbackQueryHandler(estadistica,              pattern='^estadistica$'),
+                CallbackQueryHandler(cafecito,                 pattern='^cafecito$'),
+                CallbackQueryHandler(ayuda,                    pattern='^ayuda$'),
+                CallbackQueryHandler(consejos,                 pattern='^consejos$'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
+                CallbackQueryHandler(mensaje_oferta,           pattern='^mensaje_oferta_'),
+            ],  
             LISTA_JUEGOS: [
                 CallbackQueryHandler(juegos_lista_menu,        pattern='^juegos_lista_menu$'),
                 CallbackQueryHandler(juegos_planilla,          pattern='^juegos_planilla$'),
@@ -1227,19 +1227,19 @@ def main() -> PRINCIPAL:
             ],
             JUEGO_ELECCION: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, juego_nom),
-                CallbackQueryHandler(inicio,               pattern='^inicio$'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             JUEGO: [
-                CallbackQueryHandler(juego_info,        pattern='^BGG_'),
-                CallbackQueryHandler(inicio,            pattern='^inicio$'),
+                CallbackQueryHandler(juego_info,               pattern='^BGG_'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ALARMAS_NUEVA_PRECIO: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, alarmas_agregar),
-                CallbackQueryHandler(inicio,               pattern='^inicio$'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ALARMAS_CAMBIAR_PRECIO: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, alarmas_cambiar),
-                CallbackQueryHandler(inicio,               pattern='^inicio$'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ALARMAS: [
                 CallbackQueryHandler(alarmas_agregar_precio,   pattern='^alarmas_agregar_precio$'),
