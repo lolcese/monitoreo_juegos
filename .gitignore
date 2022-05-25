@@ -2,7 +2,6 @@ __pycache__/
 .vscode/
 graficos/
 extras/
-monitoreo_juegos.db*
 *.sh
 desarollo.md
 consultas.sqlite
