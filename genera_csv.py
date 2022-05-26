@@ -24,10 +24,10 @@ def main():
     ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
     juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_mejor, precio_mejor FROM juegos ORDER BY nombre')
+    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor FROM juegos ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
-        nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, min_fecha, precio_min = j
+        nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_min = j
         if precio_actual == None:
             precio = "-"
         else:
@@ -36,9 +36,9 @@ def main():
             min_precio = "-"
         else:
             min_precio = f"${precio_min:.0f}"
-        if min_fecha == None:
-            min_fecha = "-"
-        juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, min_fecha, min_precio, constantes.dependencia_len[dependencia_leng]])
+        if fecha_actual == None:
+            fecha_actual = "-"
+        juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha_actual, min_precio, constantes.dependencia_len[dependencia_leng]])
     
     ju.close()
     if os.path.exists(f'graficos/{constantes.exporta_file}'):

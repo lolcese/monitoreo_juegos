@@ -10,7 +10,6 @@ consultas.sqlite
 bot_token.txt
 sugeridos.txt
 crontab.txt
-analizachats.py
 test.*
 sqlite3.exe
 monitoreo_juegos_todo.db
