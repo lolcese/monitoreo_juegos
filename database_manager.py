@@ -42,6 +42,7 @@ def backup_database():
 
 def restore_database():
     """ read BLOB data from a table """
+    print("Se comenzo a restaurar la BD!")
     conn = None
     try:
         path_to_dir = 'db/'

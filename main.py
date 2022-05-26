@@ -57,7 +57,7 @@ def bot():
 
 if __name__ == '__main__':
     # Primero se restaura la bd de sqllite para usar en los procesos
-    restore_database()
+    
     p1 = Process(target=procesos_cada_15_minutos).start()
     p2 = Process(target=procesos_cada_30_minutos).start()
     p1 = Process(target=procesos_cada_120_minutos).start()
