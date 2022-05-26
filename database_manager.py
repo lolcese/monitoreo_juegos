@@ -45,7 +45,7 @@ def restore_database():
     print("Se comenzo a restaurar la BD!")
     conn = None
     try:
-        path_to_dir = 'db/'
+        path_to_dir = 'bd/'
         # read database configuration
         conn = psycopg2.connect(
             database=url.path[1:],
