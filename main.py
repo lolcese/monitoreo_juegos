@@ -8,6 +8,7 @@ from baja_cotizacion import main as main_baja_cotizacion
 from actualiza_prioridades import main as main_actualiza_prioridades
 from baja_ranking import main as main_baja_ranking
 from bot_tg import main as main_bot_tg
+from database_manager import restore_database, backup_database
 
 def main():
     main_monitoreo(1)
@@ -25,10 +26,10 @@ def procesos_cada_15_minutos():
     while 1:
         sleep(900)
         main_monitoreo(1)
-def procesos_cada_60_minutos():
+def procesos_cada_30_minutos():
     sleep(600)
     while 1:
-        sleep(3600)
+        sleep(1800)
         main_monitoreo(2)
         main_ofertas_reposiciones()
         main_genera_csv()
@@ -43,6 +44,7 @@ def procesos_una_vez_por_dia():
         sleep(86400)
         main_baja_cotizacion()
         main_actualiza_prioridades()
+        backup_database()
 def procesos_una_vez_por_semana():
     sleep(2400)
     while 1:
@@ -54,10 +56,13 @@ def bot():
 
 
 if __name__ == '__main__':
+    # Primero se restaura la bd de sqllite para usar en los procesos
+    restore_database()
     p1 = Process(target=procesos_cada_15_minutos).start()
-    p2 = Process(target=procesos_cada_60_minutos).start()
+    p2 = Process(target=procesos_cada_30_minutos).start()
     p1 = Process(target=procesos_cada_120_minutos).start()
     p2 = Process(target=procesos_una_vez_por_dia).start()
     p1 = Process(target=procesos_una_vez_por_semana).start()
+    
     p2 = Process(target=bot).start()
     # main()

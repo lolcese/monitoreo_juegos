@@ -16,3 +16,4 @@ monitoreo_juegos_todo.db
 venv/
 bd/sqldiff.exe
 bd/sqlite3_analyzer.exe
+bd/monitoreo_juegos.db
