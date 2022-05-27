@@ -1271,11 +1271,11 @@ def get_bot():
 
 def send_message(chat_id, text):
     bot = get_bot()
-    bot.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.MARKDOWN)
+    bot.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.HTML)
 
 def send_photo(chat_id, caption, photo):
     bot = get_bot()
-    bot.send_photo(chat_id, photo, caption, parse_mode=ParseMode.MARKDOWN)
+    bot.send_photo(chat_id, photo, caption, parse_mode=ParseMode.HTML)
 
 if __name__ == '__main__':
     main()
