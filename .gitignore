@@ -1,7 +1,7 @@
 __pycache__/
 .vscode/
-graficos/*.png
-graficos/*.csv
+graficos/*
+!graficos/0000.png
 extras/
 *.sh
 !backup.sh
@@ -16,3 +16,6 @@ monitoreo_juegos_todo.db
 venv/
 bd/sqldiff.exe
 bd/sqlite3_analyzer.exe
+bd/monitoreo_juegos.db
+bd/monitoreo_scripts.sql
+bd/manual_backup.py

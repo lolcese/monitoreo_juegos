@@ -5,7 +5,7 @@
 # de ver datos de juegos, fijar alarmas, sugerir nuevos juegos a monitorear, etc.
 ############################################################################################
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent, ParseMode
 from telegram.ext import (Updater,InlineQueryHandler,CommandHandler,CallbackQueryHandler,ConversationHandler,CallbackContext,MessageHandler,Filters)
 from datetime import datetime
 import re
@@ -1264,6 +1264,18 @@ def main() -> PRINCIPAL:
 
     updater.start_polling()
     updater.idle()
+
+def get_bot():
+    updater = Updater(bot_token)
+    return updater.bot
+
+def send_message(chat_id, text):
+    bot = get_bot()
+    bot.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.MARKDOWN)
+
+def send_photo(chat_id, caption, photo):
+    bot = get_bot()
+    bot.send_photo(chat_id, photo, caption, parse_mode=ParseMode.MARKDOWN)
 
 if __name__ == '__main__':
     main()

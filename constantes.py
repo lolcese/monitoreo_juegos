@@ -5,11 +5,14 @@
 import sqlite3
 import os.path
 import path
-
+from database_manager import restore_database
 # os.chdir(path.actual)
 
 db_file = 'bd/monitoreo_juegos.db'
 exporta_file = 'precios_exporta.csv'
+
+if not os.path.isfile(db_file):
+    restore_database()
 
 conn = sqlite3.connect(db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 conn.execute("PRAGMA journal_mode=WAL")
