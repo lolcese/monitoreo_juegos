@@ -1,7 +1,7 @@
 __pycache__/
 .vscode/
-graficos/*.png
-graficos/*.csv
+graficos/*
+!graficos/0000.png
 extras/
 *.sh
 !backup.sh
