@@ -17,3 +17,5 @@ venv/
 bd/sqldiff.exe
 bd/sqlite3_analyzer.exe
 bd/monitoreo_juegos.db
+bd/monitoreo_scripts.sql
+bd/manual_backup.py
