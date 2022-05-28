@@ -36,9 +36,10 @@ def grafica(bgg_id, nombre):
             cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
             datos = cursor.fetchall()
             precio_hi = [sub[0] for sub in datos]
-            fecha_hi = [sub[1] for sub in datos]
-            ax1.plot(fecha_hi, precio_hi, marker='o', linestyle='dashed', markersize=5)
-            leyenda.append(constantes.sitio_nom[sitio])
+            if precio_hi != None:
+                fecha_hi = [sub[1] for sub in datos]
+                ax1.plot(fecha_hi, precio_hi, marker='o', linestyle='dashed', markersize=5)
+                leyenda.append(constantes.sitio_nom[sitio])
 
         fig.tight_layout(rect=[0, 0.01, 1, 0.97])
         plt.legend(leyenda)
