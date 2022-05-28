@@ -1162,19 +1162,14 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 
     if len(juegos) <= 10:
         for j in juegos:
-            BGG_id = j[0]
             nombre, texto = texto_info_juego(j[0])
-            arch = f"{BGG_id}.png"
-            if not os.path.exists(f"graficos/{arch}"):
-                arch = "0000.png"
-            imagen = f'{constantes.sitio_URL["base"]}graficos/{arch}?f={datetime.now().isoformat()}' # Para evitar que una imagen quede en cache
 
             results.append(
                     InlineQueryResultArticle(
                     id=str(uuid4()),
                     title=nombre,
                     input_message_content = InputTextMessageContent(
-                                            message_text = f"<a href='{imagen}'> </a>{texto}\n\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
+                                            message_text = f"{texto}\n\nPara más información y la posibilidad de poner alarmas, andá a @Monitor_Juegos_bot y escribí /start",
                                             parse_mode="HTML",
                                             disable_web_page_preview = False)
                     )
