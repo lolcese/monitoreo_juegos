@@ -5,7 +5,7 @@ import os.path
 import path
 import sqlite3
 from datetime import datetime
-import requests
+import manda
 
 os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
@@ -84,8 +84,8 @@ if texto_of_me != "" or texto_st_me != "":
         id_usuario = m[0]
         tipo_alarma = m[1]
         if (tipo_alarma == 1 or tipo_alarma == 3):
-            requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_usuario}&disable_web_page_preview=True&parse_mode=Markdown&text={texto_of_me}')
+            manda.send_message(id_usuario, texto_of_me)
         if (tipo_alarma == 2 or tipo_alarma == 3):
-            requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_usuario}&disable_web_page_preview=True&parse_mode=Markdown&text={texto_st_me}')
+            manda.send_message(id_usuario, texto_st_me)
 
 

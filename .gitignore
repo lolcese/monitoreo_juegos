@@ -1,7 +1,6 @@
 __pycache__/
 .vscode/
-graficos/*
-!graficos/0000.png
+temp/*
 extras/
 monitoreo_juegos.db*
 *.sh

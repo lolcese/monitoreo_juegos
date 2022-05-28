@@ -12,17 +12,13 @@ import re
 from datetime import datetime
 from urllib.error import URLError, HTTPError
 import sqlite3
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from matplotlib.ticker import FormatStrFormatter
 import constantes
 import os.path
 import path
 from telegram.ext import (Updater)
-import requests
 import sys
+import manda
+import hace_grafico
 
 prioridad = str(sys.argv[1])
 os.chdir(path.actual)
@@ -376,7 +372,6 @@ def lee_pagina_mm(ju_id, precio_envio):
 
 ######### Programa principal
 def main():
-    plt.ioff()
     conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.execute("PRAGMA journal_mode=WAL")
     cursor = conn.cursor()
@@ -384,7 +379,6 @@ def main():
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
         bgg_id, nombre = jb
-        hacer_grafico = False
         cursor.execute('SELECT id_juego, sitio, sitio_ID, peso, precio_envio FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
         juegos_id = cursor.fetchall()
         for j in juegos_id: # Cada repetición del mismo juego
@@ -433,50 +427,17 @@ def main():
             cursor.execute('UPDATE juegos SET precio_actual = ?, fecha_actual = ?, precio_mejor = ?, fecha_mejor = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, id_juego])
             conn.commit()
 
-            cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
-            datos = cursor.fetchall()
-            precio_hi = [sub[0] for sub in datos]
-            fecha_hi = [sub[1] for sub in datos]
-            if any(precio_hi): # Si hay algún dato válido
-                if hacer_grafico == False:
-                    leyenda = []
-                    plt.rc('xtick', labelsize=8)
-                    fig, ax1 = plt.subplots()
-                    ax1.set_xlabel('Fecha')
-                    ax1.set_ylabel('Precio $')
-                    ax1.ticklabel_format(useOffset=False)
-                    ax1.tick_params(axis='y')
-                    plt.grid()
-                    fig.suptitle(nombre)
-                    ax1.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m/%y"))
-                    ax1.yaxis.set_major_formatter(FormatStrFormatter('%.0f'))
-                    ax1.tick_params(axis='x', labelrotation= 45)
-                    hacer_grafico = True
-                ax1.plot(fecha_hi, precio_hi, marker='o', linestyle='dashed', markersize=5)
-                leyenda.append(constantes.sitio_nom[j[1]])
-
-        arch = f"graficos/{bgg_id}.png"
-        if os.path.exists(arch):
-            os.remove(arch)
-        if hacer_grafico == True: # Una vez que se bajaron todas las páginas que monitorean un juego
-            fig.tight_layout(rect=[0, 0.01, 1, 0.97])
-            plt.legend(leyenda)
-            plt.savefig(arch,dpi=100)
-            plt.close('all')
-
         cursor.execute('SELECT id_persona, precio_alarma FROM alarmas WHERE BGG_id = ? and precio_alarma >= ?',(bgg_id, precio))
         alarmas = cursor.fetchall()
-        for alarma in alarmas:
-            id_persona, precio_al = alarma
-            if str(precio_al) == "":
-                continue
-            arch = f"{bgg_id}.png"
-            if not os.path.exists(f"graficos/{arch}"):
-                arch = "0000.png"
-            imagen = f'{constantes.sitio_URL["base"]}graficos/{arch}?f={datetime.now().isoformat()}' # Para evitar que una imagen quede en cache
-
-            texto = f'\U000023F0\U000023F0\U000023F0\n[ ]({imagen})\n[{nombre}]({constantes.sitio_URL["BGG"]+str(bgg_id)}) está a *${precio:.0f}* en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_ID}) (tenés una alarma a los ${precio_al:.0f})\n\n\U000023F0\U000023F0\U000023F0'
-            requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_persona}&disable_web_page_preview=False&parse_mode=Markdown&text={texto}')
+        if len(alarmas) > 0:
+            arch = hace_grafico.grafica(bgg_id, nombre)
+            for alarma in alarmas:
+                id_persona, precio_al = alarma
+                print(bgg_id,precio)
+                texto = f'\U000023F0\U000023F0\U000023F0\n\n{constantes.sitio_URL["BGG"]+str(bgg_id)} está a <b>${precio:.0f}</b> en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_ID}) (tenés una alarma a los ${precio_al:.0f})'
+                print(texto)
+                manda.send_photo(id_persona, texto, arch)
+            os.remove(arch)
 
 if __name__ == '__main__':
     main()

@@ -15,8 +15,9 @@ import constantes
 import os.path
 import path
 from uuid import uuid4
-import requests
 import html
+import manda
+import hace_grafico
 
 os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
@@ -50,7 +51,7 @@ def start(update: Update, context: CallbackContext) -> int:
     conn.commit()
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text(text = f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n¿Qué querés hacer?', reply_markup=reply_markup)
+    update.message.reply_text(text = 'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n¿Qué querés hacer?', reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Cuando se elige la opción Inicio (es diferente al anterior porque viene de una query)
@@ -65,19 +66,18 @@ def inicio(update: Update, context: CallbackContext) -> int:
     conn.commit()
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n¿Qué querés hacer?', reply_markup=reply_markup)
+    query.edit_message_text(text = 'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n¿Qué querés hacer?', reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Cuando se elige la opción Inicio (es diferente al anterior porque tiene que borrar el mensaje)
 def inicio_borrar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    usuario = query.from_user
     usuario_id = update.callback_query.from_user.id
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
-    context.bot.send_message(chat_id = update.effective_chat.id, text = f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n¿Qué querés hacer?', reply_markup=reply_markup)
+    context.bot.send_message(chat_id = update.effective_chat.id, text = 'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n¿Qué querés hacer?', reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Menú principal
@@ -396,7 +396,6 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
 ######### Muestra todas las alarmas de un usuario
 def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
-    user = update.callback_query.from_user
     usuario_id = update.callback_query.from_user.id
     query.answer()
     conn = conecta_db()
@@ -521,16 +520,12 @@ def juego_info(update: Update, context: CallbackContext) -> int:
             ]
         ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    arch = f"graficos/{BGG_id}.png"
-    if not os.path.exists(arch):
-        arch = "graficos/0000.png"
-    # ima = constantes.sitio_URL["base"]+arch
-    # timestamp = datetime.now().isoformat()
-    # ima_url = '{0}?a={1}'.format(ima, timestamp)
+    arch = hace_grafico.grafica(BGG_id, nombre)
     
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
+    
     id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
-    # id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = ima_url)
+    os.remove(arch)
     id = context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
 
     fecha = datetime.now()
@@ -576,7 +571,7 @@ def texto_info_juego(BGG_id):
             precio_ju.append(precio_actual)
             texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
             if precio_mejor == precio_actual:
-                texto_ju[ju] += f"Es el precio más barato de los últimos 15 días.\n"
+                texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
             else:
                 texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
         ju += 1
@@ -607,7 +602,7 @@ def alarmas_agregar(update: Update, context: CallbackContext) -> int:
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
-    if precio == "":
+    if precio is None:
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text("El precio tiene que ser un número", reply_markup=reply_markup)        
         return ALARMAS_NUEVA_PRECIO
@@ -814,7 +809,7 @@ def comentarios_mandar(update: Update, context: CallbackContext) -> int:
     cursor.execute('INSERT INTO comentarios (usuario, comentario,fecha) VALUES (?,?,?)',[usuario,comentario,fecha])
     conn.commit()
     texto = f"{usuario} dejó el comentario:\n{comentario}"
-    requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&disable_web_page_preview=False&text={texto}')
+    manda.send_message(id_aviso, texto)
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -914,7 +909,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha, precio_envio) VALUES (?,?,?,?,?,?,?)',[usuario_nom, usuario_id, bgg_url, url, peso, fecha, precio_envio])
     conn.commit()
     texto = f"{usuario_nom} sugirió el juego {url}"
-    requests.get(f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&disable_web_page_preview=False&text={texto}')
+    manda.send_message(id_aviso, texto)
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -1138,7 +1133,7 @@ def mensaje_oferta(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = f"Tus preferencias se actualizaron", reply_markup=reply_markup)
+    query.edit_message_text(text = "Tus preferencias se actualizaron", reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Invitame a un cafecito
