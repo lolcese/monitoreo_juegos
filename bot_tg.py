@@ -525,8 +525,8 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     
     id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
-    os.remove(arch)
     id = context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
+    os.remove(arch)
 
     fecha = datetime.now()
     cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[update.callback_query.from_user.full_name,usuario_id,fecha,f"Ver juego {nombre}"])

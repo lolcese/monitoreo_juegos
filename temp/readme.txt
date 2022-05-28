@@ -1,0 +1,1 @@
+Este directorio puede ser borrado
