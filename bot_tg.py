@@ -524,7 +524,8 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     
-    id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
+    if arch != None:
+        id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
     id = context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
     os.remove(arch)
 
