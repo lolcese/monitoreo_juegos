@@ -51,7 +51,7 @@ def grafica(bgg_id, nombre):
         width = 300
         height = 100
         message = "Sin datos"
-        font = ImageFont.truetype("arial.ttf", size=40)
+        font = ImageFont.truetype("arial.pil", size=40)
 
         img = Image.new('RGB', (width, height), color='white')
 
