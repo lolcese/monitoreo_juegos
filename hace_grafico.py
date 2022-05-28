@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.ticker import FormatStrFormatter
 import constantes
-from PIL import Image, ImageDraw, ImageFont
 from random import randint
 
 def grafica(bgg_id, nombre):
@@ -48,22 +47,6 @@ def grafica(bgg_id, nombre):
         plt.close('all')
 
     else: # Si no hay datos válidos
-        width = 300
-        height = 100
-        message = "Sin datos"
-        font = ImageFont.truetype("arial.pil", size=40)
-
-        img = Image.new('RGB', (width, height), color='white')
-
-        imgDraw = ImageDraw.Draw(img)
-
-        textWidth, textHeight = imgDraw.textsize(message, font=font)
-        xText = (width - textWidth) / 2
-        yText = (height - textHeight) / 2
-
-        imgDraw.text((xText, yText), message, font=font, fill="black")
-
-        arch = f"temp/{randint(0, 9999999999)}.png"
-        img.save(arch)
+        arch = None
 
     return arch
