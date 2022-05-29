@@ -41,9 +41,6 @@ def main():
         juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha_actual, min_precio, constantes.dependencia_len[dependencia_leng]])
     
     ju.close()
-    if os.path.exists(f'{constantes.exporta_file}'):
-        os.remove(f'{constantes.exporta_file}')
-    os.rename(constantes.exporta_file,f'{constantes.exporta_file}')
 
 if __name__ == '__main__':
     main()
