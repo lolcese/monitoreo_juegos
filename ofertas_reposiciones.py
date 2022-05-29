@@ -27,7 +27,7 @@ for p in prom:
         fecha = datetime.now()
         cursor.execute('SELECT fecha_inicial as "[timestamp]" FROM ofertas WHERE id_juego = ?',[id_juego])
         ofertas_act = cursor.fetchone()
-        tx_al = f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n"
+        tx_al = f'\U000027A1 <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n'
         if ofertas_act == None: # Si no está en el listado de ofertas actuales
             cursor.execute('INSERT INTO ofertas (id_juego,precio_prom,precio_actual,fecha_inicial,activa) VALUES (?,?,?,?,?)',(id_juego,precio_prom,precio_actual,fecha,"Sí"))
             conn.commit()
@@ -54,7 +54,7 @@ for s in stock:
     precio_actual = cursor.fetchall()[0][0]
     if (precio_actual > 0):
         fecha = datetime.now()
-        tx_of = f"\U000027A1 [{nombre}]({constantes.sitio_URL['BGG']+str(bgg_id)}) está en stock en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_id}) a ${precio_actual:.0f} (y antes no lo estaba)\n"
+        tx_of = f'\U000027A1 <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} (y antes no lo estaba)\n'
         if (fecha - fecha_ag).days >= 7:
             cursor.execute('SELECT * FROM restock WHERE id_juego = ?',[id_juego])
             restock_act = cursor.fetchone()
@@ -69,9 +69,9 @@ for s in stock:
                 texto_st += tx_of
 
 if texto_of_me != "":
-    texto_of_me = f"\U0001F381\U0001F381\U0001F381\n\n*Juegos en oferta*\n\n{texto_of_me}\n\U0001F381\U0001F381\U0001F381"
+    texto_of_me = f"\U0001F381\U0001F381\U0001F381\n\n<b>Juegos en oferta</b>\n\n{texto_of_me}\n\U0001F381\U0001F381\U0001F381"
 if texto_st_me != "":
-    texto_st_me = f"\U0001F381\U0001F381\U0001F381\n\n*Juegos en reposición*\n\n{texto_st_me}\n\U0001F381\U0001F381\U0001F381"
+    texto_st_me = f"\U0001F381\U0001F381\U0001F381\n\n<b>Juegos en reposición</b>\n\n{texto_st_me}\n\U0001F381\U0001F381\U0001F381"
 if texto_of_me != "" or texto_st_me != "":
     cursor.execute('SELECT id_usuario,tipo_alarma FROM alarmas_ofertas')
     mensa = cursor.fetchall()

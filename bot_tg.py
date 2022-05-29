@@ -24,7 +24,7 @@ os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
 id_aviso = os.environ.get('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, JUEGO_AGREGAR, ADMIN = range(10)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, JUEGO_AGREGAR, ADMIN, CONSULTA_SQLITE = range(11)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -1191,13 +1191,14 @@ def admin(update: Update, context: CallbackContext) -> None:
         keyboard = menu()
         reply_markup = InlineKeyboardMarkup(keyboard)
         keyboard = [
+            [InlineKeyboardButton("\U00002753 Consulta sqlite", callback_data='consulta_sqlite')],
             [InlineKeyboardButton("\U00002753 Administrar juegos sugeridos", callback_data='admin_juegos_sugeridos')],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
         return ADMIN
     else:
-        texto = '\U0001F6AB\U0001F6AB No sos un usuario autorizado a administrar \U0001F6AB\U0001F6AB'
+        texto = '\U0001F6AB\U0001F6AB No sos un usuario autorizado a administrar, fuera de aquí \U0001F6AB\U0001F6AB'
         keyboard = menu()
         reply_markup = InlineKeyboardMarkup(keyboard)
         keyboard = [
@@ -1270,6 +1271,7 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
         query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
         return ADMIN
 
+######### Procesa sugeridos
 def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
@@ -1302,6 +1304,34 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    return ADMIN
+
+######### Consulta sqlite
+def consulta_sqlite(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    query.edit_message_text(text = 'Escribí la consulta sqlite', reply_markup=reply_markup)
+    return CONSULTA_SQLITE
+
+######### Procesa consulta sqlite
+def consulta_sqlite_procesa(update: Update, context: CallbackContext) -> int:
+    consulta = update.message.text
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute(consulta+";")
+    res = cursor.fetchall()
+
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text(text = res, reply_markup=reply_markup)
+    return ADMIN
 
 ######### Handlers
 def main() -> PRINCIPAL:
@@ -1371,7 +1401,12 @@ def main() -> PRINCIPAL:
             ],
             ADMIN: [
                 CallbackQueryHandler(admin_juegos_sugeridos,   pattern='^admin_juegos_sugeridos$'),
-                CallbackQueryHandler(admin_sugeridos_r, pattern='^admin_sugeridos_'),
+                CallbackQueryHandler(consulta_sqlite,          pattern='^consulta_sqlite$'),
+                CallbackQueryHandler(admin_sugeridos_r,        pattern='^admin_sugeridos_'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
+            ],
+            CONSULTA_SQLITE: [
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, consulta_sqlite_procesa),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },

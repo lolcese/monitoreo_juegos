@@ -1,6 +1,7 @@
 from telegram.ext import (Updater)
 import os.path
 import path
+from datetime import datetime
 
 os.chdir(path.actual)
 
@@ -13,13 +14,13 @@ def get_bot():
 def send_message(chat_id, text):
     bot = get_bot()
     try:
-        bot.send_message(chat_id = chat_id, text = text, parse_mode = "HTML")
+        bot.send_message(chat_id = chat_id, text = text, parse_mode = "HTML", disable_web_page_preview = True)
     except:
-        print(f"Error enviando mensaje a {chat_id}")
+        print(f"{datetime.now()} - Error enviando mensaje a {chat_id}")
 
 def send_photo(chat_id, caption, photo):
     bot = get_bot()
     try:
-        bot.send_photo(chat_id, photo = open(photo, 'rb'), caption = caption, parse_mode = "HTML")
+        bot.send_photo(chat_id, photo = open(photo, 'rb'), caption = caption, parse_mode = "HTML", disable_web_page_preview = True)
     except:
-        print(f"Error enviando imagen a {chat_id}")
+        print(f"{datetime.now()} - Error enviando imagen a {chat_id}")
