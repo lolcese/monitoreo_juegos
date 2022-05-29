@@ -12,8 +12,14 @@ def get_bot():
 
 def send_message(chat_id, text):
     bot = get_bot()
-    bot.send_message(chat_id = chat_id, text = text, parse_mode = "HTML")
+    try:
+        bot.send_message(chat_id = chat_id, text = text, parse_mode = "HTML")
+    except:
+        print(f"Error enviando mensaje a {chat_id}")
 
 def send_photo(chat_id, caption, photo):
     bot = get_bot()
-    bot.send_photo(chat_id, photo = open(photo, 'rb'), caption = caption, parse_mode = "HTML")
+    try:
+        bot.send_photo(chat_id, photo = open(photo, 'rb'), caption = caption, parse_mode = "HTML")
+    except:
+        print(f"Error enviando imagen a {chat_id}")

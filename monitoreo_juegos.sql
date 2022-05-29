@@ -30,10 +30,10 @@ CREATE INDEX precio_fecha ON precios (
 CREATE TABLE juegos_sugeridos (
                             id_juego_sugerido INTEGER PRIMARY KEY,
                             usuario_nom TEXT NOT NULL,
-                            usuario_id TEXT NOT NULL,
-                            BGG_URL TEXT NOT NULL,
-                            URL TEXT NOT NULL,
-                            fecha datetime NOT NULL,
+                            usuario_id INTEGER NOT NULL,
+                            bgg_id TEXT NOT NULL,
+                            sitio_nom TEXT NOT NULL,
+                            sitio_id TEXT NOT NULL,
                             peso REAL,
                             precio_envio REAL
                             );

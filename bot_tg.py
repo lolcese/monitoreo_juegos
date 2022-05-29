@@ -18,12 +18,13 @@ from uuid import uuid4
 import html
 import manda
 import hace_grafico
+import urllib.request
 
 os.chdir(path.actual)
 bot_token = os.environ.get('bot_token')
 id_aviso = os.environ.get('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, JUEGO_AGREGAR = range(9)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, JUEGO_AGREGAR, ADMIN = range(10)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -526,8 +527,8 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     
     if arch != None:
         id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
+        os.remove(arch)
     id = context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
-    os.remove(arch)
 
     fecha = datetime.now()
     cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[update.callback_query.from_user.full_name,usuario_id,fecha,f"Ver juego {nombre}"])
@@ -747,7 +748,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
     return PRINCIPAL
 
-######### Muestra estadísticas de uso
+######### Muestra |ísticas de uso
 def estadistica(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
@@ -867,7 +868,10 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     bgg_url = dat[0]
     url = dat[1]
 
-    if not re.search('boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)',bgg_url):
+    busca_id = re.search('boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)',bgg_url)
+    if busca_id:
+        bgg_id = busca_id.group(2)
+    else:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
         return JUEGO_AGREGAR
 
@@ -885,7 +889,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        update.message.reply_text(text = 'Ese juego ya está siendo monitoreado desde ese sitio.', reply_markup=reply_markup)
+        update.message.reply_text(text = f'Ese juego ya está siendo monitoreado desde {url}.', reply_markup=reply_markup, disable_web_page_preview = True)
         return PRINCIPAL
 
     if len(dat) == 2 and re.search("deepdiscount", url):
@@ -906,8 +910,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
     conn = conecta_db()
     cursor = conn.cursor()
-    fecha = datetime.now()
-    cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, usuario_id, BGG_URL, URL, peso, fecha, precio_envio) VALUES (?,?,?,?,?,?,?)',[usuario_nom, usuario_id, bgg_url, url, peso, fecha, precio_envio])
+    cursor.execute('INSERT INTO juegos_sugeridos (usuario_nom, bgg_id, usuario_id, sitio_nom, sitio_id, peso, precio_envio) VALUES (?,?,?,?,?,?,?)',[usuario_nom, bgg_id, usuario_id, sitio_nom, sitio_id, peso, precio_envio])
     conn.commit()
     texto = f"{usuario_nom} sugirió el juego {url}"
     manda.send_message(id_aviso, texto)
@@ -1180,13 +1183,133 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
         cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',["-",0,fecha,"Inline "+query])
         conn.commit()
 
+######### Módulo de administración
+def admin(update: Update, context: CallbackContext) -> None:
+    usuario = update.message.from_user
+    if usuario.id == int(id_aviso):
+        texto = 'Hola Luis'
+        keyboard = menu()
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        keyboard = [
+            [InlineKeyboardButton("\U00002753 Administrar juegos sugeridos", callback_data='admin_juegos_sugeridos')],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
+        return ADMIN
+    else:
+        texto = '\U0001F6AB\U0001F6AB No sos un usuario autorizado a administrar \U0001F6AB\U0001F6AB'
+        keyboard = menu()
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        keyboard = [
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
+        return PRINCIPAL
+
+######### Administrar juegos sugeridos
+def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio FROM juegos_sugeridos')
+    juegos = cursor.fetchone()
+    if juegos is None:
+        texto = "No hay juegos sugeridos"
+        keyboard = [
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    else:
+        id_juego_sugerido, usuario_nom, _, bgg_id, sitio_nom, sitio_id, peso, precio_envio = juegos
+        texto = f"Usuario: {usuario_nom}\n"
+        url = f'https://api.geekdo.com/xmlapi2/thing?id={bgg_id}&stats=1'
+        req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
+        data = urllib.request.urlopen(req).read()
+        data = data.decode('utf-8')
+        votos = {}
+
+        nombre = html.unescape(re.search('<name type=\"primary\" sortindex=\".*?\" value=\"(.*?)\"',data)[1])
+        ranking = html.unescape(re.search('name=\"boardgame\".*?value=\"(.*?)\"',data)[1])
+
+        votos_dep = float(re.search('poll name=\"language_dependence\".*?totalvotes=\"(.*?)\"',data)[1])
+        if votos_dep >= 3:
+            votos[1] = float(re.search('result level.*? value=\"No necessary in-game text\" numvotes=\"(.*?)\"',data)[1])
+            votos[2] = float(re.search('result level.*? value=\"Some necessary text - easily memorized or small crib sheet\" numvotes=\"(.*?)\"',data)[1])
+            votos[3] = float(re.search('result level.*? value=\"Moderate in-game text - needs crib sheet or paste ups\" numvotes=\"(.*?)\"',data)[1])
+            votos[4] = float(re.search('result level.*? value=\"Extensive use of text - massive conversion needed to be playable\" numvotes=\"(.*?)\"',data)[1])
+            votos[5] = float(re.search('result level.*? value=\"Unplayable in another language\" numvotes=\"(.*?)\"',data)[1])
+            dependencia_leng = int(max(votos, key=votos.get))
+        else:
+            dependencia_leng = 0
+
+        texto += f"Nombre: <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>\n"
+        if peso != None:
+            texto += f"Peso: {peso}\n"
+
+        if precio_envio != None:
+            texto += f"Precio envío: {precio_envio}\n"
+
+        cursor.execute ('SELECT sitio, sitio_ID FROM juegos WHERE BGG_id = ?',[int(bgg_id)])
+        moni = cursor.fetchall()
+        for m in moni:
+            sitio_ya, sitio_id_ya = m
+            texto += f"<b>Ya está siendo monitoreado desde <a href='{constantes.sitio_URL[sitio_ya]+str(sitio_id_ya)}'>{constantes.sitio_nom[sitio_ya]}</a></b>\n"
+        texto += f"URL: {constantes.sitio_URL[sitio_nom]+sitio_id}"
+
+        keyboard = [
+            [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_sugeridos_{id_juego_sugerido}_aprobar|{nombre}|{ranking}|{dependencia_leng}')],
+            [InlineKeyboardButton("\U0000274C Rechazar no Argentina", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarnoARG')],
+            [InlineKeyboardButton("\U0000274C Rechazar juego equivocado", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarequiv')],
+            [InlineKeyboardButton("\U0000274C Rechazar otro", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarotro')],
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+        return ADMIN
+
+def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    sug_id = query.data.split("_")[2]
+    estado = query.data.split("_")[3]
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio FROM juegos_sugeridos WHERE id_juego_sugerido = ?', [sug_id])
+    juegos = cursor.fetchone()
+    _, _, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio = juegos
+
+    if estado == "rechazarnoARG":
+        manda.send_message(usuario_id, f'Gracias por la sugerencia, pero {constantes.sitio_URL[sitio_nom]+sitio_id} no se envía a Argentina')
+    elif estado == "rechazarequiv":
+        manda.send_message(usuario_id, f'Gracias por la sugerencia, pero {constantes.sitio_URL[sitio_nom]+sitio_id} no corresponde a <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a>')
+    elif estado == "rechazarotro":
+        manda.send_message(usuario_id, f'Gracias por la sugerencia, pero <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} no puede ser monitoreado')
+    elif estado.startswith("aprobar"):
+        _, nombre, ranking, dependencia_leng = estado.split("|")
+        fecha = datetime.now()
+        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio) VALUES (?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, int(ranking), peso, dependencia_leng, "3", precio_envio))
+        conn.commit()
+        manda.send_message(usuario_id, f'Gracias por la sugerencia, <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} ha sido agregado al monitoreo')
+    conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[sug_id])
+    conn.commit()
+    texto = "Juego procesado"
+    keyboard = [
+        [InlineKeyboardButton("\U00002753 Más juegos sugeridos", callback_data='admin_juegos_sugeridos')],
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+
 ######### Handlers
 def main() -> PRINCIPAL:
     updater = Updater(bot_token)
     dispatcher = updater.dispatcher
 
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
+        entry_points=[CommandHandler('start', start),CommandHandler('admin', admin)],
         states={
             PRINCIPAL: [
                 CallbackQueryHandler(juegos_lista_menu,        pattern='^juegos_lista_menu$'),
@@ -1246,9 +1369,13 @@ def main() -> PRINCIPAL:
             JUEGO_AGREGAR: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, sugerir_juego)
             ],
-
-},
-    fallbacks=[CommandHandler('start', start)],
+            ADMIN: [
+                CallbackQueryHandler(admin_juegos_sugeridos,   pattern='^admin_juegos_sugeridos$'),
+                CallbackQueryHandler(admin_sugeridos_r, pattern='^admin_sugeridos_'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
+            ],
+        },
+    fallbacks=[CommandHandler('start', start),CommandHandler('admin', admin)],
     )
 
     dispatcher.add_handler(conv_handler)
@@ -1260,3 +1387,4 @@ def main() -> PRINCIPAL:
 if __name__ == '__main__':
     main()
 
+#https://t.me/Monitor_Juegos_bot?start=test
