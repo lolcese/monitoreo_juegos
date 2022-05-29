@@ -22,7 +22,7 @@ def send_message(chat_id, text):
         conn.execute("PRAGMA journal_mode=WAL")
         cursor = conn.cursor()
         cursor.execute('DELETE FROM alarmas WHERE id_persona = ?',[chat_id])
-        cursor.execute('DELETE FROM alarmas_ofertas WHERE id_persona = ?',[chat_id])
+        cursor.execute('DELETE FROM alarmas_ofertas WHERE id_usuario = ?',[chat_id])
         print(f"{datetime.now()} - Error enviando mensaje a {chat_id} - Borrado")
         conn.commit()
 
@@ -35,6 +35,6 @@ def send_photo(chat_id, caption, photo):
         conn.execute("PRAGMA journal_mode=WAL")
         cursor = conn.cursor()
         cursor.execute('DELETE FROM alarmas WHERE id_persona = ?',[chat_id])
-        cursor.execute('DELETE FROM alarmas_ofertas WHERE id_persona = ?',[chat_id])
+        cursor.execute('DELETE FROM alarmas_ofertas WHERE id_usuario = ?',[chat_id])
         print(f"{datetime.now()} - Error enviando imagen a {chat_id} - Borrado")
         conn.commit()
