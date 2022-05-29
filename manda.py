@@ -2,6 +2,8 @@ from telegram.ext import (Updater)
 import os.path
 import path
 from datetime import datetime
+import sqlite3
+import constantes
 
 os.chdir(path.actual)
 
@@ -16,11 +18,23 @@ def send_message(chat_id, text):
     try:
         bot.send_message(chat_id = chat_id, text = text, parse_mode = "HTML", disable_web_page_preview = True)
     except:
-        print(f"{datetime.now()} - Error enviando mensaje a {chat_id}")
+        conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        conn.execute("PRAGMA journal_mode=WAL")
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM alarmas WHERE id_persona = ?',[chat_id])
+        cursor.execute('DELETE FROM alarmas_ofertas WHERE id_persona = ?',[chat_id])
+        print(f"{datetime.now()} - Error enviando mensaje a {chat_id} - Borrado")
+        conn.commit()
 
 def send_photo(chat_id, caption, photo):
     bot = get_bot()
     try:
         bot.send_photo(chat_id, photo = open(photo, 'rb'), caption = caption, parse_mode = "HTML", disable_web_page_preview = True)
     except:
-        print(f"{datetime.now()} - Error enviando imagen a {chat_id}")
+        conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        conn.execute("PRAGMA journal_mode=WAL")
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM alarmas WHERE id_persona = ?',[chat_id])
+        cursor.execute('DELETE FROM alarmas_ofertas WHERE id_persona = ?',[chat_id])
+        print(f"{datetime.now()} - Error enviando imagen a {chat_id} - Borrado")
+        conn.commit()
