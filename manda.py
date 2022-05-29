@@ -16,4 +16,4 @@ def send_message(chat_id, text):
 
 def send_photo(chat_id, caption, photo):
     bot = get_bot()
-    bot.send_photo(chat_id, photo, caption, parse_mode = "HTML")
+    bot.send_photo(chat_id, photo = open(photo, 'rb'), caption = caption, parse_mode = "HTML")
