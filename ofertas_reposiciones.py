@@ -1,14 +1,9 @@
 #!/usr/bin/python
 
 import constantes
-import os.path
-import path
 import sqlite3
 from datetime import datetime
 import manda
-
-os.chdir(path.actual)
-bot_token = os.environ.get('bot_token')
 
 conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 conn.execute("PRAGMA journal_mode=WAL")
@@ -83,9 +78,7 @@ if texto_of_me != "" or texto_st_me != "":
     for m in mensa:
         id_usuario = m[0]
         tipo_alarma = m[1]
-        if (tipo_alarma == 1 or tipo_alarma == 3):
+        if (tipo_alarma == 1 or tipo_alarma == 3) and texto_of_me != "":
             manda.send_message(id_usuario, texto_of_me)
-        if (tipo_alarma == 2 or tipo_alarma == 3):
+        if (tipo_alarma == 2 or tipo_alarma == 3) and texto_st_me != "":
             manda.send_message(id_usuario, texto_st_me)
-
-
