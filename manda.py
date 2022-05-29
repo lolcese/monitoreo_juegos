@@ -1,5 +1,8 @@
 from telegram.ext import (Updater)
 import os.path
+import path
+
+os.chdir(path.actual)
 
 bot_token = os.environ.get('bot_token')
 

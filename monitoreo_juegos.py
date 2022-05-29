@@ -433,9 +433,8 @@ def main():
             arch = hace_grafico.grafica(bgg_id, nombre)
             for alarma in alarmas:
                 id_persona, precio_al = alarma
-                print(bgg_id,precio)
                 texto = f'\U000023F0\U000023F0\U000023F0\n\n{constantes.sitio_URL["BGG"]+str(bgg_id)} está a <b>${precio:.0f}</b> en [{constantes.sitio_nom[sitio]}]({constantes.sitio_URL[sitio]+sitio_ID}) (tenés una alarma a los ${precio_al:.0f})'
-                print(texto)
+                print(id_persona, texto, arch)
                 manda.send_photo(id_persona, texto, arch)
             os.remove(arch)
 
