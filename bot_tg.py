@@ -44,6 +44,8 @@ def dividir_texto(texto, n):
 
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
+    # print(context.args)
+    # if len(context.args) == 0:
     usuario = update.message.from_user
     fecha = datetime.now()
     conn = conecta_db()
@@ -54,6 +56,15 @@ def start(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(text = 'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n¿Qué querés hacer?', reply_markup=reply_markup)
     return PRINCIPAL
+    # else: # Cuando se responde desde un mensaje
+    #     id_usuario, accion, bgg_id = context.args[0].split("|")
+    #     print(id_usuario, accion, bgg_id)
+    #     if accion == "borrar_alarma":
+    #         cursor.execute('DELETE FROM alarmas WHERE id_persona = ? AND BGG_id = ?', [id_usuario,bgg_id])
+    #         conn.commit()
+    #         texto = "Tu alarma fue borrada"
+    #         manda.send_message(id_usuario, texto)
+    #         return PRINCIPAL
 
 ######### Cuando se elige la opción Inicio (es diferente al anterior porque viene de una query)
 def inicio(update: Update, context: CallbackContext) -> int:
@@ -1292,7 +1303,7 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     elif estado.startswith("aprobar"):
         _, nombre, ranking, dependencia_leng = estado.split("|")
         fecha = datetime.now()
-        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio) VALUES (?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, int(ranking), peso, dependencia_leng, "3", precio_envio))
+        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio) VALUES (?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3", precio_envio))
         conn.commit()
         manda.send_message(usuario_id, f'Gracias por la sugerencia, <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} ha sido agregado al monitoreo')
     conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[sug_id])
@@ -1339,7 +1350,7 @@ def main() -> PRINCIPAL:
     dispatcher = updater.dispatcher
 
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start),CommandHandler('admin', admin)],
+        entry_points=[CommandHandler('start', start, pass_args=True),CommandHandler('admin', admin)],
         states={
             PRINCIPAL: [
                 CallbackQueryHandler(juegos_lista_menu,        pattern='^juegos_lista_menu$'),
@@ -1410,7 +1421,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },
-    fallbacks=[CommandHandler('start', start),CommandHandler('admin', admin)],
+    fallbacks=[CommandHandler('start', start, pass_args=True),CommandHandler('admin', admin)],
     )
 
     dispatcher.add_handler(conv_handler)
@@ -1423,3 +1434,4 @@ if __name__ == '__main__':
     main()
 
 #https://t.me/Monitor_Juegos_bot?start=test
+#dispatcher.add_handler(CommandHandler('hello', SayHello, pass_args=True))
