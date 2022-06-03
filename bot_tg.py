@@ -123,7 +123,11 @@ def juegos_lista_menu(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    id = query.edit_message_text(text = "Elegí los juegos a listar", reply_markup=reply_markup)
+    try:
+        id = query.edit_message_text(text = "Elegí los juegos a listar", reply_markup=reply_markup)
+    except:
+        return LISTA_JUEGOS
+
     context.chat_data["mensaje_id"] = id.message_id
     return LISTA_JUEGOS
 

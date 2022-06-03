@@ -39,14 +39,3 @@ def send_photo(chat_id, caption, photo):
         # cursor.execute('DELETE FROM alarmas_ofertas WHERE id_usuario = ?',[chat_id])
         print(f"{datetime.now()} - Error enviando imagen a {chat_id} - Borrado")
         # conn.commit()
-
-def send_button(chat_id, texto):
-    bot = get_bot()
-    keyboard = [
-        [
-            InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
-        ],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    bot.send_message(chat_id, text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)

@@ -436,8 +436,6 @@ def main():
                 texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está a <b>${precio:.0f}</b> en <a href="{constantes.sitio_URL[sitio]+sitio_ID}">{constantes.sitio_nom[sitio]}</a> (tenés una alarma a los ${precio_al:.0f}).'
                 # texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está a <b>${precio:.0f}</b> en <a href="{constantes.sitio_URL[sitio]+sitio_ID}">{constantes.sitio_nom[sitio]}</a> (tenés una alarma a los ${precio_al:.0f}).'
                 manda.send_photo(id_persona, texto, arch)
-                texto = 'Si querés borrar la alarma, hacé click <a href="https://t.me/Buscalibre_bot?start={id_persona}|borrar_alarma|{bgg_id}">acá</a>.'
-                # manda.send_button(id_persona, texto)
             os.remove(arch)
 
 if __name__ == '__main__':
