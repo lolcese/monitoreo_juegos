@@ -5,7 +5,7 @@ import constantes
 import sqlite3
 
 os.chdir(path.actual)
-conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 conn.execute("PRAGMA journal_mode=WAL")
 cursor = conn.cursor()
 cursor.execute('UPDATE juegos SET prioridad = "3"')

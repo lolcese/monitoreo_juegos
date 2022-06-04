@@ -5,7 +5,7 @@ import sqlite3
 from datetime import datetime
 import manda
 
-conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 conn.execute("PRAGMA journal_mode=WAL")
 cursor = conn.cursor()
 cursor.execute('SELECT id_juego, avg(precio) FROM precios GROUP BY id_juego HAVING avg(precio) NOT NULL')

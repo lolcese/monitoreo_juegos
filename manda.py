@@ -19,7 +19,7 @@ def send_message(chat_id, text):
     try:
         bot.send_message(chat_id = chat_id, text = text, parse_mode = "HTML", disable_web_page_preview = True)
     except:
-        # conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        # conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         # conn.execute("PRAGMA journal_mode=WAL")
         # cursor = conn.cursor()
         # cursor.execute('DELETE FROM alarmas WHERE id_persona = ?',[chat_id])
@@ -32,7 +32,7 @@ def send_photo(chat_id, caption, photo):
     try:
         bot.send_photo(chat_id, photo = open(photo, 'rb'), caption = caption, parse_mode = "HTML")
     except:
-        # conn = sqlite3.connect(constantes.db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        # conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         # conn.execute("PRAGMA journal_mode=WAL")
         # cursor = conn.cursor()
         # cursor.execute('DELETE FROM alarmas WHERE id_persona = ?',[chat_id])
