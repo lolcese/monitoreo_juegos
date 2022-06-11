@@ -2,6 +2,12 @@ __pycache__/
 .vscode/
 temp/*
 !temp/readme.txt
+db/*
+!db/readme.txt
+logs/*
+!logs/readme.txt
+db/*
+!db/readme.txt
 extras/
 monitoreo_juegos.db*
 consultas.sqlite
