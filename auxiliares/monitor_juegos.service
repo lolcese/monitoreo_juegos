@@ -2,7 +2,7 @@
 Description=Monitor de precios de juegos
 
 [Service]
-User=lolcese
+User=ubuntu
 WorkingDirectory=/home/ubuntu/monitoreo_juegos
 StandardOutput=append:/home/ubuntu/monitoreo_juegos/logs/log_bot.txt
 StandardError=append:/home/ubuntu/monitoreo_juegos/logs/log_bot.txt
