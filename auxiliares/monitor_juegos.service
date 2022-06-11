@@ -3,10 +3,11 @@ Description=Monitor de precios de juegos
 
 [Service]
 User=lolcese
-WorkingDirectory=/home/ubuntu/monitoreo_juegos
-ExecStart=/home/ubuntu/monitoreo_juegos/inicia_bot.sh >/dev/null 2>&1
+WorkingDirectory=/home/lolcese/monitoreo_juegos
+StandardOutput=append:/home/lolcese/monitoreo_juegos/logs/log_bot.txt
+StandardError=append:/home/lolcese/monitoreo_juegos/logs/log_bot.txt
+ExecStart=/usr/bin/python3 bot_tg.py
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
-
