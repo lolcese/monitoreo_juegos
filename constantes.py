@@ -3,10 +3,6 @@
 ########################################################
 
 import sqlite3
-import os.path
-import path
-
-os.chdir(path.actual)
 
 db_file = 'monitoreo_juegos.db'
 exporta_file = 'precios_exporta.csv'

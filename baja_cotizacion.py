@@ -3,17 +3,15 @@ import sqlite3
 import re
 import html
 import urllib.request
-import os
 import constantes
-import path
 from datetime import datetime
 import requests
 from requests import get
 from urllib.error import URLError, HTTPError
+from decouple import config
 
-os.chdir(path.actual)
-bot_token = os.environ.get('bot_token')
-id_aviso = os.environ.get('id_aviso')
+bot_token = config('bot_token')
+id_aviso = config('id_aviso')
 
 fecha = datetime.now()
 

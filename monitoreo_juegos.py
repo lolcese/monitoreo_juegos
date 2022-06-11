@@ -12,17 +12,18 @@ import re
 from datetime import datetime
 from urllib.error import URLError, HTTPError
 import sqlite3
-import constantes
-import os.path
-import path
 from telegram.ext import (Updater)
+from decouple import config
 import sys
+import os
+import constantes
 import manda
 import hace_grafico
 
+bot_token = config('bot_token')
+id_aviso = config('id_aviso')
+
 prioridad = str(sys.argv[1])
-os.chdir(path.actual)
-bot_token = os.environ.get('bot_token')
 
 updater = Updater(bot_token)
 

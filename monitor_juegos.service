@@ -1,0 +1,12 @@
+[Unit]
+Description=Monitor de precios de juegos
+
+[Service]
+User=lolcese
+WorkingDirectory=/home/ubuntu/monitoreo_juegos
+ExecStart=/home/ubuntu/monitoreo_juegos/inicia_bot.sh >/dev/null 2>&1
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

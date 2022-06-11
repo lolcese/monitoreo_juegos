@@ -3,13 +3,14 @@ import sqlite3
 import re
 import html
 import urllib.request
-import os
 import constantes
-import path
 import time
 from datetime import datetime
+from decouple import config
 
-os.chdir(path.actual)
+bot_token = config('bot_token')
+id_aviso = config('id_aviso')
+
 fecha = datetime.now()
 
 conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)

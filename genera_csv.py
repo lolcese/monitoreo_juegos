@@ -8,11 +8,7 @@
 
 import sqlite3
 import constantes
-import os.path
-import path
 import csv
-
-os.chdir(path.actual)
 
 ######### Programa principal
 def main():

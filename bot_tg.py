@@ -12,17 +12,15 @@ import re
 import sqlite3
 import os
 import constantes
-import os.path
-import path
 from uuid import uuid4
 import html
 import manda
 import hace_grafico
 import urllib.request
+from decouple import config
 
-os.chdir(path.actual)
-bot_token = os.environ.get('bot_token')
-id_aviso = os.environ.get('id_aviso')
+bot_token = config('bot_token')
+id_aviso = config('id_aviso')
 
 PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, JUEGO_AGREGAR, ADMIN, CONSULTA_SQLITE = range(11)
 

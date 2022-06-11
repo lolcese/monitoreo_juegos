@@ -14,3 +14,4 @@ crontab.txt
 test.*
 sqlite3.exe
 monitoreo_juegos_todo.db
+.env

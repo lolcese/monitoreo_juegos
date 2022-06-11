@@ -1,14 +1,12 @@
 from telegram.ext import (Updater)
-import os.path
-import path
 from datetime import datetime
 import sqlite3
 import constantes
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
+from decouple import config
 
-os.chdir(path.actual)
-
-bot_token = os.environ.get('bot_token')
+bot_token = config('bot_token')
+id_aviso = config('id_aviso')
 
 def get_bot():
     updater = Updater(bot_token)
