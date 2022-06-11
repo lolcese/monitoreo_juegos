@@ -3,9 +3,9 @@ Description=Monitor de precios de juegos
 
 [Service]
 User=lolcese
-WorkingDirectory=/home/lolcese/monitoreo_juegos
-StandardOutput=append:/home/lolcese/monitoreo_juegos/logs/log_bot.txt
-StandardError=append:/home/lolcese/monitoreo_juegos/logs/log_bot.txt
+WorkingDirectory=/home/ubuntu/monitoreo_juegos
+StandardOutput=append:/home/ubuntu/monitoreo_juegos/logs/log_bot.txt
+StandardError=append:/home/ubuntu/monitoreo_juegos/logs/log_bot.txt
 ExecStart=/usr/bin/python3 bot_tg.py
 Restart=always
 
