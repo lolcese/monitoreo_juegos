@@ -1,0 +1,9 @@
+5,20,35,50   *   * * * cd /home/lolcese/monitoreo_juegos && python3 monitoreo_juegos.py 1    >>logs/log_monitoreo_juegos_1.txt 2>&1
+10           *   * * * cd /home/lolcese/monitoreo_juegos && python3 monitoreo_juegos.py 2    >>logs/log_monitoreo_juegos_2.txt 2>&1
+20           */2 * * * cd /home/lolcese/monitoreo_juegos && python3 monitoreo_juegos.py 3    >>logs/log_monitoreo_juegos_3.txt 2>&1
+30           1   * * * cd /home/lolcese/monitoreo_juegos && python3 baja_cotizacion.py       >>logs/log_baja_cotizacion.txt 2>&1
+5            2   * * 7 cd /home/lolcese/monitoreo_juegos && python3 baja_ranking.py          >>logs/log_baja_ranking.txt 2>&1
+45           *   * * * cd /home/lolcese/monitoreo_juegos && python3 ofertas_reposiciones.py  >>logs/log_ofertas_reposiciones.txt 2>&1
+15           *   * * * cd /home/lolcese/monitoreo_juegos && python3 genera_csv.py            >>logs/log_genera_csv.txt 2>&1 && rclone copy exporta/precios_exporta.csv gdrive:/precios_exporta.csv
+5            3   * * * cd /home/lolcese/monitoreo_juegos && python3 actualiza_prioridades.py >>logs/log_actualiza_prioridades.txt 2>&1
+5            4   * * * cd /home/lolcese/monitoreo_juegos && bash backup.sh >/dev/null 2>&1
