@@ -4,14 +4,8 @@ temp/*
 !temp/readme.txt
 extras/
 monitoreo_juegos.db*
-*.sh
-!backup.sh
-desarollo.md
 consultas.sqlite
 bot_token.txt
-sugeridos.txt
-crontab.txt
-test.*
 sqlite3.exe
 monitoreo_juegos_todo.db
 .env
