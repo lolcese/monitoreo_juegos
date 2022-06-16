@@ -1248,6 +1248,8 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
         nombre = html.unescape(re.search('<name type=\"primary\" sortindex=\".*?\" value=\"(.*?)\"',data)[1])
         ranking = html.unescape(re.search('name=\"boardgame\".*?value=\"(.*?)\"',data)[1])
 
+        print(nombre,ranking)
+        
         votos_dep = float(re.search('poll name=\"language_dependence\".*?totalvotes=\"(.*?)\"',data)[1])
         if votos_dep >= 3:
             votos[1] = float(re.search('result level.*? value=\"No necessary in-game text\" numvotes=\"(.*?)\"',data)[1])
