@@ -4,6 +4,6 @@
 30           1   * * * cd /home/ubuntu/monitoreo_juegos && python3 baja_cotizacion.py       >>logs/log_baja_cotizacion.txt 2>&1
 5            2   * * 7 cd /home/ubuntu/monitoreo_juegos && python3 baja_ranking.py          >>logs/log_baja_ranking.txt 2>&1
 45           *   * * * cd /home/ubuntu/monitoreo_juegos && python3 ofertas_reposiciones.py  >>logs/log_ofertas_reposiciones.txt 2>&1
-15           *   * * * cd /home/ubuntu/monitoreo_juegos && python3 genera_csv.py            >>logs/log_genera_csv.txt 2>&1 && rclone copy exporta/precios_exporta.csv gdrive:/precios_exporta.csv
+15           *   * * * cd /home/ubuntu/monitoreo_juegos && python3 genera_csv.py            >>logs/log_genera_csv.txt 2>&1
 5            3   * * * cd /home/ubuntu/monitoreo_juegos && python3 actualiza_prioridades.py >>logs/log_actualiza_prioridades.txt 2>&1
 5            4   * * * cd /home/ubuntu/monitoreo_juegos && bash backup.sh >/dev/null 2>&1

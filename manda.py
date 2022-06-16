@@ -35,5 +35,5 @@ def send_photo(chat_id, caption, photo):
         # cursor = conn.cursor()
         # cursor.execute('DELETE FROM alarmas WHERE id_persona = ?',[chat_id])
         # cursor.execute('DELETE FROM alarmas_ofertas WHERE id_usuario = ?',[chat_id])
-        print(f"{datetime.now()} - Error enviando imagen a {chat_id} - Borrado")
+        print(f"{datetime.now()} - Error enviando imagen a {chat_id}")
         # conn.commit()
