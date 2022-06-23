@@ -1259,7 +1259,7 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
         else:
             dependencia_leng = 0
 
-        texto += f"Nombre: <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>\n"
+        texto += f"Nombre: {html.escape(nombre)} - {constantes.sitio_URL['BGG']+str(bgg_id)}\n"
         if peso != None:
             texto += f"Peso: {peso}\n"
 
@@ -1270,7 +1270,7 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
         moni = cursor.fetchall()
         for m in moni:
             sitio_ya, sitio_id_ya = m
-            texto += f"<b>Ya está siendo monitoreado desde <a href='{constantes.sitio_URL[sitio_ya]+str(sitio_id_ya)}'>{constantes.sitio_nom[sitio_ya]}</a></b>\n"
+            texto += f"Ya está siendo monitoreado desde {constantes.sitio_URL[sitio_ya]+str(sitio_id_ya)}\n"
         texto += f"URL: {constantes.sitio_URL[sitio_nom]+sitio_id}"
         keyboard = [
             [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_sugeridos_{id_juego_sugerido}_aprobar|{nombre}|{ranking}|{dependencia_leng}')],
