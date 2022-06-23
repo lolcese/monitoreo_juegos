@@ -1238,8 +1238,7 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
         query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     else:
         id_juego_sugerido, usuario_nom, _, bgg_id, sitio_nom, sitio_id, peso, precio_envio = juegos
-        # texto = f"Usuario: {usuario_nom}\n"
-        texto = ""
+        texto = f"Usuario: {usuario_nom}\n"
         url = f'https://api.geekdo.com/xmlapi2/thing?id={bgg_id}&stats=1'
         req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
         data = urllib.request.urlopen(req).read()
@@ -1260,7 +1259,7 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
         else:
             dependencia_leng = 0
 
-        # texto += f"Nombre: <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>\n"
+        texto += f"Nombre: <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>\n"
         if peso != None:
             texto += f"Peso: {peso}\n"
 
@@ -1272,7 +1271,7 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
         for m in moni:
             sitio_ya, sitio_id_ya = m
             texto += f"<b>Ya está siendo monitoreado desde <a href='{constantes.sitio_URL[sitio_ya]+str(sitio_id_ya)}'>{constantes.sitio_nom[sitio_ya]}</a></b>\n"
-        texto += f"URL: {constantes.sitio_URL[sitio_nom]+sitio_id}"
+        # texto += f"URL: {constantes.sitio_URL[sitio_nom]+sitio_id}"
         keyboard = [
             [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_sugeridos_{id_juego_sugerido}_aprobar|{nombre}|{ranking}|{dependencia_leng}')],
             [InlineKeyboardButton("\U0000274C Rechazar no Argentina", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarnoARG')],
