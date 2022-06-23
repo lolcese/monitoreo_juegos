@@ -1272,6 +1272,7 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
             sitio_ya, sitio_id_ya = m
             texto += f"<b>Ya está siendo monitoreado desde <a href='{constantes.sitio_URL[sitio_ya]+str(sitio_id_ya)}'>{constantes.sitio_nom[sitio_ya]}</a></b>\n"
         # texto += f"URL: {constantes.sitio_URL[sitio_nom]+sitio_id}"
+        texto = "a"
         keyboard = [
             [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_sugeridos_{id_juego_sugerido}_aprobar|{nombre}|{ranking}|{dependencia_leng}')],
             [InlineKeyboardButton("\U0000274C Rechazar no Argentina", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarnoARG')],
