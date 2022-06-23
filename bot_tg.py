@@ -1271,10 +1271,9 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
         for m in moni:
             sitio_ya, sitio_id_ya = m
             texto += f"<b>Ya está siendo monitoreado desde <a href='{constantes.sitio_URL[sitio_ya]+str(sitio_id_ya)}'>{constantes.sitio_nom[sitio_ya]}</a></b>\n"
-        # texto += f"URL: {constantes.sitio_URL[sitio_nom]+sitio_id}"
-        texto = "a"
+        texto += f"URL: {constantes.sitio_URL[sitio_nom]+sitio_id}"
         keyboard = [
-            [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_sugeridos_{id_juego_sugerido}_aprobar|{nombre}|{ranking}|{dependencia_leng}')],
+            [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_sugeridos_{id_juego_sugerido}_aprobar')],
             [InlineKeyboardButton("\U0000274C Rechazar no Argentina", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarnoARG')],
             [InlineKeyboardButton("\U0000274C Rechazar juego equivocado", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarequiv')],
             [InlineKeyboardButton("\U0000274C Rechazar otro", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarotro')],
@@ -1282,6 +1281,9 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+        context.chat_data["nombre"] = nombre
+        context.chat_data["ranking"] = ranking
+        context.chat_data["dependencia_leng"] = dependencia_leng
         return ADMIN
 
 ######### Procesa sugeridos
@@ -1303,7 +1305,9 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     elif estado == "rechazarotro":
         manda.send_message(usuario_id, f'Gracias por la sugerencia, pero <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} no puede ser monitoreado')
     elif estado.startswith("aprobar"):
-        _, nombre, ranking, dependencia_leng = estado.split("|")
+        nombre = context.chat_data["nombre"]
+        ranking = context.chat_data["ranking"]
+        dependencia_leng = context.chat_data["dependencia_leng"]
         fecha = datetime.now()
         conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio) VALUES (?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3", precio_envio))
         conn.commit()
