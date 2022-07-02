@@ -44,7 +44,7 @@ def dividir_texto(texto, n):
 def start(update: Update, context: CallbackContext) -> int:
     usuario = update.message.from_user
     nombre = usuario.full_name
-    usuario_id = usuario.id,fecha
+    usuario_id = usuario.id
     fecha = datetime.now()
     conn = conecta_db()
     cursor = conn.cursor()
@@ -66,7 +66,7 @@ def inicio(update: Update, context: CallbackContext) -> int:
     query.answer()
     usuario = query.from_user
     nombre = usuario.full_name
-    usuario_id = usuario.id,fecha
+    usuario_id = usuario.id
     fecha = datetime.now()
     conn = conecta_db()
     cursor = conn.cursor()
