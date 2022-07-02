@@ -54,7 +54,7 @@ def start(update: Update, context: CallbackContext) -> int:
     cola = cursor.fetchone()
     txt = ""
     if cola != None:
-        txt = f"Gracias por colaborar con ${cola[0]} el {cola[1]}\n"
+        txt = f"\U0000FE0F Gracias por colaborar con ${cola[0]} el {cola[1]} \U0000FE0F\n"
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(text = f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n{txt}¿Qué querés hacer?', reply_markup=reply_markup)
@@ -748,13 +748,13 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
     
+02/07/2022: Campaña para cambio de server.
 21/05/2022: Agregado Miniature Market.
 18/05/2022: Agregado Planeton.
 18/05/2022: Agregado un tutorial por @matiliza.
 18/05/2022: Muestra precios actuales en las alarmas.
 18/05/2022: Resuelta la actualización automática de la planilla.
 19/04/2022: Actualiza automáticamente el costo de envío de Buscalibre.
-22/01/2022: Chequea automáticamente si es un duplicado al agregar un juego.
 """
 
     keyboard = [
@@ -1160,7 +1160,7 @@ def mensaje_oferta(update: Update, context: CallbackContext) -> int:
 def colaborar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = "<b>Colaborar con el server</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. Por razones de estabilidad se muda a un server pago, y es por eso que pedimos una colaboración para mantenerlo. El costo anual es de unos $6000, y es por eso que buscamos a 30 personas que aporten $200 anuales. Si te interesa, <a href='https://forms.gle/dV7MSopV1aVwG1kC9'>acá</a> están las instrucciones para colaborar.\n\nColaboradores: 1/30 (@juanigsrz)\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>"
+    texto = "<b>Colaborar con el server</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. Por razones de estabilidad se muda a un server pago, y es por eso que pedimos una colaboración para mantenerlo. El costo anual es de unos $6000, y es por eso que buscamos a personas que aporten $200 anuales. Si te interesa, <a href='https://forms.gle/dV7MSopV1aVwG1kC9'>acá</a> están las instrucciones para colaborar.\n\nColaboradores: @juanigsrz, @cisco_funk, @Marthinoth, @eli_9_gonzalez, @JeongmaLFC, @sebastianc, @jpsok, @Julikho, @hllambis y otros que prefieren no aparecer.\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
