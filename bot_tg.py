@@ -771,7 +771,9 @@ def estadistica(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('SELECT COUNT (DISTINCT nombre) FROM usuarios WHERE fecha > datetime("now", "-1 days")')
-    num_usu = cursor.fetchone()[0]
+    num_usu_24h = cursor.fetchone()[0]
+    cursor.execute('SELECT COUNT (DISTINCT nombre) FROM usuarios WHERE fecha > datetime("now", "-30 days")')
+    num_usu_30d = cursor.fetchone()[0]
     cursor.execute('SELECT COUNT (DISTINCT BGG_id) FROM juegos')
     num_jue = cursor.fetchone()[0]
     cursor.execute('SELECT COUNT () FROM juegos')
@@ -793,7 +795,8 @@ def estadistica(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT nombre FROM juegos WHERE id_juego = ?',[juego_menos_pr])
     mas_barato = cursor.fetchone()[0]
     texto = '<b>Estadística</b>\n\n' + \
-    f'En las últimas 24 horas se conectaron {num_usu} personas al bot\n\n' + \
+    f'En las últimas 24 horas se conectaron {num_usu_24h} personas al bot\n\n' + \
+    f'En los últimos 30 días se conectaron {num_usu_30d} personas al bot\n\n' + \
     f'Actualmente se están monitoreando los precios de {num_jue} juegos desde {num_jue_fu} sitios.\n\n' + \
     f'Hay {num_ala} alarmas de {pers_ala} personas distintas. El juego con más alarmas es {html.escape(mas_ala)}.\n\n' + \
     f'El juego monitoreado más caro en las últimas 24 horas fue {html.escape(mas_caro)} (${mas_caro_precio:.0f}) y el más barato {html.escape(mas_barato)} (${mas_barato_precio:.0f}).'
@@ -1160,7 +1163,7 @@ def mensaje_oferta(update: Update, context: CallbackContext) -> int:
 def colaborar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = "<b>Colaborar con el server</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. Por razones de estabilidad se muda a un server pago, y es por eso que pedimos una colaboración para mantenerlo. El costo anual es de unos $6000, y es por eso que buscamos a personas que aporten $200 anuales. Si te interesa, <a href='https://forms.gle/dV7MSopV1aVwG1kC9'>acá</a> están las instrucciones para colaborar.\n\nColaboradores: @juanigsrz, @cisco_funk, @Marthinoth, @eli_9_gonzalez, @JeongmaLFC, @sebastianc, @jpsok, @Julikho, @hllambis y otros que prefieren no aparecer.\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>"
+    texto = "<b>Colaborar con el server</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. Por razones de estabilidad se muda a un server pago, y es por eso que pedimos una colaboración para mantenerlo. El costo anual es de unos $6000, y es por eso que buscamos a personas que aporten $200 anuales. Si te interesa, <a href='https://forms.gle/dV7MSopV1aVwG1kC9'>acá</a> están las instrucciones para colaborar.\n\nColaboradores: @juanigsrz, @cisco_funk, @Marthinoth, @eli_9_gonzalez, @JeongmaLFC, @sebastianc, @jpsok, @Julikho, @hllambis, @dave, @Leono, @Facuml89, @KaNawogirusa y otros que prefieren no aparecer.\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
