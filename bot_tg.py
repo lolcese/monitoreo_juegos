@@ -42,41 +42,44 @@ def dividir_texto(texto, n):
 
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
-    # print(context.args)
-    # if len(context.args) == 0:
     usuario = update.message.from_user
+    nombre = usuario.full_name
+    usuario_id = usuario.id,fecha
     fecha = datetime.now()
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[usuario.full_name,usuario.id,fecha,"Inicio"])
+    cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[nombre, usuario_id, fecha, "Inicio"])
     conn.commit()
+    cursor.execute('SELECT monto, fecha from colaboradores WHERE id_persona = ?',[usuario_id])
+    cola = cursor.fetchone()
+    txt = ""
+    if cola != None:
+        txt = f"Gracias por colaborar con ${cola[0]} el {cola[1]}\n"
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text(text = 'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n¿Qué querés hacer?', reply_markup=reply_markup)
+    update.message.reply_text(text = f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n{txt}¿Qué querés hacer?', reply_markup=reply_markup)
     return PRINCIPAL
-    # else: # Cuando se responde desde un mensaje
-    #     id_usuario, accion, bgg_id = context.args[0].split("|")
-    #     print(id_usuario, accion, bgg_id)
-    #     if accion == "borrar_alarma":
-    #         cursor.execute('DELETE FROM alarmas WHERE id_persona = ? AND BGG_id = ?', [id_usuario,bgg_id])
-    #         conn.commit()
-    #         texto = "Tu alarma fue borrada"
-    #         manda.send_message(id_usuario, texto)
-    #         return PRINCIPAL
 
 ######### Cuando se elige la opción Inicio (es diferente al anterior porque viene de una query)
 def inicio(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     usuario = query.from_user
+    nombre = usuario.full_name
+    usuario_id = usuario.id,fecha
     fecha = datetime.now()
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[usuario.full_name,usuario.id,fecha,"Inicio secundario"])
+    cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[nombre, usuario_id, fecha, "Inicio"])
     conn.commit()
+    cursor.execute('SELECT monto, fecha from colaboradores WHERE id_persona = ?',[usuario_id])
+    cola = cursor.fetchone()
+    txt = ""
+    if cola != None:
+        txt = f"Gracias por colaborar con ${cola[0]} el {cola[1]}\n"
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = 'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n¿Qué querés hacer?', reply_markup=reply_markup)
+    update.message.reply_text(text = f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n{txt}¿Qué querés hacer?', reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Cuando se elige la opción Inicio (es diferente al anterior porque tiene que borrar el mensaje)
@@ -95,7 +98,7 @@ def menu():
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Listas de juegos monitoreados", callback_data='juegos_lista_menu')],
         [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
-        [InlineKeyboardButton("\U0001F3B2 Ver un juego y poner/borrar alarmas", callback_data='juego_ver')],
+        [InlineKeyboardButton("\U0001F3B2\U0001F3B2 Ver un juego y poner/borrar alarmas \U0001F3B2\U0001F3B2", callback_data='juego_ver')],
         [InlineKeyboardButton("\U0000270F Sugerir juego a monitorear", callback_data='sugerir_juego_datos')],
         [InlineKeyboardButton("\U000023F0 Ver mis alarmas", callback_data='alarmas_muestra')],
         [InlineKeyboardButton("\U00002757 Novedades", callback_data='novedades')],
@@ -103,7 +106,7 @@ def menu():
         [InlineKeyboardButton("\U00002753 Ayuda", callback_data='ayuda')],
         [InlineKeyboardButton("\U0001F4AC Enviar comentarios y sugerencias", callback_data='comentarios_texto')],
         [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
-        [InlineKeyboardButton("\U00002615 Invitame a un cafecito", callback_data='cafecito')]
+        [InlineKeyboardButton("\U0001F932 Colaborá con el server \U0001F932", callback_data='colaborar')]
     ]
     return keyboard
 
@@ -1153,11 +1156,11 @@ def mensaje_oferta(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = "Tus preferencias se actualizaron", reply_markup=reply_markup)
     return PRINCIPAL
 
-######### Invitame a un cafecito
-def cafecito(update: Update, context: CallbackContext) -> int:
+######### Colaborar
+def colaborar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = "<b>Invitame a un cafecito</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. De todos modos, hay costos de electricidad para mantenerlo funcionando y muchas horas de trabajo encima, así que dejo abierta la posibilidad de quien quiera y pueda haga un aporte monetario.\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>\n\n\U00002615 Alias: luis.olcese.mp \U00002615"
+    texto = "<b>Colaborar con el server</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. Por razones de estabilidad se muda a un server pago, y es por eso que pedimos una colaboración para mantenerlo. El costo anual es de unos $6000, y es por eso que buscamos a 30 personas que aporten $200 anuales. Si te interesa, <a href='https://forms.gle/dV7MSopV1aVwG1kC9'>acá</a>están las instrucciones para colaborar.\n\nColaboradores: 0/30\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -1367,7 +1370,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(comentarios_texto,        pattern='^comentarios_texto$'),
                 CallbackQueryHandler(novedades,                pattern='^novedades$'),
                 CallbackQueryHandler(estadistica,              pattern='^estadistica$'),
-                CallbackQueryHandler(cafecito,                 pattern='^cafecito$'),
+                CallbackQueryHandler(colaborar,                pattern='^colaborar$'),
                 CallbackQueryHandler(ayuda,                    pattern='^ayuda$'),
                 CallbackQueryHandler(consejos,                 pattern='^consejos$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),

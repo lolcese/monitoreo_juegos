@@ -87,3 +87,10 @@ CREATE TABLE juegos (
                             fecha_mejor DATETIME,
                             precio_envio REAL
                             );
+CREATE TABLE colaboradores (
+                            id_colaborador INTEGER PRIMARY KEY,
+                            usuario TEXT NOT NULL,
+                            id_persona INTEGER NOT NULL,
+                            monto INTEGER NOT NULL,
+                            fecha datetime NOT NULL
+                            );
