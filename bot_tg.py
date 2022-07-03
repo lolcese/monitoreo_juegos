@@ -79,7 +79,7 @@ def inicio(update: Update, context: CallbackContext) -> int:
         txt = f"Gracias por colaborar con ${cola[0]} el {cola[1]}\n"
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text.reply_text(text = f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n{txt}¿Qué querés hacer?', reply_markup=reply_markup)
+    query.edit_message_text(text = f'Hola, te doy la bienvenida al bot para monitorear precios de juegos. Si apretás un botón y no responde, escribí /start.\n{txt}¿Qué querés hacer?', reply_markup=reply_markup)
     return PRINCIPAL
 
 ######### Cuando se elige la opción Inicio (es diferente al anterior porque tiene que borrar el mensaje)
