@@ -2,12 +2,18 @@
 Description=Monitor de precios de juegos
 
 [Service]
-User=ubuntu
-WorkingDirectory=/home/ubuntu/monitoreo_juegos
-StandardOutput=append:/home/ubuntu/monitoreo_juegos/logs/log_bot.txt
-StandardError=append:/home/ubuntu/monitoreo_juegos/logs/log_bot.txt
+User=root
+WorkingDirectory=/root/monitoreo_juegos
+StandardOutput=append:/root/monitoreo_juegos/logs/log_bot.txt
+StandardError=append:/root/monitoreo_juegos/logs/log_bot.txt
 ExecStart=/usr/bin/python3 bot_tg.py
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
+# cd /etc/systemd/system
+# nano monitor_juegos.service
+# Poner este archivo
+# sudo systemctl daemon-reload
+# sudo systemctl start monitor_juegos.service

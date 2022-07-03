@@ -464,7 +464,7 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',['%'+nombre_juego+'%'])
     juegos = cursor.fetchall()
     keyboard = []
-    if len(juegos) > 10:
+    if len(juegos) > 15:
         keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text("Demasiados resultados, escribí más letras", reply_markup=reply_markup)
@@ -1163,7 +1163,7 @@ def mensaje_oferta(update: Update, context: CallbackContext) -> int:
 def colaborar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = "<b>Colaborar con el server</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. Por razones de estabilidad se muda a un server pago, y es por eso que pedimos una colaboración para mantenerlo. El costo anual es de unos $6000, y es por eso que buscamos a 30 personas que aporten $200 anuales. Si te interesa, <a href='https://forms.gle/dV7MSopV1aVwG1kC9'>acá</a> están las instrucciones para colaborar.\n\nHay 28 colaboradores: @juanigsrz, @cisco_funk, @Marthinoth, @eli_9_gonzalez, @JeongmaLFC, @sebastianc, @jpsok, @Julikho, @hllambis, @dave, @Leono, @Facuml89, @KaNawogirusa, @PukllayClub, @Bixon, @martinborda, @Jorh y otros que prefieren no aparecer.\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>"
+    texto = "<b>Colaborar con el server</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. Por razones de estabilidad se muda a un server pago, y es por eso que pedimos una colaboración para mantenerlo. El costo anual es de unos $6000, y es por eso que buscamos a 30 personas que aporten $200 anuales. Si te interesa, <a href='https://forms.gle/dV7MSopV1aVwG1kC9'>acá</a> están las instrucciones para colaborar.\n\nHay 30 colaboradores: @juanigsrz, @cisco_funk, @Marthinoth, @eli_9_gonzalez, @JeongmaLFC, @sebastianc, @jpsok, @Julikho, @hllambis, @dave_101, @Leono, @Facuml89, @KaNawogirusa, @PukllayClub, @Bixon, @martinborda, @Jorh, @damianyaz y otros que prefieren no aparecer.\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>"
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
