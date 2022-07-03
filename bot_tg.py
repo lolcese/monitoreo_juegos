@@ -748,13 +748,13 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
     
+03/07/2022: Cambio de server.
 02/07/2022: Campaña para cambio de server.
 21/05/2022: Agregado Miniature Market.
 18/05/2022: Agregado Planeton.
 18/05/2022: Agregado un tutorial por @matiliza.
 18/05/2022: Muestra precios actuales en las alarmas.
 18/05/2022: Resuelta la actualización automática de la planilla.
-19/04/2022: Actualiza automáticamente el costo de envío de Buscalibre.
 """
 
     keyboard = [
