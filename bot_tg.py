@@ -1167,11 +1167,11 @@ def colaborar(update: Update, context: CallbackContext) -> int:
     cursor = conn.cursor()
     cursor.execute('SELECT COUNT(*) FROM colaboradores')
     n_colaboradores = cursor.fetchone()[0]
-    cursor.execute('SELECT usuario_tg FROM colaboradores WHERE mostrar = "Si"')
+    cursor.execute('SELECT usuario_tg, usuario FROM colaboradores WHERE mostrar = "Si"')
     colaboradores = cursor.fetchall()
     cola = []
     for col in colaboradores:
-        cola.append("@" + col[0])
+        cola.append(col[1]+" (@" + col[0]+")")
 
     texto = f"<b>Colaborar con el server</b>\n\nEl objetivo de este bot no es el de generar ganancia, sino de tener una herramienta para comparar precios para la Comunidad Boardgamera Argentina. Por razones de estabilidad se muda a un server pago, y es por eso que pedimos una colaboración para mantenerlo. El costo anual es de unos $6000, y es por eso que buscamos a 30 personas que aporten $200 anuales. Si te interesa, <a href='https://forms.gle/dV7MSopV1aVwG1kC9'>acá</a> están las instrucciones para colaborar.\n\nHay {n_colaboradores} colaboradores: {', '.join(sorted(cola))} y otros que prefieren no aparecer.\n\n<b>No hay absolutamente ninguna diferencia en las funciones, ni alarmas, ni nada para quienes hayan aportado y para los que no.</b>"
     keyboard = [
