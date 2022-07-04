@@ -68,7 +68,8 @@ CREATE TABLE restock (
 CREATE TABLE alarmas_ofertas (
                             id_alarma_oferta INTEGER PRIMARY KEY,
                             id_usuario INTEGER NOT NULL,
-                            tipo_alarma INTEGER NOT NULL DEFAULT 3
+                            tipo_alarma INTEGER NOT NULL DEFAULT 3,
+                            tiempo_alarma INTEGER NOT NULL DEFAULT 60,
                             );
 CREATE TABLE juegos (
                             id_juego INTEGER PRIMARY KEY,
@@ -92,5 +93,7 @@ CREATE TABLE colaboradores (
                             usuario TEXT NOT NULL,
                             id_persona INTEGER NOT NULL,
                             monto INTEGER NOT NULL,
-                            fecha datetime NOT NULL
+                            fecha datetime NOT NULL,
+                            usuario_tg TEXT,
+                            mostrar TEXT
                             );
