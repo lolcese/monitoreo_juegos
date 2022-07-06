@@ -22,7 +22,7 @@ from decouple import config
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, JUEGO_AGREGAR, ADMIN, CONSULTA_SQLITE = range(11)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, ADMIN = range(11)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -96,16 +96,9 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
 ######### Menú principal
 def menu():
     keyboard = [
-        [InlineKeyboardButton("\U0001F4DA Listas de juegos monitoreados", callback_data='juegos_lista_menu')],
-        [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
-        [InlineKeyboardButton("\U0001F3B2\U0001F3B2 Ver un juego y poner/borrar alarmas \U0001F3B2\U0001F3B2", callback_data='juego_ver')],
-        [InlineKeyboardButton("\U0000270F Sugerir juego a monitorear", callback_data='sugerir_juego_datos')],
-        [InlineKeyboardButton("\U000023F0 Ver mis alarmas", callback_data='alarmas_muestra')],
-        [InlineKeyboardButton("\U00002757 Novedades", callback_data='novedades')],
-        [InlineKeyboardButton("\U0001F4A1 Consejos", callback_data='consejos')],
-        [InlineKeyboardButton("\U00002753 Ayuda", callback_data='ayuda')],
-        [InlineKeyboardButton("\U0001F4AC Enviar comentarios y sugerencias", callback_data='comentarios_texto')],
-        [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
+        [InlineKeyboardButton("\U0001F4DA Ver Listas de juegos", callback_data='juegos_lista_menu')],
+        [InlineKeyboardButton("\U0001F3B2 Ver un juego y mis alarmas", callback_data='juego_ver')],
+        [InlineKeyboardButton("\U00002753 Ayuda e información", callback_data='ayuda_info')],
         [InlineKeyboardButton("\U0001F932 Colaborá con el server \U0001F932", callback_data='colaborar')]
     ]
     return keyboard
@@ -121,6 +114,8 @@ def juegos_lista_menu(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U0001F522 Juegos disp. (por precio)", callback_data='juegos_stockprecio')],
         [InlineKeyboardButton("\U0001F5DE Últimos 30 agregados", callback_data='juegos_lista_ULT')],
         [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos_0')],
+        [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
+        [InlineKeyboardButton("\U0000270F Sugerir juego a monitorear", callback_data='sugerir_juego_datos')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -449,6 +444,7 @@ def juego_ver(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     keyboard = [
+        [InlineKeyboardButton("\U000023F0 Ver mis alarmas", callback_data='alarmas_muestra')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -689,6 +685,22 @@ def alarmas_borrar(update: Update, context: CallbackContext) -> int:
     context.bot.send_message(chat_id=update.effective_chat.id, text = f'Borraste la alarma para {nombre}.', reply_markup=reply_markup)
     return PRINCIPAL
 
+######### Muestra ayuda e información
+def ayuda_info(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    keyboard = [
+        [InlineKeyboardButton("\U00002753 Ayuda", callback_data='ayuda')],
+        [InlineKeyboardButton("\U00002757 Novedades del bot", callback_data='novedades')],
+        [InlineKeyboardButton("\U0001F4A1 Consejos para comprar", callback_data='consejos')],
+        [InlineKeyboardButton("\U0001F4AC Enviar comentarios y sugerencias", callback_data='comentarios_texto')],
+        [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = "Elegí lo que quieras ver", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    return PRINCIPAL
+
 ######### Muestra ayuda
 def ayuda(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
@@ -871,7 +883,7 @@ https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777
 """
 
     query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
-    return JUEGO_AGREGAR
+    return LISTA_JUEGOS
 
 ######### Guarda el juego sugerido
 def sugerir_juego(update: Update, context: CallbackContext) -> int:
@@ -881,7 +893,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
     if len(dat) < 2:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de BGG y en el renglón siguiente el URL del juego.")
-        return JUEGO_AGREGAR
+        return LISTA_JUEGOS
 
     bgg_url = dat[0]
     url = dat[1]
@@ -891,11 +903,11 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         bgg_id = busca_id.group(2)
     else:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
-        return JUEGO_AGREGAR
+        return LISTA_JUEGOS
 
     if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves|planeton|miniaturemarket", url):
         update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land o Planeton")
-        return JUEGO_AGREGAR
+        return LISTA_JUEGOS
 
     sitio_nom, sitio_id = extrae_sitio(url)
     conn = conecta_db()
@@ -912,11 +924,11 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
     if len(dat) == 2 and re.search("deepdiscount", url):
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")
-        return JUEGO_AGREGAR
+        return LISTA_JUEGOS
 
     if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url)):
         update.message.reply_text("Cuando agregás un juego de Planeton, tenés que poner el monto del envío.")
-        return JUEGO_AGREGAR
+        return LISTA_JUEGOS
 
     peso = None
     precio_envio = None
@@ -1328,7 +1340,6 @@ def main() -> PRINCIPAL:
         states={
             PRINCIPAL: [
                 CallbackQueryHandler(juegos_lista_menu,        pattern='^juegos_lista_menu$'),
-                CallbackQueryHandler(ofertas_restock,          pattern='^ofertas_restock$'),
                 CallbackQueryHandler(juego_ver,                pattern='^juego_ver$'),
                 CallbackQueryHandler(sugerir_juego_datos,      pattern='^sugerir_juego_datos$'),
                 CallbackQueryHandler(alarmas_muestra,          pattern='^alarmas_muestra$'),
@@ -1342,6 +1353,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(mensaje_oferta,           pattern='^mensaje_oferta_'),
             ],  
             LISTA_JUEGOS: [
+                CallbackQueryHandler(ofertas_restock,          pattern='^ofertas_restock$'),
                 CallbackQueryHandler(juegos_lista_menu,        pattern='^juegos_lista_menu$'),
                 CallbackQueryHandler(juegos_planilla,          pattern='^juegos_planilla$'),
                 CallbackQueryHandler(juegos_todos,             pattern='^juegos_todos$'),
@@ -1353,6 +1365,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(juegos_lista_ULT,         pattern='^juegos_lista_ULT$'),
                 CallbackQueryHandler(juegos_baratos,           pattern='^juegos_baratos_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, sugerir_juego)
             ],
             JUEGO_ELECCION: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, juego_nom),
@@ -1380,9 +1393,6 @@ def main() -> PRINCIPAL:
             COMENTARIOS: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, comentarios_mandar),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
-            ],
-            JUEGO_AGREGAR: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, sugerir_juego)
             ],
             ADMIN: [
                 CallbackQueryHandler(admin_juegos_sugeridos,   pattern='^admin_juegos_sugeridos$'),
