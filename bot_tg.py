@@ -22,7 +22,7 @@ from decouple import config
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, ADMIN = range(11)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, ADMIN = range(9)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -1344,6 +1344,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(sugerir_juego_datos,      pattern='^sugerir_juego_datos$'),
                 CallbackQueryHandler(alarmas_muestra,          pattern='^alarmas_muestra$'),
                 CallbackQueryHandler(comentarios_texto,        pattern='^comentarios_texto$'),
+                CallbackQueryHandler(ayuda_info,               pattern='^ayuda_info$'),
                 CallbackQueryHandler(novedades,                pattern='^novedades$'),
                 CallbackQueryHandler(estadistica,              pattern='^estadistica$'),
                 CallbackQueryHandler(colaborar,                pattern='^colaborar$'),
