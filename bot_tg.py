@@ -1360,7 +1360,6 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(juegos_lista_menu,        pattern='^juegos_lista_menu$'),
                 CallbackQueryHandler(juego_ver,                pattern='^juego_ver$'),
                 CallbackQueryHandler(sugerir_juego_datos,      pattern='^sugerir_juego_datos$'),
-                CallbackQueryHandler(alarmas_muestra,          pattern='^alarmas_muestra$'),
                 CallbackQueryHandler(comentarios_texto,        pattern='^comentarios_texto$'),
                 CallbackQueryHandler(ayuda_info,               pattern='^ayuda_info$'),
                 CallbackQueryHandler(novedades,                pattern='^novedades$'),
@@ -1388,6 +1387,7 @@ def main() -> PRINCIPAL:
             ],
             JUEGO_ELECCION: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, juego_nom),
+                CallbackQueryHandler(alarmas_muestra,          pattern='^alarmas_muestra$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             JUEGO: [
