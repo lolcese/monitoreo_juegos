@@ -22,7 +22,7 @@ from decouple import config
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, ADMIN = range(9)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN = range(10)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -96,9 +96,9 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
 ######### Menú principal
 def menu():
     keyboard = [
-        [InlineKeyboardButton("\U0001F4DA Ver Listas de juegos", callback_data='juegos_lista_menu')],
-        [InlineKeyboardButton("\U0001F3B2 Ver un juego y mis alarmas", callback_data='juego_ver')],
-        [InlineKeyboardButton("\U00002753 Ayuda e información", callback_data='ayuda_info')],
+        [InlineKeyboardButton("\U0001F4DA Ver Listas de juegos \U0001F4DA", callback_data='juegos_lista_menu')],
+        [InlineKeyboardButton("\U0001F3B2 Ver un juego y mis alarmas \U0001F3B2", callback_data='juego_ver')],
+        [InlineKeyboardButton("\U00002753 Ayuda e información \U00002753", callback_data='ayuda_info')],
         [InlineKeyboardButton("\U0001F932 Colaborá con el server \U0001F932", callback_data='colaborar')]
     ]
     return keyboard
@@ -1046,20 +1046,17 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    texto_of = "<b>Juegos en oferta</b>\n\n"
-    cursor.execute('SELECT id_juego,precio_prom,precio_actual FROM ofertas WHERE activa = "Sí"')
-    ofertas = cursor.fetchall()
     ofertas_10 = []
     ofertas_15 = []
     ofertas_20 = []
     porc_10 = []
     porc_15 = []
     porc_20 = []
+    texto_of = "<b>Juegos en oferta</b>\n\n"
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual FROM juegos WHERE precio_actual < 0.9 * precio_prom')
+    ofertas = cursor.fetchall()
     for o in ofertas:
-        cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id FROM juegos WHERE id_juego = ?',[o[0]])
-        nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
-        precio_prom = o[1]
-        precio_actual = o[2]
+        nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual = o
         porc = (precio_prom - precio_actual) / precio_prom * 100
         if porc >= 20:
             ofertas_20.append(f"\U0001F381 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en <a href='{constantes.sitio_URL[sitio]+sitio_id}'>{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} y el promedio es de ${precio_prom:.0f} ({porc:.0f}% menos)\n")
@@ -1082,93 +1079,102 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_of += "No hay ningún juego en oferta\n"
 
     texto_st = "<b>Juegos en reposición</b>\n\n"
-    cursor.execute('SELECT id_juego FROM restock WHERE activa = "Sí"')
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE reposicion = "Sí"')
     restock = cursor.fetchall()
     for r in restock:
-        id_juego = r[0]
-        cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE id_juego = ?',[id_juego])
-        nombre, sitio, sitio_id, bgg_id, precio_actual = cursor.fetchone()
+        nombre, sitio, sitio_id, bgg_id, precio_actual = r
         if precio_actual != None:
             texto_st += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en stock en <a href='{constantes.sitio_URL[sitio]+sitio_id}'>{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} (y antes no lo estaba)\n"
     if texto_st == "<b>Juegos en reposición</b>\n\n":
         texto_st = "No hay ningún juego en reposición\n"
 
-    cursor.execute('SELECT id_usuario, tipo_alarma FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
+    cursor.execute('SELECT tipo_alarma_oferta, tipo_alarma_reposicion FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
     alarmas_ofertas = cursor.fetchone()
 
     if alarmas_ofertas == None:
-        texto_al = "Cuando haya una oferta o reposición, te puedo mandar un mensaje (solo la primera vez que esté en ese estado).\n"
-        keyboard = [
-            [
-                InlineKeyboardButton("\U00002795 Ofertas", callback_data='mensaje_oferta_1'),
-                InlineKeyboardButton("\U00002795 Reposiciones", callback_data='mensaje_oferta_2'),
-                InlineKeyboardButton("\U00002795 Ambas", callback_data='mensaje_oferta_3')
-            ],
-            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-        ]
-    elif (alarmas_ofertas[1] == 3):
-        texto_al = "Cuando haya una oferta o reposición, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
-        keyboard = [
-            [
-                InlineKeyboardButton("\U00002796 Ofertas", callback_data='mensaje_oferta_2'),
-                InlineKeyboardButton("\U00002796 Reposiciones", callback_data='mensaje_oferta_1'),
-                InlineKeyboardButton("\U00002796 Ninguna", callback_data='mensaje_oferta_0')
-            ],
-            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-        ]
-    elif (alarmas_ofertas[1] == 1):
-        texto_al = "Cuando haya una oferta, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
-        keyboard = [
-            [
-                InlineKeyboardButton("\U00002796 Ofertas", callback_data='mensaje_oferta_0'),
-                InlineKeyboardButton("\U00002795 Reposiciones", callback_data='mensaje_oferta_3')
-            ],
-            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-        ]
-    elif (alarmas_ofertas[1] == 2):
-        texto_al = "Cuando haya una reposición, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
-        keyboard = [
-            [
-                InlineKeyboardButton("\U00002795 Ofertas", callback_data='mensaje_oferta_3'),
-                InlineKeyboardButton("\U00002796 Reposiciones", callback_data='mensaje_oferta_0')
-            ],
-            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-        ]
+        texto_al = "Según tus preferencias actuales, no vas a recibir mensajes cuando haya una oferta, y no vas a recibir mensajes cuando haya reposiciones.\n"
+    else:
+        texto_al = "Según tus preferencias actuales, "
+        tipo_alarma_oferta, tipo_alarma_reposicion = alarmas_ofertas[0]
+        if tipo_alarma_oferta == "BLP":
+            texto_al += "vas a recibir un mensaje cuando haya una oferta en Buscalibre, Buscalibre Amazon o Planeton, "
+        elif tipo_alarma_oferta == "Todo":
+            texto_al += "vas a recibir un mensaje cuando haya una oferta en cualquier sitio, "
+        else:
+            texto_al += "no vas a recibir mensajes cuando haya una oferta, "
+
+        if tipo_alarma_reposicion == "BLP":
+            texto_al += "y vas a recibir un mensaje cuando haya una reposición en Buscalibre, Buscalibre Amazon o Planeton."
+        elif tipo_alarma_reposicion == "Todo":
+            texto_al += "y vas a recibir un mensaje cuando haya una reposición en cualquier sitio."
+        else:
+            texto_al += "y no vas a recibir mensajes cuando haya reposiciones."
+
+    keyboard = [
+        [InlineKeyboardButton("\U0000267B Modificar los avisos", callback_data='modificar_avisos1')],
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto_mensaje_div = dividir_texto(f"{texto_of}\n{texto_st}\n", 25)
     for t in texto_mensaje_div:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = f"{texto_al}", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
-    return PRINCIPAL
-######### Cambiar al aviso de ofertas
-def mensaje_oferta(update: Update, context: CallbackContext) -> int:
+    return OFERTAS
+
+######### Paso 1 en la modificación de avisos de ofertas y reposiciones
+def modificar_avisos1(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    tipo_of = int(query.data.split("_")[2])
-    usuario_id = update.callback_query.from_user.id
+    keyboard = [
+        [InlineKeyboardButton("\U0000267B Solo Buscalibre, Buscalibre Amazon y Planeton", callback_data='modificar_avisos2_BLP')],
+        [InlineKeyboardButton("\U0000267B Para todos los sitios", callback_data='modificar_avisos2_Todo')],
+        [InlineKeyboardButton("\U0000267B No quiero recibirlas", callback_data='modificar_avisos2_No')],
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = "¿Querés recibir alarmas cuando hay ofertas?", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    return OFERTAS
 
-    if (tipo_of == 0):
-        conn = conecta_db()
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
+######### Paso 2 en la modificación de avisos de ofertas y reposiciones
+def modificar_avisos2(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    context.chat_data["tipo_oferta"] = query.data.split("_")[2]
+    keyboard = [
+        [InlineKeyboardButton("\U0000267B Solo Buscalibre, Buscalibre Amazon y Planeton", callback_data='avisos_reposiciones_BLP')],
+        [InlineKeyboardButton("\U0000267B Para todos los sitios", callback_data='avisos_reposiciones_Todo')],
+        [InlineKeyboardButton("\U0000267B No quiero recibirlas", callback_data='avisos_reposiciones_No')],
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = "¿Querés recibir alarmas cuando haya reposiciones?", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    return OFERTAS
+
+######### Cambiar al aviso de ofertas
+def aceptar_ofe_repo(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    tipo_reposicion = query.data.split("_")[2]
+    tipo_oferta = context.chat_data["tipo_oferta"]
+    usuario_id = update.callback_query.from_user.id
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT tipo_alarma_oferta, tipo_alarma_reposicion FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
+    alarmas_ofertas = cursor.fetchone()
+    if alarmas_ofertas == None:
+        cursor.execute('INSERT INTO alarmas_ofertas (id_usuario, tipo_alarma_oferta, tipo_alarma_reposicion) VALUES (?,?,?)',[usuario_id, tipo_oferta, tipo_reposicion])
         conn.commit()
     else:
-        conn = conecta_db()
-        cursor = conn.cursor()
-        cursor.execute('SELECT id_usuario, tipo_alarma FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
-        alarmas_ofertas = cursor.fetchone()
-        if alarmas_ofertas == None:
-            cursor.execute('INSERT INTO alarmas_ofertas (tipo_alarma, id_usuario) VALUES (?,?)',[tipo_of, usuario_id])
-            conn.commit()
-        else:
-            cursor.execute('UPDATE alarmas_ofertas SET tipo_alarma = ? WHERE id_usuario = ?',[tipo_of, usuario_id])
-            conn.commit()
+        cursor.execute('UPDATE alarmas_ofertas SET tipo_alarma_oferta = ?, tipo_alarma_reposicion = ? WHERE id_usuario = ?',[tipo_oferta, tipo_reposicion, usuario_id])
+        conn.commit()
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = "Tus preferencias se actualizaron", reply_markup=reply_markup)
     return PRINCIPAL
+
 ######### Colaborar
 def colaborar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
@@ -1368,7 +1374,6 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(ayuda,                    pattern='^ayuda$'),
                 CallbackQueryHandler(consejos,                 pattern='^consejos$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
-                CallbackQueryHandler(mensaje_oferta,           pattern='^mensaje_oferta_'),
             ],  
             LISTA_JUEGOS: [
                 CallbackQueryHandler(ofertas_restock,          pattern='^ofertas_restock$'),
@@ -1408,6 +1413,12 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(alarmas_borrar,           pattern='^alarmas_borrar$'),
                 CallbackQueryHandler(inicio_borrar,            pattern='^inicio$'),
                 CallbackQueryHandler(juego_nom_otra,           pattern='^juego_nom_otra$'),
+            ],
+            OFERTAS: [
+                CallbackQueryHandler(modificar_avisos1,        pattern='^modificar_avisos1_'),
+                CallbackQueryHandler(modificar_avisos2,        pattern='^modificar_avisos2_'),
+                CallbackQueryHandler(aceptar_ofe_repo,         pattern='^aceptar_ofertas_reposiciones$'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             COMENTARIOS: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, comentarios_mandar),
