@@ -1386,12 +1386,7 @@ def main() -> PRINCIPAL:
             ],
             ADMIN: [
                 CallbackQueryHandler(admin_juegos_sugeridos,   pattern='^admin_juegos_sugeridos$'),
-                CallbackQueryHandler(consulta_sqlite,          pattern='^consulta_sqlite$'),
                 CallbackQueryHandler(admin_sugeridos_r,        pattern='^admin_sugeridos_'),
-                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
-            ],
-            CONSULTA_SQLITE: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, consulta_sqlite_procesa),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },
