@@ -380,44 +380,71 @@ def main():
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
         bgg_id, nombre = jb
-        cursor.execute('SELECT id_juego, sitio, sitio_ID, peso, precio_envio FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
+        cursor.execute('SELECT id_juego, sitio, sitio_id, peso, precio_envio FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
         juegos_id = cursor.fetchall()
         for j in juegos_id: # Cada repetición del mismo juego
             fecha = datetime.now()
-            id_juego, sitio, sitio_ID, peso, precio_envio = j
+            id_juego, sitio, sitio_id, peso, precio_envio = j
             if   sitio == "BLAM":
-                precio = lee_pagina_blam(sitio_ID)
+                precio = lee_pagina_blam(sitio_id)
             elif sitio == "BLIB":
-                precio = lee_pagina_blib(sitio_ID)
+                precio = lee_pagina_blib(sitio_id)
             elif sitio == "TMAM":
-                precio = lee_pagina_tmam(sitio_ID)
+                precio = lee_pagina_tmam(sitio_id)
             elif sitio == "TMWM":
-                precio = lee_pagina_tmwm(sitio_ID) 
+                precio = lee_pagina_tmwm(sitio_id) 
             elif sitio == "TMEB":
-                precio = lee_pagina_tmeb(sitio_ID) 
+                precio = lee_pagina_tmeb(sitio_id) 
             elif sitio == "TMMA":
-                precio = lee_pagina_tmma(sitio_ID) 
+                precio = lee_pagina_tmma(sitio_id) 
             elif sitio == "BOOK":
-                precio = lee_pagina_book(sitio_ID)
+                precio = lee_pagina_book(sitio_id)
             elif sitio == "365":
-                precio = lee_pagina_365(sitio_ID)
+                precio = lee_pagina_365(sitio_id)
             elif sitio == "shop4es":
-                precio = lee_pagina_shop4es(sitio_ID)
+                precio = lee_pagina_shop4es(sitio_id)
             elif sitio == "shop4world":
-                precio = lee_pagina_shop4world(sitio_ID)
+                precio = lee_pagina_shop4world(sitio_id)
             elif sitio == "deep":
-                precio = lee_pagina_deep(sitio_ID, peso)
+                precio = lee_pagina_deep(sitio_id, peso)
             elif sitio == "grooves":
-                precio = lee_pagina_grooves(sitio_ID)
+                precio = lee_pagina_grooves(sitio_id)
             elif sitio == "planeton":
-                precio = lee_pagina_planeton(sitio_ID, precio_envio)
+                precio = lee_pagina_planeton(sitio_id, precio_envio)
             elif sitio == "MM":
-                precio = lee_pagina_mm(sitio_ID, precio_envio)
+                precio = lee_pagina_mm(sitio_id, precio_envio)
 
-            if precio != None:
-                cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
-                conn.commit()
+# Calcula el promedio y reposicion
+            cursor.execute('SELECT precio_prom FROM juegos WHERE id_juego = ?', [id_juego])
+            prom = cursor.fetchone()
+            if prom is None:
+# Si no hay ningún precio antes
+                precio_prom = None
+                if precio is None:
+                    reposicion = "No"
+                else:
+                    reposicion = "Sí"
+# Dispara alarma reposiciones
+                    if sitio == "BLIB" or sitio == "BLAM":
+                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
+                    else:
+                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
+                    usuarios_ofertas = cursor.fetchall()
+                    for u in usuarios_ofertas:
+                        texto = f'\U0001F381\n\n\<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U0001F381'
+                        manda.send_message(u[0], texto)
+                    
+            else:
+# Si hay precios antes            
+                precio_prom = prom[0]
+                cursor.execute('SELECT max(precio) FROM precios WHERE id_juego = ? AND fecha_agregado < datetime("now", "-2 days", "localtime")', [id_juego])
+                max_pr = cursor.fetchone()
+                if max_pr is None:
+                    reposicion = "Sí"
+                else:
+                    reposicion = "No"
 
+# Busca el precio más barato
             cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio, fecha DESC LIMIT 1', [id_juego])
             mejor = cursor.fetchone()
             if mejor != None:
@@ -425,19 +452,38 @@ def main():
             else:
                 precio_mejor = None
                 fecha_mejor = None
-            cursor.execute('UPDATE juegos SET precio_actual = ?, fecha_actual = ?, precio_mejor = ?, fecha_mejor = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, id_juego])
+            if precio != None:
+# Dispara alarma ofertas
+                if precio < precio_mejor:
+                    porc = (precio_prom - precio) / precio_prom * 100
+                    if sitio == "BLIB" or "BLAM":
+                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
+                    else:
+                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
+                    usuarios_ofertas = cursor.fetchall()
+                    for u in usuarios_ofertas:
+                        texto = f'\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381'
+                        manda.send_photo(u[0], texto, arch)
+
+# Guarda el precio en la tabla precios
+            if precio != None:
+                cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
+                conn.commit()
+
+# Guarda el precio, promedio y reposición en la tabla juegos
+            cursor.execute('UPDATE juegos SET precio_actual = ?, fecha_actual = ?, precio_mejor = ?, fecha_mejor = ?, precio_prom = ?, reposicion = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, precio_prom, reposicion, id_juego])
             conn.commit()
 
-        cursor.execute('SELECT id_persona, precio_alarma FROM alarmas WHERE BGG_id = ? and precio_alarma >= ?',(bgg_id, precio))
-        alarmas = cursor.fetchall()
-        if len(alarmas) > 0:
-            arch = hace_grafico.grafica(bgg_id, nombre)
-            for alarma in alarmas:
-                id_persona, precio_al = alarma
-                texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está a <b>${precio:.0f}</b> en <a href="{constantes.sitio_URL[sitio]+sitio_ID}">{constantes.sitio_nom[sitio]}</a> (tenés una alarma a los ${precio_al:.0f}).'
-                # texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está a <b>${precio:.0f}</b> en <a href="{constantes.sitio_URL[sitio]+sitio_ID}">{constantes.sitio_nom[sitio]}</a> (tenés una alarma a los ${precio_al:.0f}).'
-                manda.send_photo(id_persona, texto, arch)
-            os.remove(arch)
+# Manda alarmas
+            cursor.execute('SELECT id_persona, precio_alarma FROM alarmas WHERE BGG_id = ? and precio_alarma >= ?',(bgg_id, precio))
+            alarmas = cursor.fetchall()
+            if len(alarmas) > 0:
+                arch = hace_grafico.grafica(bgg_id, nombre)
+                for alarma in alarmas:
+                    id_persona, precio_al = alarma
+                    texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está a <b>${precio:.0f}</b> en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> (tenés una alarma a los ${precio_al:.0f}).'
+                    manda.send_photo(id_persona, texto, arch)
+                os.remove(arch)
 
 if __name__ == '__main__':
     main()
