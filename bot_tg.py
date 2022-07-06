@@ -1096,36 +1096,55 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT id_usuario, tipo_alarma FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
     alarmas_ofertas = cursor.fetchone()
 
-    texto_al = "Cuando haya una oferta o reposición, te puedo mandar un mensaje (solo la primera vez que esté en ese estado).\n"
-    keyboard = [
-        [
-            InlineKeyboardButton("\U00002795 Ofertas y repos cada 15 m", callback_data='mensaje_oferta_3_15'),
-            InlineKeyboardButton("\U00002795 Ofertas y repos cada 1 h", callback_data='mensaje_oferta_3_60'),
-        ],
-        [
-            InlineKeyboardButton("\U00002795 Ofertas cada 15 m", callback_data='mensaje_oferta_1_15'),
-            InlineKeyboardButton("\U00002795 Ofertas cada 1 h", callback_data='mensaje_oferta_1_60'),
-        ],
-        [
-            InlineKeyboardButton("\U00002795 Reposiciones cada 15 m", callback_data='mensaje_oferta_2_15'),
-            InlineKeyboardButton("\U00002795 Reposiciones cada 1 h", callback_data='mensaje_oferta_2_60'),
-        ],
-        [InlineKeyboardButton("\U00002796 Sin avisos", callback_data='mensaje_oferta_0_0')],
-        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
-    ]
+    if alarmas_ofertas == None:
+        texto_al = "Cuando haya una oferta o reposición, te puedo mandar un mensaje (solo la primera vez que esté en ese estado).\n"
+        keyboard = [
+            [
+                InlineKeyboardButton("\U00002795 Ofertas", callback_data='mensaje_oferta_1'),
+                InlineKeyboardButton("\U00002795 Reposiciones", callback_data='mensaje_oferta_2'),
+                InlineKeyboardButton("\U00002795 Ambas", callback_data='mensaje_oferta_3')
+            ],
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+    elif (alarmas_ofertas[1] == 3):
+        texto_al = "Cuando haya una oferta o reposición, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
+        keyboard = [
+            [
+                InlineKeyboardButton("\U00002796 Ofertas", callback_data='mensaje_oferta_2'),
+                InlineKeyboardButton("\U00002796 Reposiciones", callback_data='mensaje_oferta_1'),
+                InlineKeyboardButton("\U00002796 Ninguna", callback_data='mensaje_oferta_0')
+            ],
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+    elif (alarmas_ofertas[1] == 1):
+        texto_al = "Cuando haya una oferta, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
+        keyboard = [
+            [
+                InlineKeyboardButton("\U00002796 Ofertas", callback_data='mensaje_oferta_0'),
+                InlineKeyboardButton("\U00002795 Reposiciones", callback_data='mensaje_oferta_3')
+            ],
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+    elif (alarmas_ofertas[1] == 2):
+        texto_al = "Cuando haya una reposición, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
+        keyboard = [
+            [
+                InlineKeyboardButton("\U00002795 Ofertas", callback_data='mensaje_oferta_3'),
+                InlineKeyboardButton("\U00002796 Reposiciones", callback_data='mensaje_oferta_0')
+            ],
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto_mensaje_div = dividir_texto(f"{texto_of}\n{texto_st}\n", 25)
     for t in texto_mensaje_div:
         context.bot.send_message(chat_id = usuario_id, text = t, parse_mode = "HTML", disable_web_page_preview = True)
     context.bot.send_message(chat_id = usuario_id, text = f"{texto_al}", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
-
 ######### Cambiar al aviso de ofertas
 def mensaje_oferta(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     tipo_of = int(query.data.split("_")[2])
-    tiempo_of = int(query.data.split("_")[3])
     usuario_id = update.callback_query.from_user.id
 
     if (tipo_of == 0):
@@ -1139,10 +1158,10 @@ def mensaje_oferta(update: Update, context: CallbackContext) -> int:
         cursor.execute('SELECT id_usuario, tipo_alarma FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
         alarmas_ofertas = cursor.fetchone()
         if alarmas_ofertas == None:
-            cursor.execute('INSERT INTO alarmas_ofertas (tipo_alarma, id_usuario, tiempo_alarma) VALUES (?,?,?)',[tipo_of, usuario_id, tiempo_of])
+            cursor.execute('INSERT INTO alarmas_ofertas (tipo_alarma, id_usuario) VALUES (?,?)',[tipo_of, usuario_id])
             conn.commit()
         else:
-            cursor.execute('UPDATE alarmas_ofertas SET tipo_alarma = ?, tiempo_alarma = ? WHERE id_usuario = ?',[tipo_of, usuario_id, tiempo_of])
+            cursor.execute('UPDATE alarmas_ofertas SET tipo_alarma = ? WHERE id_usuario = ?',[tipo_of, usuario_id])
             conn.commit()
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -1150,7 +1169,6 @@ def mensaje_oferta(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = "Tus preferencias se actualizaron", reply_markup=reply_markup)
     return PRINCIPAL
-
 ######### Colaborar
 def colaborar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
