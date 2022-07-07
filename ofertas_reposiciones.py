@@ -133,3 +133,13 @@ if texto_of_me != "" or texto_st_me != "":
     #         ],
     #         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         # ]
+
+# sqlite> delete from ofertas;
+# sqlite> delete from restock;
+# sqlite> alter table alarmas_ofertas add tipo_alarma_oferta text;
+# sqlite> alter table alarmas_ofertas add tipo_alarma_reposicion text;
+# sqlite> update alarmas_ofertas set tipo_alarma_oferta = "Todo", tipo_alarma_reposicion = "Todo" WHERE tipo_alarma = 3;
+# sqlite> update alarmas_ofertas set tipo_alarma_oferta = "Todo", tipo_alarma_reposicion = "No" WHERE tipo_alarma = 1;
+# sqlite> update alarmas_ofertas set tipo_alarma_oferta = "No", tipo_alarma_reposicion = "Todo" WHERE tipo_alarma = 2;
+# sqlite> alter table juegos add precio_prom REAL;
+# sqlite> alter table juegos add reposicion TEXT;
