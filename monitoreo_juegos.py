@@ -88,10 +88,10 @@ def lee_pagina_tmam(ju_id):
     peso = float(peso[1])
  
     precio_dol = re.search('"USD":(.*?),',text)
-    if not precio_dol or precio_dol == "No disponible":
+    if not precio_dol or precio_dol[1] == "No disponible":
         return None
     precio_dol = float(precio_dol[1])
-    if precio_dol < 100:
+    if precio_dol < 1:
         return None
 
     pr_tm = precio_tm(peso,precio_dol)
@@ -114,7 +114,7 @@ def lee_pagina_tmwm(ju_id):
     if not precio_dol or stock == 1:
         return None
     precio_dol = float(precio_dol[1])
-    if precio_dol < 100:
+    if precio_dol < 1:
         return None
 
     pr_tm = precio_tm(peso,precio_dol)
@@ -138,7 +138,7 @@ def lee_pagina_tmeb(ju_id):
     if not precio_dol or stock == 1:
         return None
     precio_dol = float(precio_dol[1])
-    if precio_dol < 100:
+    if precio_dol < 1:
         return None
 
     pr_tm = precio_tm(peso,precio_dol)
