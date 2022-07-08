@@ -390,13 +390,17 @@ def main():
             elif sitio == "BLIB":
                 precio = lee_pagina_blib(sitio_ID)
             elif sitio == "TMAM":
-                precio = lee_pagina_tmam(sitio_ID)
+                #precio = lee_pagina_tmam(sitio_ID)
+                continue
             elif sitio == "TMWM":
-                precio = lee_pagina_tmwm(sitio_ID) 
+                #precio = lee_pagina_tmwm(sitio_ID) 
+                continue
             elif sitio == "TMEB":
-                precio = lee_pagina_tmeb(sitio_ID) 
+                #precio = lee_pagina_tmeb(sitio_ID) 
+                continue
             elif sitio == "TMMA":
-                precio = lee_pagina_tmma(sitio_ID) 
+                #precio = lee_pagina_tmma(sitio_ID) 
+                continue
             elif sitio == "BOOK":
                 precio = lee_pagina_book(sitio_ID)
             elif sitio == "365":
