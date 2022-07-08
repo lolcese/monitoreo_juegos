@@ -85,7 +85,7 @@ env_int_dol = datos1[0]
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "tasa_tm"',(env_int_dol, fecha))
 conn.commit()
 
-datos2 = re.search('<td class="indent">0.1</td>\n.*?\n.*?\n.*?\n.*?\nU\$S (.*?) ',data)
+datos2 = re.search('<td class="indent">0.1<\/td>\n.*?\n.*?\n.*?\nU\$S (.*?) ',data)
 tasa_kg = datos2[0]
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "precio_kg"',(tasa_kg, fecha))
