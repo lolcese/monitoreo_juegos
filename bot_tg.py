@@ -120,7 +120,7 @@ def juegos_lista_menu(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     try:
-        id = query.edit_message_text(text = "Elegí los juegos a listar", reply_markup=reply_markup)
+        id = query.edit_message_text(text = "¿Qué lista querés ver? Podés también sugerir juegos que no estén en el listado", reply_markup=reply_markup)
     except:
         return LISTA_JUEGOS
 
@@ -1090,6 +1090,8 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
 
     cursor.execute('SELECT tipo_alarma_oferta, tipo_alarma_reposicion FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
     alarmas_ofertas = cursor.fetchone()
+
+    print(alarmas_ofertas)
 
     if alarmas_ofertas == None:
         texto_al = "Según tus preferencias actuales, no vas a recibir mensajes cuando haya una oferta, y no vas a recibir mensajes cuando haya reposiciones.\n"
