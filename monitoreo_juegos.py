@@ -437,7 +437,7 @@ def main():
             else:
 # Si hay precios antes            
                 precio_prom = prom[0]
-                cursor.execute('SELECT precio FROM juegos WHERE id_juego = ? AND fecha_agregado < datetime("now", "-2 days", "localtime")', [id_juego])
+                cursor.execute('SELECT precio_mejor FROM juegos WHERE id_juego = ? AND fecha_agregado < datetime("now", "-2 days", "localtime")', [id_juego])
                 max_pr = cursor.fetchone()
                 if max_pr is None:
                     reposicion = "Sí"
