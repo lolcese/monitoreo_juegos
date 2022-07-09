@@ -1097,7 +1097,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_al = "Según tus preferencias actuales, no vas a recibir mensajes cuando haya una oferta, y no vas a recibir mensajes cuando haya reposiciones.\n"
     else:
         texto_al = "Según tus preferencias actuales, "
-        tipo_alarma_oferta, tipo_alarma_reposicion = alarmas_ofertas[0]
+        tipo_alarma_oferta, tipo_alarma_reposicion = alarmas_ofertas
         if tipo_alarma_oferta == "BLP":
             texto_al += "vas a recibir un mensaje cuando haya una oferta en Buscalibre, Buscalibre Amazon o Planeton, "
         elif tipo_alarma_oferta == "Todo":
