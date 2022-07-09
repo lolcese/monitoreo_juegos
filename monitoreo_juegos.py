@@ -419,7 +419,6 @@ def main():
             prom = cursor.fetchone()
             precio_prom, reposicion = prom
             if precio_prom is None:
-                print(precio, precio_prom, reposicion)
 # Si no hay ningún precio antes
                 if precio is None:
                     reposicion = "No"
@@ -459,7 +458,7 @@ def main():
                 mejor = cursor.fetchone()
                 precio_mejor, fecha_mejor = mejor
 # Dispara alarma ofertas
-                if precio < precio_mejor:
+                if precio != None and precio < precio_mejor:
                     porc = (precio_prom - precio) / precio_prom * 100
                     if sitio == "BLIB" or "BLAM":
                         cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
