@@ -1148,7 +1148,7 @@ def modificar_avisos2(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = "¿Querés recibir alarmas cuando haya reposiciones?", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    query.edit_message_text(text = "¿De qué sitios querés recibir alarmas cuando haya reposiciones?", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return OFERTAS
 
 ######### Cambiar al aviso de ofertas
