@@ -1133,7 +1133,7 @@ def modificar_avisos1(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = "¿Querés recibir alarmas cuando hay ofertas?", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    query.edit_message_text(text = "¿De qué sitios querés recibir alarmas cuando hay ofertas?", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return OFERTAS
 
 ######### Paso 2 en la modificación de avisos de ofertas y reposiciones
@@ -1152,7 +1152,7 @@ def modificar_avisos2(update: Update, context: CallbackContext) -> int:
     return OFERTAS
 
 ######### Cambiar al aviso de ofertas
-def aceptar_ofe_repo(update: Update, context: CallbackContext) -> int:
+def avisos_reposiciones(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     tipo_reposicion = query.data.split("_")[2]
@@ -1416,8 +1416,8 @@ def main() -> PRINCIPAL:
             ],
             OFERTAS: [
                 CallbackQueryHandler(modificar_avisos1,        pattern='^modificar_avisos1$'),
-                CallbackQueryHandler(modificar_avisos2,        pattern='^modificar_avisos2$'),
-                CallbackQueryHandler(aceptar_ofe_repo,         pattern='^aceptar_ofertas_reposiciones$'),
+                CallbackQueryHandler(modificar_avisos2,        pattern='^modificar_avisos2_'),
+                CallbackQueryHandler(avisos_reposiciones,      pattern='^avisos_reposicones_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             COMENTARIOS: [
