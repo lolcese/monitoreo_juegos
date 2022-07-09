@@ -415,29 +415,38 @@ def main():
                 precio = lee_pagina_mm(sitio_id, precio_envio)
 
 # Calcula el promedio y reposicion
-            cursor.execute('SELECT precio_prom FROM juegos WHERE id_juego = ?', [id_juego])
+            cursor.execute('SELECT precio_prom, reposicion FROM juegos WHERE id_juego = ?', [id_juego])
             prom = cursor.fetchone()
-            if prom is None:
+            precio_prom, reposicion = prom
+            if precio_prom is None:
 # Si no hay ningún precio antes
-                precio_prom = None
                 if precio is None:
                     reposicion = "No"
+                    precio_mejor = None
+                    fecha_mejor = None
                 else:
-                    reposicion = "Sí"
+                    if reposicion != "Sí": # Cuando se carga un juego nuevo, va puesto como reposición para no disparar acá
+                        reposicion = "Sí"
 # Dispara alarma reposiciones
-                    if sitio == "BLIB" or sitio == "BLAM":
-                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
+                        if sitio == "BLIB" or sitio == "BLAM":
+                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
+                        else:
+                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
+                        usuarios_ofertas = cursor.fetchall()
+                        for u in usuarios_ofertas:
+                            texto = f'\U0001F381\n\n\<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U0001F381'
+                            manda.send_message(u[0], texto)
                     else:
-                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
-                    usuarios_ofertas = cursor.fetchall()
-                    for u in usuarios_ofertas:
-                        texto = f'\U0001F381\n\n\<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U0001F381'
-                        manda.send_message(u[0], texto)
-                    
-            else:
+                        reposicion = "No"
+
+                    precio_mejor = precio
+                    fecha_mejor = datetime.now()
+
 # Si hay precios antes            
+            else:
                 precio_prom = prom[0]
-                cursor.execute('SELECT precio_mejor FROM juegos WHERE id_juego = ? AND fecha_agregado < datetime("now", "-2 days", "localtime")', [id_juego])
+# Saca el Sí si hay precios hace más de dos días                
+                cursor.execute('SELECT precio_mejor FROM juegos WHERE id_juego = ? AND fecha BETWEEN datetime("now", "-7 days", "localtime") AND datetime("now", "-2 days", "localtime")', [id_juego])
                 max_pr = cursor.fetchone()
                 if max_pr is None:
                     reposicion = "Sí"
@@ -445,18 +454,11 @@ def main():
                     reposicion = "No"
 
 # Busca el precio más barato
-            cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio, fecha DESC LIMIT 1', [id_juego])
-            mejor = cursor.fetchone()
-            if mejor != None:
+                cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio, fecha DESC LIMIT 1', [id_juego])
+                mejor = cursor.fetchone()
                 precio_mejor, fecha_mejor = mejor
-            else:
-                precio_mejor = None
-                fecha_mejor = None
-            if precio != None:
-                if precio_mejor == None:
-                    precio_mejor = precio
 # Dispara alarma ofertas
-                elif precio < precio_mejor:
+                if precio < precio_mejor:
                     porc = (precio_prom - precio) / precio_prom * 100
                     if sitio == "BLIB" or "BLAM":
                         cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
