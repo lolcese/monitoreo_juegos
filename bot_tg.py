@@ -1091,8 +1091,6 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT tipo_alarma_oferta, tipo_alarma_reposicion FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
     alarmas_ofertas = cursor.fetchone()
 
-    print(alarmas_ofertas)
-
     if alarmas_ofertas == None:
         texto_al = "Según tus preferencias actuales, no vas a recibir mensajes cuando haya una oferta, y no vas a recibir mensajes cuando haya reposiciones.\n"
     else:
