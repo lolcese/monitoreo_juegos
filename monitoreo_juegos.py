@@ -453,8 +453,10 @@ def main():
                 precio_mejor = None
                 fecha_mejor = None
             if precio != None:
+                if precio_mejor == None:
+                    precio_mejor = precio
 # Dispara alarma ofertas
-                if precio < precio_mejor:
+                elif precio < precio_mejor:
                     porc = (precio_prom - precio) / precio_prom * 100
                     if sitio == "BLIB" or "BLAM":
                         cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
