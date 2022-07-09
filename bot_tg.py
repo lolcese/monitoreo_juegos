@@ -133,7 +133,7 @@ def juegos_planilla(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Planilla con todos los juegos</b>
     
-Si querés ver una planilla con todos los precios de los juegos, andá <a href="https://docs.google.com/spreadsheets/d/1eh5ckbIl5td0B8aRScxkIZU62MfeMplXxGdlsAWPoVA/edit?usp=sharing">acá</a>.
+Si querés ver una planilla con todos los precios de los juegos, andá <a href="https://tinyurl.com/MonitorJuegosbot">acá</a>.
     
 Tené en cuenta que, si bien se actualiza automáticamente, puede tener un desfasaje de 2-3 horas con los precios reales (y 1 hora con los precios que muestra el bot)."""
     keyboard = [
@@ -1415,8 +1415,8 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(juego_nom_otra,           pattern='^juego_nom_otra$'),
             ],
             OFERTAS: [
-                CallbackQueryHandler(modificar_avisos1,        pattern='^modificar_avisos1_'),
-                CallbackQueryHandler(modificar_avisos2,        pattern='^modificar_avisos2_'),
+                CallbackQueryHandler(modificar_avisos1,        pattern='^modificar_avisos1$'),
+                CallbackQueryHandler(modificar_avisos2,        pattern='^modificar_avisos2$'),
                 CallbackQueryHandler(aceptar_ofe_repo,         pattern='^aceptar_ofertas_reposiciones$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
