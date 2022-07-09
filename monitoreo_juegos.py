@@ -447,7 +447,7 @@ def main():
             else:
                 precio_prom = prom[0]
 # Saca el Sí si hay precios hace más de dos días                
-                cursor.execute('SELECT precio_mejor FROM precios WHERE id_juego = ? AND fecha BETWEEN datetime("now", "-7 days", "localtime") AND datetime("now", "-2 days", "localtime")', [id_juego])
+                cursor.execute('SELECT max(precio) FROM precios WHERE id_juego = ? AND fecha BETWEEN datetime("now", "-7 days", "localtime") AND datetime("now", "-2 days", "localtime")', [id_juego])
                 max_pr = cursor.fetchone()
                 if max_pr is None:
                     reposicion = "Sí"
