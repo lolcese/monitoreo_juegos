@@ -419,6 +419,7 @@ def main():
             prom = cursor.fetchone()
             precio_prom, reposicion = prom
             if precio_prom is None:
+                print(precio, precio_prom, reposicion)
 # Si no hay ningún precio antes
                 if precio is None:
                     reposicion = "No"
@@ -434,7 +435,7 @@ def main():
                             cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
                         usuarios_ofertas = cursor.fetchall()
                         for u in usuarios_ofertas:
-                            texto = f'\U0001F381\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U0001F381'
+                            texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U0001F381\U0001F381\U0001F381'
                             manda.send_message(u[0], texto)
                     else:
                         reposicion = "No"
