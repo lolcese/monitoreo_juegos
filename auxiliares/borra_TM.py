@@ -5,7 +5,7 @@ conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARS
 conn.execute("PRAGMA journal_mode=WAL")
 cursor = conn.cursor()
 
-cursor.execute('SELECT id_juego FROM juegos WHERE sitio = "TMAM" OR sitio = "TMWM" sitio = "TMEB"')
+cursor.execute('SELECT id_juego FROM juegos WHERE sitio = "TMAM" OR sitio = "TMWM" OR sitio = "TMEB"')
 juegos = cursor.fetchall()
 for j in juegos:
     id_juego = j[0]
