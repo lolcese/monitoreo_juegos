@@ -467,7 +467,7 @@ def main():
                     usuarios_ofertas = cursor.fetchall()
                     for u in usuarios_ofertas:
                         texto = f'\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381'
-                        manda.send_photo(u[0], texto, arch)
+                        manda.send_message(u[0], texto)
 
 # Guarda el precio en la tabla precios
             if precio != None:
