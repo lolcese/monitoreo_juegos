@@ -145,5 +145,5 @@ if texto_of_me != "" or texto_st_me != "":
 # sqlite> alter table juegos add reposicion TEXT;
 # sqlite> alter table juegos add oferta TEXT;
 # sqlite> update juegos set reposicion = "No";
-# sqlite> update juegos set oferta = "No";
+# sqlite> update juegos set oferta = "Sí";
 # sqlite> alter table juegos add nombre_noacentos TEXT;

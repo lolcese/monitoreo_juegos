@@ -395,6 +395,7 @@ def main():
             prom = cursor.fetchone()
             precio_prom, reposicion, oferta = prom
             if precio_prom is None:
+                oferta = "No"
 # Si no hay ningún precio antes
                 if precio is None:
                     reposicion = "No"
