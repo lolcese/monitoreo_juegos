@@ -766,13 +766,11 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
     
-03/07/2022: Cambio de server.
-02/07/2022: Campaña para cambio de server.
-21/05/2022: Agregado Miniature Market.
-18/05/2022: Agregado Planeton.
-18/05/2022: Agregado un tutorial por @matiliza.
-18/05/2022: Muestra precios actuales en las alarmas.
-18/05/2022: Resuelta la actualización automática de la planilla.
+10/07/2022: Cambio en el sistena de ofertas y reposiciones
+10/07/2022: Se pueden buscar los nombres sin acentos
+03/07/2022: Cambio de server
+02/07/2022: Campaña para cambio de server
+21/05/2022: Agregado Miniature Market
 """
 
     keyboard = [
@@ -1347,6 +1345,8 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
         dependencia_leng = context.chat_data["dependencia_leng"]
         fecha = datetime.now()
         nombre_noacentos = strip_accents(nombre)
+        nombre_noacentos = re.sub(r'[^\w\s]','',nombre_noacentos)
+        nombre_noacentos = re.sub(r'\s+',' ',nombre_noacentos)
         conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3", precio_envio, "Nuevo", nombre_noacentos))
         conn.commit()
         manda.send_message(usuario_id, f'Gracias por la sugerencia, <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} ha sido agregado al monitoreo')

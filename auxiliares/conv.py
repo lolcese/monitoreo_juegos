@@ -18,6 +18,5 @@ for j in juegos:
     nom_n = strip_accents(nombre)
     nom_n = re.sub(r'[^\w\s]','',nom_n)
     nom_n = re.sub(r'\s+',' ',nom_n)
-    print(id_juego,"++", nombre,"++",nom_n)
     cursor.execute('UPDATE juegos SET nombre_noacentos = ? WHERE id_juego = ?', (nom_n, id_juego))
     conn.commit()
