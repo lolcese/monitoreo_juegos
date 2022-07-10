@@ -434,7 +434,7 @@ def main():
                 mejor = cursor.fetchone()
                 precio_mejor, fecha_mejor = mejor
 # Dispara alarma ofertas
-                if precio != None and precio < precio_prom * 0.9:
+                if precio != None and precio <= precio_prom * 0.9:
                     porc = (precio_prom - precio) / precio_prom * 100
                     if sitio == "BLIB" or "BLAM":
                         cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
