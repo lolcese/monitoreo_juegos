@@ -144,3 +144,4 @@ if texto_of_me != "" or texto_st_me != "":
 # sqlite> alter table juegos add precio_prom REAL;
 # sqlite> alter table juegos add reposicion TEXT;
 # sqlite> update juegos set reposicion = "Nuevo";
+# sqlite> alter table juegos add nombre_noacentos TEXT;
