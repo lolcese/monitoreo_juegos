@@ -26,6 +26,7 @@ Cualquier duda, mandame un mensaje a [@Luis_Olcese](https://t.me/Luis_Olcese).
 
 - monitoreo_juegos.py 2
 - genera_csv.py
+- baja_cotizacion.py
 
 ### Cada 120 minutos
 
@@ -34,7 +35,6 @@ Cualquier duda, mandame un mensaje a [@Luis_Olcese](https://t.me/Luis_Olcese).
 ### Cada 1 día
 
 - backup.sh
-- baja_cotizacion.py
 - actualiza_prioridades.py
 
 ### Cada 7 días
