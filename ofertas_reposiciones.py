@@ -143,3 +143,4 @@ if texto_of_me != "" or texto_st_me != "":
 # sqlite> update alarmas_ofertas set tipo_alarma_oferta = "No", tipo_alarma_reposicion = "Todo" WHERE tipo_alarma = 2;
 # sqlite> alter table juegos add precio_prom REAL;
 # sqlite> alter table juegos add reposicion TEXT;
+# sqlite> update juegos set reposicion = "Nuevo";

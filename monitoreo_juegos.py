@@ -425,7 +425,7 @@ def main():
                     precio_mejor = None
                     fecha_mejor = None
                 else:
-                    if reposicion != "Sí": # Cuando se carga un juego nuevo, va puesto como reposición para no disparar acá
+                    if reposicion != "Nuevo":
                         reposicion = "Sí"
 # Dispara alarma reposiciones
                         if sitio == "BLIB" or sitio == "BLAM":

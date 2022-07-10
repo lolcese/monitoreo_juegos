@@ -18,6 +18,7 @@ import manda
 import hace_grafico
 import urllib.request
 from decouple import config
+import unicodedata
 
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
@@ -39,6 +40,11 @@ def dividir_texto(texto, n):
     if bloque[-1] == "" or bloque[-1] == "\n":
         bloque.pop()
     return bloque
+
+######### Saca acentos
+def strip_accents(s):
+   return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')
 
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
@@ -457,7 +463,7 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
     context.chat_data["nombre_juego"] = nombre_juego
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',['%'+nombre_juego+'%'])
+    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%'))
     juegos = cursor.fetchall()
     keyboard = []
     if len(juegos) > 15:
@@ -1127,13 +1133,13 @@ def modificar_avisos1(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     keyboard = [
-        [InlineKeyboardButton("\U0000267B Solo Buscalibre, Buscalibre Amazon y Planeton", callback_data='modificar_avisos2_BLP')],
-        [InlineKeyboardButton("\U0000267B Para todos los sitios", callback_data='modificar_avisos2_Todo')],
-        [InlineKeyboardButton("\U0000267B No quiero recibirlas", callback_data='modificar_avisos2_No')],
+        [InlineKeyboardButton("\U00002795 Solo Buscalibre, Buscalibre Amazon y Planeton", callback_data='modificar_avisos2_BLP')],
+        [InlineKeyboardButton("\U00002795 Para todos los sitios", callback_data='modificar_avisos2_Todo')],
+        [InlineKeyboardButton("\U00002796 No quiero recibirlas", callback_data='modificar_avisos2_No')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(text = "¿De qué sitios querés recibir alarmas cuando hay <b>ofertas</b>?", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    query.edit_message_text(text = "¿De qué sitios querés recibir alarmas cuando haya <b>ofertas</b>?", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return OFERTAS
 
 ######### Paso 2 en la modificación de avisos de ofertas y reposiciones
@@ -1142,9 +1148,9 @@ def modificar_avisos2(update: Update, context: CallbackContext) -> int:
     query.answer()
     context.chat_data["tipo_oferta"] = query.data.split("_")[2]
     keyboard = [
-        [InlineKeyboardButton("\U0000267B Solo Buscalibre, Buscalibre Amazon y Planeton", callback_data='avisos_reposiciones_BLP')],
-        [InlineKeyboardButton("\U0000267B Para todos los sitios", callback_data='avisos_reposiciones_Todo')],
-        [InlineKeyboardButton("\U0000267B No quiero recibirlas", callback_data='avisos_reposiciones_No')],
+        [InlineKeyboardButton("\U00002795 Solo Buscalibre, Buscalibre Amazon y Planeton", callback_data='avisos_reposiciones_BLP')],
+        [InlineKeyboardButton("\U00002795 Para todos los sitios", callback_data='avisos_reposiciones_Todo')],
+        [InlineKeyboardButton("\U00002796 No quiero recibirlas", callback_data='avisos_reposiciones_No')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -1340,7 +1346,8 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
         ranking = context.chat_data["ranking"]
         dependencia_leng = context.chat_data["dependencia_leng"]
         fecha = datetime.now()
-        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio) VALUES (?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3", precio_envio))
+        nombre_noacentos = strip_accents(nombre)
+        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3", precio_envio, "Nuevo", nombre_noacentos))
         conn.commit()
         manda.send_message(usuario_id, f'Gracias por la sugerencia, <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} ha sido agregado al monitoreo')
     conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[sug_id])
