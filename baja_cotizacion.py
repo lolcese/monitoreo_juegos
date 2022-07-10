@@ -79,17 +79,14 @@ url = 'https://tiendamia.com/ar/tarifas'
 response = get(url)
 data = response.content.decode('utf-8', errors='ignore')
 
-datos1 = re.search('el shipping internacional tiene un costo de <span class="price dollar_price">\nU\$S (.*?) .*?\n.*?\nAR\$ (.*?) ',data)
+datos1 = re.search('el shipping internacional tiene un costo de <span class="price dollar_price">\nU\$S (.*?) ',data)
 env_int_dol = datos1[1]
-env_int_int = datos1[2]
 
-cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "env_int_dol"',(env_int_dol, fecha))
-cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "tasa_tm"',(env_int_int, fecha))
+cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "tasa_tm"',(env_int_dol, fecha))
 conn.commit()
 
-datos2 = re.search('<td class="indent">0.1</td>\n.*?\n.*?\n.*?\n.*?\n.*?\nAR\$ (.*?) ',data)
+datos2 = re.search('<td class="indent">0.1<\/td>\n.*?\n.*?\n.*?\nU\$S (.*?) ',data)
 tasa_kg = datos2[1]
-tasa_kg = float(re.sub("\.", "", tasa_kg))
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "precio_kg"',(tasa_kg, fecha))
 conn.commit()
