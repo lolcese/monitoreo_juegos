@@ -390,6 +390,8 @@ def main():
             elif sitio == "MM":
                 precio = lee_pagina_mm(sitio_id, precio_envio)
 
+            if precio > 0:
+                precio = round(precio)
 # Calcula el promedio y reposicion
             cursor.execute('SELECT precio_prom, reposicion, oferta FROM juegos WHERE id_juego = ?', [id_juego])
             prom = cursor.fetchone()
@@ -421,7 +423,7 @@ def main():
 
 # Si hay precios antes            
             else:
-                precio_prom = prom[0]
+                precio_prom = round(prom[0])
 # Saca el Sí si hay precios hace más de dos días                
                 cursor.execute('SELECT max(precio) FROM precios WHERE id_juego = ? AND fecha BETWEEN datetime("now", "-7 days", "localtime") AND datetime("now", "-2 days", "localtime")', [id_juego])
                 max_pr = cursor.fetchone()
