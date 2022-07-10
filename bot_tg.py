@@ -460,6 +460,9 @@ def juego_ver(update: Update, context: CallbackContext) -> int:
 ######### Muestra un menú con los juegos que coinciden con el texto
 def juego_nom(update: Update, context: CallbackContext) -> int:
     nombre_juego = update.message.text
+    argum = context.args
+    if argum is not None:
+        nombre_juego = context.args[0]
     context.chat_data["nombre_juego"] = nombre_juego
     conn = conecta_db()
     cursor = conn.cursor()
@@ -1437,7 +1440,10 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },
-    fallbacks=[CommandHandler('start', start, pass_args=True),CommandHandler('admin', admin)],
+    fallbacks=[CommandHandler('start', start, pass_args=True),
+               CommandHandler('admin', admin),
+               CommandHandler('juego', juego_nom)
+               ],
     )
 
     dispatcher.add_handler(conv_handler)
@@ -1448,6 +1454,3 @@ def main() -> PRINCIPAL:
 
 if __name__ == '__main__':
     main()
-
-#https://t.me/Monitor_Juegos_bot?start=test
-#dispatcher.add_handler(CommandHandler('hello', SayHello, pass_args=True))
