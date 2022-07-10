@@ -390,6 +390,8 @@ def main():
             elif sitio == "MM":
                 precio = lee_pagina_mm(sitio_id, precio_envio)
 
+            if id_juego == 160:
+                precio = 10000
 # Calcula el promedio y reposicion
             cursor.execute('SELECT precio_prom, reposicion FROM juegos WHERE id_juego = ?', [id_juego])
             prom = cursor.fetchone()
