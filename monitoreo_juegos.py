@@ -424,10 +424,10 @@ def main():
 # Saca el Sí si hay precios hace más de dos días                
                 cursor.execute('SELECT max(precio) FROM precios WHERE id_juego = ? AND fecha BETWEEN datetime("now", "-7 days", "localtime") AND datetime("now", "-2 days", "localtime")', [id_juego])
                 max_pr = cursor.fetchone()
-                if max_pr is None:
-                    reposicion = "Sí"
-                else:
+                if len(max_pr) > 0:
                     reposicion = "No"
+                else:
+                    reposicion = "Sí"
 
 # Busca el precio más barato
                 cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio, fecha DESC LIMIT 1', [id_juego])
