@@ -1347,7 +1347,7 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
         nombre_noacentos = strip_accents(nombre)
         nombre_noacentos = re.sub(r'[^\w\s]','',nombre_noacentos)
         nombre_noacentos = re.sub(r'\s+',' ',nombre_noacentos)
-        conn.execute ('INSERT INTO juegos (BGG_id,nombre,sitio,sitio_ID,fecha_agregado,ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3", precio_envio, "Nuevo", nombre_noacentos))
+        conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3", precio_envio, "Nuevo", "Sí", nombre_noacentos))
         conn.commit()
         manda.send_message(usuario_id, f'Gracias por la sugerencia, <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} ha sido agregado al monitoreo')
     conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[sug_id])
