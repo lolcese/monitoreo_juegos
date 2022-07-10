@@ -1442,8 +1442,7 @@ def main() -> PRINCIPAL:
         },
     fallbacks=[CommandHandler('start', start, pass_args=True),
                CommandHandler('admin', admin),
-               CommandHandler('juego', juego_nom),
-               CommandHandler('ayuda', ayuda)
+               CommandHandler('juego', juego_nom)
                ],
     )
 
