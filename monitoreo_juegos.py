@@ -423,7 +423,7 @@ def main():
 
 # Si hay precios antes            
             else:
-                precio_prom = round(prom[0])
+                precio_prom = prom[0]
 # Saca el Sí si hay precios hace más de dos días                
                 cursor.execute('SELECT max(precio) FROM precios WHERE id_juego = ? AND fecha BETWEEN datetime("now", "-7 days", "localtime") AND datetime("now", "-2 days", "localtime")', [id_juego])
                 max_pr = cursor.fetchone()
@@ -459,7 +459,7 @@ def main():
 
 # Guarda el precio, promedio y reposición en la tabla juegos
             cursor.execute('SELECT avg(precio) FROM precios WHERE id_juego = ?', [id_juego])
-            precio_prom = cursor.fetchone()[0]
+            precio_prom = round(cursor.fetchone()[0])
             cursor.execute('UPDATE juegos SET precio_actual = ?, fecha_actual = ?, precio_mejor = ?, fecha_mejor = ?, precio_prom = ?, reposicion = ?, oferta = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, precio_prom, reposicion, oferta, id_juego])
             conn.commit()
 
