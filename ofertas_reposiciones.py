@@ -82,3 +82,68 @@ if texto_of_me != "" or texto_st_me != "":
             manda.send_message(id_usuario, texto_of_me)
         if (tipo_alarma == 2 or tipo_alarma == 3) and texto_st_me != "":
             manda.send_message(id_usuario, texto_st_me)
+
+# + Ofertas no / inmediatas / cada 1 hora
+# + Ofertas todos sitios / Solo Planeton, buscalibre
+# + Reposiciones no / inmediatas / cada 1 hora
+# + Reposiciones todos sitios / Solo Planeton, buscalibre
+
+# Solo Buscalibre + Buscalibre Amazon
+#     Ofertas no / inmediatas / cada 1 hora
+#     Reposiciones no / inmediatas / cada 1 hora
+# Otros sitios
+#     Ofertas no / inmediatas / cada 1 hora
+#     Reposiciones no / inmediatas / cada 1 hora
+
+
+    #     texto_al = "Cuando haya una oferta o reposición, te puedo mandar un mensaje (solo la primera vez que esté en ese estado).\n"
+    #     keyboard = [
+    #         [
+    #             InlineKeyboardButton("\U00002795 Ofertas", callback_data='mensaje_oferta_1'),
+    #             InlineKeyboardButton("\U00002795 Reposiciones", callback_data='mensaje_oferta_2'),
+    #             InlineKeyboardButton("\U00002795 Ambas", callback_data='mensaje_oferta_3')
+    #         ],
+    #         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    #     ]
+    # elif (alarmas_ofertas[1] == 3):
+    #     texto_al = "Cuando haya una oferta o reposición, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
+    #     keyboard = [
+    #         [
+    #             InlineKeyboardButton("\U00002796 Ofertas", callback_data='mensaje_oferta_2'),
+    #             InlineKeyboardButton("\U00002796 Reposiciones", callback_data='mensaje_oferta_1'),
+    #             InlineKeyboardButton("\U00002796 Ninguna", callback_data='mensaje_oferta_0')
+    #         ],
+    #         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    #     ]
+    # elif (alarmas_ofertas[1] == 1):
+    #     texto_al = "Cuando haya una oferta, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
+    #     keyboard = [
+    #         [
+    #             InlineKeyboardButton("\U00002796 Ofertas", callback_data='mensaje_oferta_0'),
+    #             InlineKeyboardButton("\U00002795 Reposiciones", callback_data='mensaje_oferta_3')
+    #         ],
+    #         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    #     ]
+    # elif (alarmas_ofertas[1] == 2):
+    #     texto_al = "Cuando haya una reposición, te voy a mandar un mensaje (solo la primera vez que esté en ese estado).\n"
+    #     keyboard = [
+    #         [
+    #             InlineKeyboardButton("\U00002795 Ofertas", callback_data='mensaje_oferta_3'),
+    #             InlineKeyboardButton("\U00002796 Reposiciones", callback_data='mensaje_oferta_0')
+    #         ],
+    #         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        # ]
+
+# sqlite> drop table ofertas;
+# sqlite> drop table restock;
+# sqlite> alter table alarmas_ofertas add tipo_alarma_oferta text;
+# sqlite> alter table alarmas_ofertas add tipo_alarma_reposicion text;
+# sqlite> update alarmas_ofertas set tipo_alarma_oferta = "Todo", tipo_alarma_reposicion = "Todo" WHERE tipo_alarma = 3;
+# sqlite> update alarmas_ofertas set tipo_alarma_oferta = "Todo", tipo_alarma_reposicion = "No" WHERE tipo_alarma = 1;
+# sqlite> update alarmas_ofertas set tipo_alarma_oferta = "No", tipo_alarma_reposicion = "Todo" WHERE tipo_alarma = 2;
+# sqlite> alter table juegos add precio_prom REAL;
+# sqlite> alter table juegos add reposicion TEXT;
+# sqlite> alter table juegos add oferta TEXT;
+# sqlite> update juegos set reposicion = "No";
+# sqlite> update juegos set oferta = "Sí";
+# sqlite> alter table juegos add nombre_noacentos TEXT;
