@@ -780,7 +780,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
     return PRINCIPAL
 
-######### Muestra |ísticas de uso
+######### Muestra características de uso
 def estadistica(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
