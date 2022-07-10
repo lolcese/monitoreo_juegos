@@ -15,5 +15,6 @@ juegos = cursor.fetchall()
 for j in juegos:
     id_juego, nombre = j
     nom_n = strip_accents(nombre)
+    print(id_juego, nombre,nom_n)
     cursor.execute('UPDATE juegos SET nombre_noacentos = ? WHERE id_juego = ?', (nom_n, id_juego))
     
