@@ -1057,7 +1057,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     porc_15 = []
     porc_20 = []
     texto_of = "<b>Juegos en oferta</b>\n\n"
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual FROM juegos WHERE oferta = "Sí"')
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual FROM juegos WHERE oferta = "Sí" and precio_actual > 0')
     ofertas = cursor.fetchall()
     for o in ofertas:
         nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual = o
