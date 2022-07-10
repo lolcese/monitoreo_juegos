@@ -19,7 +19,7 @@ for j in juegos:
     nom_n = re.sub(r'[^\w\s]','',nom_n)
     nom_n = re.sub(r'\s+',' ',nom_n)
 
-    cursor.execute('SELECT avg(precio) FROM precios WHERE id_juego = ?', (id_juego))
+    cursor.execute('SELECT avg(precio) FROM precios WHERE id_juego = ?', [id_juego])
     prom = cursor.fetchone()[0]
     
     cursor.execute('UPDATE juegos SET nombre_noacentos = ?, precio_prom = ? WHERE id_juego = ?', (nom_n, prom, id_juego))

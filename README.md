@@ -25,7 +25,6 @@ Cualquier duda, mandame un mensaje a [@Luis_Olcese](https://t.me/Luis_Olcese).
 ### Cada 30 minutos
 
 - monitoreo_juegos.py 2
-- ofertas_reposiciones.py
 - genera_csv.py
 
 ### Cada 120 minutos
