@@ -459,7 +459,9 @@ def main():
 
 # Guarda el precio, promedio y reposición en la tabla juegos
             cursor.execute('SELECT avg(precio) FROM precios WHERE id_juego = ?', [id_juego])
-            precio_prom = round(cursor.fetchone()[0])
+            precio_prom = cursor.fetchone()[0]
+            if precio_prom is not None:
+                precio_prom = round(precio_prom)
             cursor.execute('UPDATE juegos SET precio_actual = ?, fecha_actual = ?, precio_mejor = ?, fecha_mejor = ?, precio_prom = ?, reposicion = ?, oferta = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, precio_prom, reposicion, oferta, id_juego])
             conn.commit()
 
