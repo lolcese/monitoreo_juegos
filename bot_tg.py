@@ -52,7 +52,7 @@ def start(update: Update, context: CallbackContext) -> int:
     #     func, id_persona, bgg_id = context.args[0].split("|")
     #     print(func, id_persona, bgg_id)
     #     return PRINCIPAL
-    print(context.args)
+    print(f"************{context.args}!!!!!!!!!!!")
     usuario = update.message.from_user
     nombre = usuario.full_name
     usuario_id = usuario.id
@@ -1380,7 +1380,7 @@ def main() -> PRINCIPAL:
     dispatcher = updater.dispatcher
 
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start, pass_args=True),CommandHandler('admin', admin)],
+        entry_points=[CommandHandler('start', start), CommandHandler('admin', admin), CommandHandler('juego', juego_nom)],
         states={
             PRINCIPAL: [
                 CallbackQueryHandler(juegos_lista_menu,        pattern='^juegos_lista_menu$'),
@@ -1450,10 +1450,10 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },
-    fallbacks=[CommandHandler('start', start),
-               CommandHandler('admin', admin),
-               CommandHandler('juego', juego_nom)
-               ],
+    # fallbacks=[CommandHandler('start', start),
+    #            CommandHandler('admin', admin),
+    #            CommandHandler('juego', juego_nom)
+    #            ],
     )
 
     dispatcher.add_handler(conv_handler)
