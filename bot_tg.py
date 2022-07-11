@@ -1376,7 +1376,7 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
 
 ######### Handlers
 def main() -> PRINCIPAL:
-    updater = Updater(bot_token)
+    updater = Updater(bot_token, use_context=True)
     dispatcher = updater.dispatcher
 
     conv_handler = ConversationHandler(
