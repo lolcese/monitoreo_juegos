@@ -48,12 +48,11 @@ def strip_accents(s):
 
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
-    if len(context.args) > 0:
-        mensaje = context.args[0]
-        func, id_persona, bgg_id = mensaje.split("|")
-        print(func, id_persona, bgg_id)
-        return PRINCIPAL
-
+    # if len(context.args) > 0:
+    #     func, id_persona, bgg_id = context.args[0].split("|")
+    #     print(func, id_persona, bgg_id)
+    #     return PRINCIPAL
+    print(context.args)
     usuario = update.message.from_user
     nombre = usuario.full_name
     usuario_id = usuario.id
@@ -1451,7 +1450,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },
-    fallbacks=[CommandHandler('start', start, pass_args=True),
+    fallbacks=[CommandHandler('start', start),
                CommandHandler('admin', admin),
                CommandHandler('juego', juego_nom)
                ],
