@@ -740,7 +740,7 @@ Desde cualquier chat o grupo, escribí @Monitor_Juegos_bot y parte del nombre de
 Si un menú no responde, escribí nuevamente /start.
 
 <b>@matiliza armó un tutorial sobre todas las funciones del bot, miralo <a href='https://www.dropbox.com/s/15abm8a78x1jcwf/tuto-bot.mov?dl=0'>acá.</a></b>
-<b>La imagen del bot es cortesía del maravilloso @Bou.</b>
+<b>La imagen del bot es cortesía del maravilloso <a href='https://www.instagram.com/bousantiago/'>Bou</a>.</b>
 
 Cualquier duda, mandame un mensaje a @Luis_Olcese."""
     keyboard = [
@@ -779,7 +779,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
     
-10/07/2022: Cambio de imagen gracias a @Bou
+10/07/2022: Cambio de imagen gracias a <a href='https://www.instagram.com/bousantiago/'>Bou</a>
 10/07/2022: Cambio en el sistena de ofertas y reposiciones
 10/07/2022: Se pueden buscar los nombres sin acentos
 03/07/2022: Cambio de server

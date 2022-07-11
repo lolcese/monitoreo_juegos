@@ -474,12 +474,13 @@ def main():
                 for alarma in alarmas:
                     id_persona, precio_al = alarma
                     texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está a <b>${precio:.0f}</b> en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> (tenés una alarma a los ${precio_al:.0f}).\n\n\U000023F0\U000023F0\U000023F0'
-                    manda.send_photo(id_persona, "", arch)
-                    keyboard = [
-                        [InlineKeyboardButton("Anular alarma", url=f"https://telegram.me/Monitor_Juegos_bot?start=anularalarma|{id_persona}|{bgg_id}")],
-                    ]
-                    reply_markup = InlineKeyboardMarkup(keyboard)
-                    manda.send_message_key(id_persona, texto, reply_markup)
+                    manda.send_photo(id_persona, texto, arch)
+                    # manda.send_photo(id_persona, "", arch)
+                    # keyboard = [
+                    #     [InlineKeyboardButton("Anular alarma", url=f"https://telegram.me/Monitor_Juegos_bot?start=anularalarma|{id_persona}|{bgg_id}")],
+                    # ]
+                    # reply_markup = InlineKeyboardMarkup(keyboard)
+                    # manda.send_message_key(id_persona, texto, reply_markup)
                 os.remove(arch)
 
 if __name__ == '__main__':
