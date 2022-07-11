@@ -52,7 +52,7 @@ def start(update: Update, context: CallbackContext) -> int:
     #     func, id_persona, bgg_id = context.args[0].split("|")
     #     print(func, id_persona, bgg_id)
     #     return PRINCIPAL
-    # print(f"************{context.args}!!!!!!!!!!!")
+    print(f"Argumentos: {context.args}")
     usuario = update.message.from_user
     nombre = usuario.full_name
     usuario_id = usuario.id
