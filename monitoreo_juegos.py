@@ -439,7 +439,6 @@ def main():
                 precio_mejor, fecha_mejor = mejor
 # Dispara alarma ofertas
                 if precio != None and precio <= precio_prom * 0.9:
-                    oferta = "Sí"
                     porc = (precio_prom - precio) / precio_prom * 100
                     if sitio == "BLIB" or "BLAM":
                         cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
@@ -450,6 +449,7 @@ def main():
                         for u in usuarios_ofertas:
                             texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
                             manda.send_message(u[0], texto)
+                    oferta = "Sí"
                 else:
                     oferta = "No"
 
