@@ -48,6 +48,12 @@ def strip_accents(s):
 
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
+    if context.args is not None:
+        mensaje = context.args[0]
+        func, id_persona, bgg_id = mensaje.split("|")
+        print(func, id_persona, bgg_id)
+        return PRINCIPAL
+
     usuario = update.message.from_user
     nombre = usuario.full_name
     usuario_id = usuario.id
