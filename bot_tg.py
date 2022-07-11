@@ -1450,10 +1450,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },
-    # fallbacks=[CommandHandler('start', start),
-    #            CommandHandler('admin', admin),
-    #            CommandHandler('juego', juego_nom)
-    #            ],
+    fallbacks=[CommandHandler('start', start)],
     )
 
     dispatcher.add_handler(conv_handler)
