@@ -461,7 +461,6 @@ def juego_ver(update: Update, context: CallbackContext) -> int:
 def juego_nom(update: Update, context: CallbackContext) -> int:
     nombre_juego = update.message.text
     if context.args is not None:
-        print(f"*****{context.args}*****")
         if len(context.args) > 0:
             nombre_juego = context.args[0]
         else:
