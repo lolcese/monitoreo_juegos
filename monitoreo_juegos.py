@@ -477,7 +477,8 @@ def main():
                     # manda.send_photo(id_persona, texto, arch)
                     manda.send_photo(id_persona, "", arch)
                     keyboard = [
-                        [InlineKeyboardButton("Anular alarma", url=f"https://t.me/Monitor_Juegos_bot?start=borraalarma_{id_persona}_{bgg_id}")],
+                        [InlineKeyboardButton("Anular alarma", url=f"https://t.me/Buscalibre_bot?start=borraalarma_{id_persona}_{bgg_id}")],
+                        # [InlineKeyboardButton("Anular alarma", url=f"https://t.me/Monitor_Juegos_bot?start=borraalarma_{id_persona}_{bgg_id}")],
                     ]
                     reply_markup = InlineKeyboardMarkup(keyboard)
                     manda.send_message_key(id_persona, texto, reply_markup)
