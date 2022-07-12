@@ -51,6 +51,7 @@ def borraalarma(id_persona, bgg_id):
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('DELETE FROM alarmas WHERE id_persona = ? AND BGG_id = ?',[id_persona, bgg_id])
+    conn.commit()
     manda.send_message(id_persona, "La alarma ha sido borrada")
     return
     
