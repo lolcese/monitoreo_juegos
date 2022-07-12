@@ -787,12 +787,12 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
     
+12/07/2022: Posibilidad de anular las alarmas en las notificaciones
 10/07/2022: Cambio de imagen gracias a <a href='https://www.instagram.com/bousantiago/'>Bou</a>
 10/07/2022: Cambio en el sistena de ofertas y reposiciones
 10/07/2022: Se pueden buscar los nombres sin acentos
 03/07/2022: Cambio de server
 02/07/2022: Campaña para cambio de server
-21/05/2022: Agregado Miniature Market
 """
 
     keyboard = [
@@ -1389,7 +1389,10 @@ def main() -> PRINCIPAL:
     dispatcher = updater.dispatcher
 
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start), CommandHandler('admin', admin), CommandHandler('juego', juego_nom)],
+        entry_points=[CommandHandler('start', start),
+                      CommandHandler('admin', admin),
+                      CommandHandler('juego', juego_nom)
+                     ],
         states={
             PRINCIPAL: [
                 CallbackQueryHandler(juegos_lista_menu,        pattern='^juegos_lista_menu$'),
@@ -1459,7 +1462,8 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },
-    fallbacks=[CommandHandler('start', start)],
+    fallbacks=[CommandHandler('start', start),CommandHandler('juego', juego_nom)],
+    allow_reentry=[True],
     )
 
     dispatcher.add_handler(conv_handler)
