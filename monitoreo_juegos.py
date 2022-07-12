@@ -440,7 +440,7 @@ def main():
 # Dispara alarma ofertas
                 if precio != None and precio <= precio_prom * 0.9:
                     porc = (precio_prom - precio) / precio_prom * 100
-                    if sitio == "BLIB" or "BLAM":
+                    if sitio == "BLIB" or sitio =="BLAM":
                         cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
                     else:
                         cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
