@@ -46,13 +46,21 @@ def strip_accents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s)
                   if unicodedata.category(c) != 'Mn')
 
+######### Borra alarma
+def borraalarma(id_persona, bgg_id):
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM alarmas WHERE id_persona = ? AND BGG_id = ?',[id_persona, bgg_id])
+    manda.send_message(id_persona, "La alarma ha sido borrada")
+    return
+    
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
-    # if len(context.args) > 0:
-    #     func, id_persona, bgg_id = context.args[0].split("|")
-    #     print(func, id_persona, bgg_id)
-    #     return PRINCIPAL
-    print(f"Argumentos: {context.args}")
+    if len(context.args) > 0:
+        func, id_persona, bgg_id = context.args[0].split("_")
+        if func == "borraalarma":
+            borraalarma(id_persona, bgg_id)
+        return PRINCIPAL
     usuario = update.message.from_user
     nombre = usuario.full_name
     usuario_id = usuario.id
