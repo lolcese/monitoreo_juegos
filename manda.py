@@ -1,6 +1,5 @@
 from telegram.ext import (Updater)
 from datetime import datetime
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
 from decouple import config
 
 bot_token = config('bot_token')
