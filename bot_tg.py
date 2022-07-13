@@ -57,7 +57,7 @@ def borraalarma(id_persona, bgg_id):
     
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
-    if len(context.args) > 0:
+    if len(context.args) > 0 and context.args[0].startswith("borraalarma"):
         func, id_persona, bgg_id = context.args[0].split("_")
         if func == "borraalarma":
             borraalarma(id_persona, bgg_id)
