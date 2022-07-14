@@ -473,13 +473,13 @@ def juego_ver(update: Update, context: CallbackContext) -> int:
 
 ######### Muestra un menú con los juegos que coinciden con el texto
 def juego_nom(update: Update, context: CallbackContext) -> int:
-    nombre_juego = update.message.text
-    if context.args is not None:
+    if context.args != None:
         if len(context.args) > 0:
             nombre_juego = context.args[0]
         else:
             return
-
+    else:
+        nombre_juego = update.message.text
     context.chat_data["nombre_juego"] = nombre_juego
     conn = conecta_db()
     cursor = conn.cursor()

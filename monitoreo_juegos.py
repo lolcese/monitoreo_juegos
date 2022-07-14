@@ -88,14 +88,14 @@ def lee_pagina_tmam(ju_id):
         return None
     peso = float(peso[1])
  
-    precio_dol = re.search('"USD":(.*?),',text)
-    if not precio_dol or precio_dol[1] == "No disponible":
+    precio_ar = re.search('"currencies":{\n"ARS":(.*?),',text)
+    if not precio_ar:
         return None
-    precio_dol = float(precio_dol[1])
-    if precio_dol < 1:
+    precio_ar = float(precio_ar[1])
+    if precio_ar < 1000:
         return None
 
-    pr_tm = precio_tm(peso,precio_dol)
+    pr_tm = precio_tm(peso,precio_ar)
     return pr_tm
 
 ######### Lee información de TMWM
@@ -111,14 +111,14 @@ def lee_pagina_tmwm(ju_id):
 
     stock = 'Disponibilidad: <span>Fuera de stock</span>' in text
 
-    precio_dol = re.search('"USD":(.*?),',text)
-    if not precio_dol or stock == 1:
+    precio_ar = re.search('"currencies":{\n"ARS":(.*?),',text)
+    if not precio_ar:
         return None
-    precio_dol = float(precio_dol[1])
-    if precio_dol < 1:
+    precio_ar = float(precio_ar[1])
+    if precio_ar < 1000:
         return None
 
-    pr_tm = precio_tm(peso,precio_dol)
+    pr_tm = precio_tm(peso,precio_ar)
     return pr_tm
 
 ######### Lee información de TMEB
@@ -128,25 +128,25 @@ def lee_pagina_tmeb(ju_id):
     if text == "Error":
         return None
 
-    peso = re.search('<span id="weight_producto_ajax">(.*?)</span>',text)
+    peso = re.search('"(.*?) kg"',text)
     if not peso:
         return None
     peso = float(peso[1])
 
     stock = '<span id="stock_producto_ajax">Sin Stock</span>' in text
 
-    precio_dol = re.search('"USD":(.*?),',text)
-    if not precio_dol or stock == 1:
+    precio_ar = re.search('"currencies":{\n"ARS":(.*?),',text)
+    if not precio_ar:
         return None
-    precio_dol = float(precio_dol[1])
-    if precio_dol < 1:
+    precio_ar = float(precio_ar[1])
+    if precio_ar < 1000:
         return None
 
-    pr_tm = precio_tm(peso,precio_dol)
+    pr_tm = precio_tm(peso,precio_ar)
     return pr_tm
 
 ######### Calcula precio para TM
-def precio_tm(peso,precio_dol):
+def precio_tm(peso,precio_ar):
     costo_peso = peso * constantes.var['precio_kg']
     if peso > 3:
         desc_3kg = 0.3 * (peso - 3) * constantes.var['precio_kg']
@@ -156,11 +156,11 @@ def precio_tm(peso,precio_dol):
         desc_5kg = 0.5 * (peso - 5) * constantes.var['precio_kg']
     else:
         desc_5kg = 0
-    precio_dol = precio_dol * 1.1 + costo_peso + constantes.var['tasa_tm'] - desc_3kg - desc_5kg
+    precio_dol = (precio_ar * 1.1 + costo_peso + constantes.var['tasa_tm'] - desc_3kg - desc_5kg) / constantes.var['dolar_tm']
     imp = 0
     if precio_dol > 50:
         imp = (precio_dol - 50) * 0.5
-    precio_final_arg = (precio_dol * constantes.var['impuesto_compras_exterior'] + imp) * constantes.var['dolar'] + constantes.var['tasa_correo']
+    precio_final_arg = precio_ar * constantes.var['impuesto_compras_exterior'] + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
     return precio_final_arg
 
 ######### Lee información de BOOK
