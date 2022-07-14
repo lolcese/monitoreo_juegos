@@ -109,7 +109,7 @@ def lee_pagina_tmwm(ju_id):
         return None
     peso = float(peso[1])
 
-    stock = 'Disponibilidad: <span>Fuera de stock</span>' in text
+    stock = '<span class="notranslate">Sin stock<\/span>' in text
 
     precio_ar = re.search('<meta property="product:price:amount" content="(.*?)">',text)
     if not precio_ar or not stock:
@@ -133,7 +133,7 @@ def lee_pagina_tmeb(ju_id):
         return None
     peso = float(peso[1])
 
-    stock = '<span id="stock_producto_ajax">Sin Stock</span>' in text
+    stock = '<span id="stock_producto_ajax">Sin Stock<\/span>' in text
 
     precio_ar = re.search('<meta property="product:price:amount" content="(.*?)">',text)
     if not precio_ar or not stock:
@@ -171,10 +171,10 @@ def lee_pagina_book(ju_id):
     if text == "Error":
         return None
 
-    precio_ar = re.search('<span class=\"sale-price\">ARS\$(.*?)</span>',text)
+    precio_ar = re.search('<span class=\"sale-price\">ARS\$(.*?)<\/span>',text)
     if not precio_ar:
         return None
-    no_stock = re.search('<p class="red-text bold">Actualmente no disponible</p>',text)
+    no_stock = re.search('<p class="red-text bold">Actualmente no disponible<\/p>',text)
     if no_stock:
         return None
     precio_ar = re.sub("\.", "", precio_ar[1])
@@ -281,7 +281,7 @@ def lee_pagina_grooves(ju_id):
     if text == "Error":
         return None
 
-    precio_eur = re.search('<div class=\"price\".*?[^s]>(\d.*?)&nbsp;EUR</big>',text)
+    precio_eur = re.search('<div class=\"price\".*?[^s]>(\d.*?)&nbsp;EUR<\/big>',text)
     if not precio_eur:
         return None
 
@@ -307,7 +307,7 @@ def lee_pagina_planeton(ju_id, precio_envio):
         return None
 
     precio_eur = re.search('<span itemprop="price" content="(.*?)">',text)
-    stock = '<span id="availability_value" class="warning_inline">No Disponible </span>' in text
+    stock = '<span id="availability_value" class="warning_inline">No Disponible <\/span>' in text
     if not precio_eur or stock == 1:
         return None
 
@@ -335,7 +335,7 @@ def lee_pagina_mm(ju_id, precio_envio):
         return None
 
     precio_dol = re.search("price: '(.*?)',",text)
-    stock = '<div class="availability out-of-stock">Out of stock</div>' in text
+    stock = '<div class="availability out-of-stock">Out of stock<\/div>' in text
     if not precio_dol or stock == 1:
         return None
 
@@ -415,7 +415,7 @@ def main():
                             cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
                         usuarios_ofertas = cursor.fetchall()
                         for u in usuarios_ofertas:
-                            texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
+                            texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición<\/b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}<\/a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}<\/a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
                             manda.send_message(u[0], texto)
                     else:
                         reposicion = "No"
@@ -448,7 +448,7 @@ def main():
                     if oferta == "No":
                         usuarios_ofertas = cursor.fetchall()
                         for u in usuarios_ofertas:
-                            texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
+                            texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta<\/b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}<\/a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}<\/a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
                             manda.send_message(u[0], texto)
                     oferta = "Sí"
                 else:
@@ -474,7 +474,7 @@ def main():
                 arch = hace_grafico.grafica(bgg_id, nombre)
                 for alarma in alarmas:
                     id_persona, precio_al = alarma
-                    texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está a <b>${precio:.0f}</b> en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> (tenés una alarma a los ${precio_al:.0f}).\n\n\U000023F0\U000023F0\U000023F0'
+                    texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}<\/a> está a <b>${precio:.0f}<\/b> en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}<\/a> (tenés una alarma a los ${precio_al:.0f}).\n\n\U000023F0\U000023F0\U000023F0'
                     # manda.send_photo(id_persona, texto, arch)
                     manda.send_photo(id_persona, "", arch)
                     keyboard = [
