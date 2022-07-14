@@ -88,7 +88,7 @@ def lee_pagina_tmam(ju_id):
         return None
     peso = float(peso[1])
  
-    precio_ar = re.search('"currencies":{\n"ARS":(.*?),',text)
+    precio_ar = re.search('<meta property="product:price:amount" content="(.*?)">',text)
     if not precio_ar:
         return None
     precio_ar = float(precio_ar[1])
@@ -112,7 +112,7 @@ def lee_pagina_tmwm(ju_id):
     stock = 'Disponibilidad: <span>Fuera de stock</span>' in text
 
     precio_ar = re.search('"currencies":{\n"ARS":(.*?),',text)
-    if not precio_ar:
+    if not precio_ar or not stock:
         return None
     precio_ar = float(precio_ar[1])
     if precio_ar < 1000:
@@ -128,7 +128,7 @@ def lee_pagina_tmeb(ju_id):
     if text == "Error":
         return None
 
-    peso = re.search('"(.*?) kg"',text)
+    peso = re.search('"([\d\.]+) kg"',text)
     if not peso:
         return None
     peso = float(peso[1])
@@ -136,7 +136,7 @@ def lee_pagina_tmeb(ju_id):
     stock = '<span id="stock_producto_ajax">Sin Stock</span>' in text
 
     precio_ar = re.search('"currencies":{\n"ARS":(.*?),',text)
-    if not precio_ar:
+    if not precio_ar or not stock:
         return None
     precio_ar = float(precio_ar[1])
     if precio_ar < 1000:
