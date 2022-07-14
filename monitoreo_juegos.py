@@ -161,7 +161,7 @@ def precio_tm(peso,precio_ar):
     imp = 0
     if precio_dol > 50:
         imp = (precio_dol - 50) * 0.5
-    precio_final_arg = precio_ar * constantes.var['impuesto_compras_exterior'] + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
+    precio_final_arg = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
     return precio_final_arg
 
 ######### Lee información de BOOK
