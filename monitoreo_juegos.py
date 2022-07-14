@@ -156,7 +156,8 @@ def precio_tm(peso,precio_ar):
         desc_5kg = 0.5 * (peso - 5) * constantes.var['precio_kg']
     else:
         desc_5kg = 0
-    precio_dol = (precio_ar * 1.1 + costo_peso + constantes.var['tasa_tm'] - desc_3kg - desc_5kg) / constantes.var['dolar_tm']
+    precio_ar = precio_ar * 1.1 + constantes.var['tasa_tm'] + costo_peso - desc_3kg - desc_5kg
+    precio_dol = precio_ar / constantes.var['dolar_tm']
     imp = 0
     if precio_dol > 50:
         imp = (precio_dol - 50) * 0.5
