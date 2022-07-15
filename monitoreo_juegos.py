@@ -403,8 +403,6 @@ def main():
 # Si no hay ningún precio antes
                 if precio is None:
                     reposicion = "No"
-                    precio_mejor = None
-                    fecha_mejor = None
                 else:
                     if reposicion != "Nuevo":
                         reposicion = "Sí"
@@ -420,9 +418,6 @@ def main():
                     else:
                         reposicion = "No"
 
-                    precio_mejor = precio
-                    fecha_mejor = datetime.now()
-
 # Si hay precios antes            
             else:
                 precio_prom = prom[0]
@@ -434,13 +429,6 @@ def main():
                 else:
                     reposicion = "No"
 
-# Busca el precio más barato
-                cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio, fecha DESC LIMIT 1', [id_juego])
-                mejor = cursor.fetchone()
-                try:
-                    precio_mejor, fecha_mejor = mejor
-                except:
-                    print(id_juego, mejor)
 # Dispara alarma ofertas
                 if precio != None and precio <= precio_prom * 0.9:
                     porc = (precio_prom - precio) / precio_prom * 100
@@ -467,6 +455,16 @@ def main():
             precio_prom = cursor.fetchone()[0]
             if precio_prom is not None:
                 precio_prom = round(precio_prom)
+
+            cursor.execute('SELECT min(precio), fecha FROM precios WHERE id_juego = ?', [id_juego])
+            juegos = cursor.fetchone()
+            if juegos == None:
+                precio_mejor = None
+                fecha_mejor = None
+            else:
+                precio_mejor = juegos[0]
+                fecha_mejor = juegos[1]
+
             cursor.execute('UPDATE juegos SET precio_actual = ?, fecha_actual = ?, precio_mejor = ?, fecha_mejor = ?, precio_prom = ?, reposicion = ?, oferta = ? WHERE id_juego = ?',[precio, fecha, precio_mejor, fecha_mejor, precio_prom, reposicion, oferta, id_juego])
             conn.commit()
 
