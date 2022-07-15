@@ -58,10 +58,13 @@ def borraalarma(id_persona, bgg_id):
 ######### Cuando se elige la opción Inicio
 def start(update: Update, context: CallbackContext) -> int:
     if len(context.args) > 0 and context.args[0].startswith("borraalarma"):
-        func, id_persona, bgg_id = context.args[0].split("_")
-        if func == "borraalarma":
-            borraalarma(id_persona, bgg_id)
-        return PRINCIPAL
+        if re.search('.*_.*_.*',context.args[0]):
+            func, id_persona, bgg_id = context.args[0].split("_")
+            if func == "borraalarma":
+                borraalarma(id_persona, bgg_id)
+            return PRINCIPAL
+        else:
+            return PRINCIPAL
     usuario = update.message.from_user
     nombre = usuario.full_name
     usuario_id = usuario.id
@@ -473,7 +476,7 @@ def juego_ver(update: Update, context: CallbackContext) -> int:
 
 ######### Muestra un menú con los juegos que coinciden con el texto
 def juego_nom(update: Update, context: CallbackContext) -> int:
-    if context.args != None:
+    if context.args is not None:
         if len(context.args) > 0:
             nombre_juego = context.args[0]
         else:
