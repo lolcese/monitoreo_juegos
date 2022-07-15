@@ -437,7 +437,10 @@ def main():
 # Busca el precio más barato
                 cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ? ORDER BY precio, fecha DESC LIMIT 1', [id_juego])
                 mejor = cursor.fetchone()
-                precio_mejor, fecha_mejor = mejor
+                try:
+                    precio_mejor, fecha_mejor = mejor
+                except:
+                    print(id_juego, mejor)
 # Dispara alarma ofertas
                 if precio != None and precio <= precio_prom * 0.9:
                     porc = (precio_prom - precio) / precio_prom * 100
