@@ -763,7 +763,7 @@ def historicos_nom(update: Update, context: CallbackContext) -> int:
         return HISTORICOS
     
     for j in juegos:
-        keyboard.append([InlineKeyboardButton(f'\U000027A1 {j[0]}', callback_data='Histo_BGG_'+str(j[1]))])
+        keyboard.append([InlineKeyboardButton(f'\U000027A1 {j[0]}', callback_data='Histo_'+str(j[1]))])
     keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(text = "Elegí el juego", reply_markup=reply_markup)
@@ -1535,7 +1535,7 @@ def main() -> PRINCIPAL:
             HISTORICOS: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, historicos_nom),
                 CallbackQueryHandler(alarmas_muestra,          pattern='^alarmas_muestra$'),
-                CallbackQueryHandler(histo_juego_info,         pattern='^Histo_BGG_'),
+                CallbackQueryHandler(histo_juego_info,         pattern='^Histo_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
