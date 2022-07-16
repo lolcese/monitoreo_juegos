@@ -28,7 +28,7 @@ def send_photo(chat_id, caption, photo):
 def send_message_key(chat_id, text, reply_markup):
     bot = get_bot()
     try:
-        bot.send_message(chat_id = chat_id, text = text, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
+        bot.send_message(chat_id = chat_id, text = text, parse_mode = "HTML", disable_web_page_preview = True, reply_markup = reply_markup)
     except:
         pass
         # print(f"{datetime.now()} - Error enviando mensaje a {chat_id}")
