@@ -8,16 +8,16 @@ import constantes
 from random import randint
 
 def grafica(bgg_id, nombre, db):
+    conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    conn.execute("PRAGMA journal_mode=WAL")
+    cursor = conn.cursor()
     if db == "actual":
-        conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-        conn.execute("PRAGMA journal_mode=WAL")
-        cursor = conn.cursor()
         cursor.execute('SELECT precio_mejor FROM juegos WHERE precio_mejor NOT NULL AND bgg_id = ?',[bgg_id])
         valido = cursor.fetchone()
     else: # Si son precios históricos
-        conn = sqlite3.connect(constantes.db_file_histo, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-        conn.execute("PRAGMA journal_mode=WAL")
-        cursor = conn.cursor()
+        conn_h = sqlite3.connect(constantes.db_file_histo, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        conn_h.execute("PRAGMA journal_mode=WAL")
+        cursor_h = conn_h.cursor()
         valido = True
 
     if valido != None: # Si hay algún dato válido
@@ -39,8 +39,12 @@ def grafica(bgg_id, nombre, db):
         ax1.tick_params(axis='x', labelrotation= 45)
         for i in juego:
             id_juego, sitio = i
-            cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
-            datos = cursor.fetchall()
+            if db == "actual":
+                cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
+                datos = cursor.fetchall()
+            else:
+                cursor_h.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
+                datos = cursor_h.fetchall()
             if len(datos) > 0:
                 hay_datos = True
                 precio_hi = [sub[0] for sub in datos]
