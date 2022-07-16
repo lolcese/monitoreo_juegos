@@ -18,13 +18,13 @@ def grafica(bgg_id, nombre, db):
         conn = sqlite3.connect(constantes.db_file_histo, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         conn.execute("PRAGMA journal_mode=WAL")
         cursor = conn.cursor()
-        cursor.execute('SELECT precio FROM precios WHERE precio NOT NULL AND bgg_id = ?',[bgg_id])
-        valido = cursor.fetchone()
+        valido = True
 
     if valido != None: # Si hay algún dato válido
         cursor.execute('SELECT id_juego, sitio FROM juegos WHERE bgg_id = ?',[bgg_id])
         juego = cursor.fetchall()
         plt.ioff()
+        hay_datos = False
         leyenda = []
         plt.rc('xtick', labelsize=8)
         fig, ax1 = plt.subplots()
@@ -42,16 +42,20 @@ def grafica(bgg_id, nombre, db):
             cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
             datos = cursor.fetchall()
             if len(datos) > 0:
+                hay_datos = True
                 precio_hi = [sub[0] for sub in datos]
                 fecha_hi = [sub[1] for sub in datos]
                 ax1.plot(fecha_hi, precio_hi, marker='o', linestyle='dashed', markersize=5)
                 leyenda.append(constantes.sitio_nom[sitio])
 
-        fig.tight_layout(rect=[0, 0.01, 1, 0.97])
-        plt.legend(leyenda)
-        arch = f"temp/{randint(0, 9999999999)}.png"
-        plt.savefig(arch,dpi=100)
-        plt.close('all')
+        if hay_datos == True:
+            fig.tight_layout(rect=[0, 0.01, 1, 0.97])
+            plt.legend(leyenda)
+            arch = f"temp/{randint(0, 9999999999)}.png"
+            plt.savefig(arch,dpi=100)
+            plt.close('all')
+        else:
+            arch = None    
 
     else: # Si no hay datos válidos
         arch = None
