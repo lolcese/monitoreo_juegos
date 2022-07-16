@@ -7,8 +7,11 @@ from matplotlib.ticker import FormatStrFormatter
 import constantes
 from random import randint
 
-def grafica(bgg_id, nombre):
-    conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+def grafica(bgg_id, nombre, db):
+    if db == "actual":
+        conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    else:
+        conn = sqlite3.connect(constantes.db_file_histo, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.execute("PRAGMA journal_mode=WAL")
     cursor = conn.cursor()
     cursor.execute('SELECT precio_mejor FROM juegos WHERE precio_mejor NOT NULL AND bgg_id = ?',[bgg_id])

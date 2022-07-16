@@ -472,7 +472,7 @@ def main():
             cursor.execute('SELECT id_persona, precio_alarma FROM alarmas WHERE BGG_id = ? and precio_alarma >= ?',(bgg_id, precio))
             alarmas = cursor.fetchall()
             if len(alarmas) > 0:
-                arch = hace_grafico.grafica(bgg_id, nombre)
+                arch = hace_grafico.grafica(bgg_id, nombre, "actual")
                 for alarma in alarmas:
                     id_persona, precio_al = alarma
                     texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}<\/a> está a <b>${precio:.0f}<\/b> en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}<\/a> (tenés una alarma a los ${precio_al:.0f}).\n\n\U000023F0\U000023F0\U000023F0'

@@ -23,7 +23,7 @@ import unicodedata
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN = range(10)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS = range(11)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -562,7 +562,7 @@ def juego_info(update: Update, context: CallbackContext) -> int:
             ]
         ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    arch = hace_grafico.grafica(BGG_id, nombre)
+    arch = hace_grafico.grafica(BGG_id, nombre, "actual")
     
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     
@@ -724,10 +724,81 @@ def ayuda_info(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U0001F4A1 Consejos para comprar", callback_data='consejos')],
         [InlineKeyboardButton("\U0001F4AC Enviar comentarios y sugerencias", callback_data='comentarios_texto')],
         [InlineKeyboardButton("\U0001F522 Estadística", callback_data='estadistica')],
+        [InlineKeyboardButton("\U0001F4C8 Precios históricos", callback_data='historicos')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = "Elegí lo que quieras ver", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    return PRINCIPAL
+
+######### Pide que se escriba el nombre del juego para ver precios histórics
+def historicos(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = 'Para ver información histórica de un juego, escribí parte del nombre:', reply_markup=reply_markup)
+    return HISTORICOS
+
+######### Muestra un menú con los juegos que coinciden con el texto
+def historicos_nom(update: Update, context: CallbackContext) -> int:
+    nombre_juego = update.message.text
+    context.chat_data["nombre_juego"] = nombre_juego
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%'))
+    juegos = cursor.fetchall()
+    keyboard = []
+    if len(juegos) > 15:
+        keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text("Demasiados resultados, escribí más letras", reply_markup=reply_markup)
+        return HISTORICOS
+    if len(juegos) == 0:
+        keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text("Ningún resultado, escribí otra cosa. Recordá que podés sugerir juegos a monitorear", reply_markup=reply_markup)
+        return HISTORICOS
+    
+    for j in juegos:
+        keyboard.append([InlineKeyboardButton(f'\U000027A1 {j[0]}', callback_data='Histo_BGG_'+str(j[1]))])
+    keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text(text = "Elegí el juego", reply_markup=reply_markup)
+    return HISTORICOS
+
+######### Muestra toda la información del juego elegido
+def histo_juego_info(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    usuario_id = update.callback_query.from_user.id
+    BGG_id = query.data.split("_")[1]
+    conn = conecta_db()
+    cursor = conn.cursor()
+    nombre, texto = texto_info_juego(BGG_id)
+    texto += "\n"
+
+    keyboard = menu()
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    arch = hace_grafico.grafica(BGG_id, nombre, "historico")
+    
+    context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
+    
+    if arch != None:
+        context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
+        os.remove(arch)
+    else:
+        texto += "Nunca estuvo disponible"
+    context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
+
+    fecha = datetime.now()
+    cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',[update.callback_query.from_user.full_name,usuario_id,fecha,f"Histórico {nombre}"])
+    conn.commit()
     return PRINCIPAL
 
 ######### Muestra ayuda
@@ -789,7 +860,8 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     texto = """<b>Novedades</b>
-    
+
+15/07/2022: Agregado de precios históricos
 12/07/2022: Posibilidad de anular las alarmas en las notificaciones
 10/07/2022: Cambio de imagen gracias a <a href='https://www.instagram.com/bousantiago/'>Bou</a>
 10/07/2022: Cambio en el sistena de ofertas y reposiciones
@@ -1407,6 +1479,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(colaborar,                pattern='^colaborar$'),
                 CallbackQueryHandler(ayuda,                    pattern='^ayuda$'),
                 CallbackQueryHandler(consejos,                 pattern='^consejos$'),
+                CallbackQueryHandler(historicos,               pattern='^historicos$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],  
             LISTA_JUEGOS: [
@@ -1457,6 +1530,12 @@ def main() -> PRINCIPAL:
             ],
             COMENTARIOS: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, comentarios_mandar),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
+            ],
+            HISTORICOS: [
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, historicos_nom),
+                CallbackQueryHandler(alarmas_muestra,          pattern='^alarmas_muestra$'),
+                CallbackQueryHandler(histo_juego_info,         pattern='^Histo_BGG_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
