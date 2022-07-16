@@ -778,8 +778,15 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
     BGG_id = query.data.split("_")[1]
     conn = conecta_db()
     cursor = conn.cursor()
-    nombre, texto = texto_info_juego(BGG_id)
-    texto += "\n"
+    cursor.execute('SELECT id_juego, nombre, ranking, dependencia_leng FROM juegos WHERE BGG_id = ?',[BGG_id])
+    juegos = cursor.fetchone()
+    nombre = juegos[1]
+    ranking = juegos[2]
+    dependencia_leng = constantes.dependencia_len[juegos[3]]
+    link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
+    texto = f"<b>{html.escape(nombre)}</b>\n\n"
+    texto += f"<a href= '{link_BGG}'>Enlace BGG</a> - Ranking: {ranking}\n"
+    texto += f"Dependencia del idioma: {dependencia_leng}"
 
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -794,7 +801,7 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
         context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
         os.remove(arch)
     else:
-        texto += "Nunca estuvo disponible"
+        texto += "\n\n<b>Nunca estuvo disponible</b>"
     context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
 
     fecha = datetime.now()
