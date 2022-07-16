@@ -766,7 +766,8 @@ def historicos_nom(update: Update, context: CallbackContext) -> int:
         keyboard.append([InlineKeyboardButton(f'\U000027A1 {j[0]}', callback_data='Histo_'+str(j[1]))])
     keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text(text = "Elegí el juego", reply_markup=reply_markup)
+    id = update.message.reply_text(text = "Elegí el juego", reply_markup=reply_markup)
+    context.chat_data["mensaje_id"] = id.message_id
     return HISTORICOS
 
 ######### Muestra toda la información del juego elegido
