@@ -413,7 +413,7 @@ def main():
                             cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
                         usuarios_ofertas = cursor.fetchall()
                         for u in usuarios_ofertas:
-                            texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición<\/b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}<\/a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}<\/a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
+                            texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
                             manda.send_message(u[0], texto)
                     else:
                         reposicion = "No"
@@ -439,7 +439,7 @@ def main():
                     if oferta == "No":
                         usuarios_ofertas = cursor.fetchall()
                         for u in usuarios_ofertas:
-                            texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta<\/b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}<\/a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}<\/a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
+                            texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
                             manda.send_message(u[0], texto)
                     oferta = "Sí"
                 else:
@@ -475,7 +475,7 @@ def main():
                 arch = hace_grafico.grafica(bgg_id, nombre, "actual")
                 for alarma in alarmas:
                     id_persona, precio_al = alarma
-                    texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}<\/a> está a <b>${precio:.0f}<\/b> en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}<\/a> (tenés una alarma a los ${precio_al:.0f}).\n\n\U000023F0\U000023F0\U000023F0'
+                    texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está a <b>${precio:.0f}</b> en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> (tenés una alarma a los ${precio_al:.0f}).\n\n\U000023F0\U000023F0\U000023F0'
                     manda.send_photo(id_persona, texto, arch)
                     # manda.send_photo(id_persona, "", arch)
                     # keyboard = [
