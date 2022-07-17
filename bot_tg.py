@@ -873,7 +873,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
 15/07/2022: Agregado de precios históricos
 12/07/2022: Posibilidad de anular las alarmas en las notificaciones
 10/07/2022: Cambio de imagen gracias a <a href='https://www.instagram.com/bousantiago/'>Bou</a>
-10/07/2022: Cambio en el sistena de ofertas y reposiciones
+10/07/2022: Cambio en el sistema de ofertas y reposiciones
 10/07/2022: Se pueden buscar los nombres sin acentos
 03/07/2022: Cambio de server
 02/07/2022: Campaña para cambio de server
@@ -1207,16 +1207,16 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_al = "Según tus preferencias actuales, "
         tipo_alarma_oferta, tipo_alarma_reposicion = alarmas_ofertas
         if tipo_alarma_oferta == "BLP":
-            texto_al += "vas a recibir un mensaje cuando haya una oferta en Buscalibre, Buscalibre Amazon o Planeton, "
+            texto_al += f"vas a recibir un mensaje cuando haya una oferta (menor a ${constantes.sitio_URL['precio_max_avisos']}) en Buscalibre, Buscalibre Amazon o Planeton, "
         elif tipo_alarma_oferta == "Todo":
-            texto_al += "vas a recibir un mensaje cuando haya una oferta en cualquier sitio, "
+            texto_al += f"vas a recibir un mensaje cuando haya una oferta (menor a ${constantes.sitio_URL['precio_max_avisos']}) en cualquier sitio, "
         else:
             texto_al += "no vas a recibir mensajes cuando haya una oferta, "
 
         if tipo_alarma_reposicion == "BLP":
-            texto_al += "y vas a recibir un mensaje cuando haya una reposición en Buscalibre, Buscalibre Amazon o Planeton."
+            texto_al += f"y vas a recibir un mensaje cuando haya una reposición (menor a ${constantes.sitio_URL['precio_max_avisos']}) en Buscalibre, Buscalibre Amazon o Planeton."
         elif tipo_alarma_reposicion == "Todo":
-            texto_al += "y vas a recibir un mensaje cuando haya una reposición en cualquier sitio."
+            texto_al += f"y vas a recibir un mensaje cuando haya una reposición (menor a ${constantes.sitio_URL['precio_max_avisos']}) en cualquier sitio."
         else:
             texto_al += "y no vas a recibir mensajes cuando haya reposiciones."
 
