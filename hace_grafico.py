@@ -44,7 +44,7 @@ def grafica(bgg_id, nombre, db):
             if db == "historico":
                 cursor_h.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
                 datos2 = cursor_h.fetchall()
-                datos = datos + datos2
+                datos = datos2 + datos
             if len(datos) > 0:
                 hay_datos = True
                 precio_hi = [sub[0] for sub in datos]
