@@ -1207,16 +1207,16 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_al = "Según tus preferencias actuales, "
         tipo_alarma_oferta, tipo_alarma_reposicion = alarmas_ofertas
         if tipo_alarma_oferta == "BLP":
-            texto_al += f"vas a recibir un mensaje cuando haya una oferta (menor a ${constantes.sitio_URL['precio_max_avisos']}) en Buscalibre, Buscalibre Amazon o Planeton, "
+            texto_al += f"vas a recibir un mensaje cuando haya una oferta (menor a ${constantes.var['precio_max_avisos']}) en Buscalibre, Buscalibre Amazon o Planeton, "
         elif tipo_alarma_oferta == "Todo":
-            texto_al += f"vas a recibir un mensaje cuando haya una oferta (menor a ${constantes.sitio_URL['precio_max_avisos']}) en cualquier sitio, "
+            texto_al += f"vas a recibir un mensaje cuando haya una oferta (menor a ${constantes.var['precio_max_avisos']}) en cualquier sitio, "
         else:
             texto_al += "no vas a recibir mensajes cuando haya una oferta, "
 
         if tipo_alarma_reposicion == "BLP":
-            texto_al += f"y vas a recibir un mensaje cuando haya una reposición (menor a ${constantes.sitio_URL['precio_max_avisos']}) en Buscalibre, Buscalibre Amazon o Planeton."
+            texto_al += f"y vas a recibir un mensaje cuando haya una reposición (menor a ${constantes.var['precio_max_avisos']}) en Buscalibre, Buscalibre Amazon o Planeton."
         elif tipo_alarma_reposicion == "Todo":
-            texto_al += f"y vas a recibir un mensaje cuando haya una reposición (menor a ${constantes.sitio_URL['precio_max_avisos']}) en cualquier sitio."
+            texto_al += f"y vas a recibir un mensaje cuando haya una reposición (menor a ${constantes.var['precio_max_avisos']}) en cualquier sitio."
         else:
             texto_al += "y no vas a recibir mensajes cuando haya reposiciones."
 
