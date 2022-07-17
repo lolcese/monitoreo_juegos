@@ -39,12 +39,12 @@ def grafica(bgg_id, nombre, db):
         ax1.tick_params(axis='x', labelrotation= 45)
         for i in juego:
             id_juego, sitio = i
-            if db == "actual":
-                cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
-                datos = cursor.fetchall()
-            else:
+            cursor.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
+            datos = cursor.fetchall()
+            if db == "historico":
                 cursor_h.execute('SELECT precio, fecha as "[timestamp]" FROM precios WHERE id_juego = ?',[id_juego])
-                datos = cursor_h.fetchall()
+                datos2 = cursor_h.fetchall()
+                datos = datos + datos2
             if len(datos) > 0:
                 hay_datos = True
                 precio_hi = [sub[0] for sub in datos]
