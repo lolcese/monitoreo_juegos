@@ -23,7 +23,7 @@ import unicodedata
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS = range(11)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS, VENTA = range(11)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -121,6 +121,7 @@ def menu():
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Ver Listas de juegos \U0001F4DA", callback_data='juegos_lista_menu')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego y mis alarmas \U0001F3B2", callback_data='juego_ver')],
+        [InlineKeyboardButton("\U0001F4B0 Poner mi juego a la venta \U0001F4B0", callback_data='agregar_venta')],
         [InlineKeyboardButton("\U00002753 Ayuda e información \U00002753", callback_data='ayuda_info')],
         [InlineKeyboardButton("\U0001F932 Colaborá con el server \U0001F932", callback_data='colaborar')]
     ]
@@ -1337,6 +1338,74 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
         cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',["-",0,fecha,"Inline "+query])
         conn.commit()
 
+
+######### Pide que se ingrese el juego a vender
+def vender_juego_datos(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    if update.message.from_user.username == "":
+        update.message.reply_text(text = 'Para que te puedan contactar, tenés que definir tu <i>username</i> en telegram.', reply_markup=reply_markup)
+        return VENTA
+
+    texto = """<b>Ingresá el juego a vender</b>
+    
+Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX), en el renglón siguiente el estado del juego (nuevo, usado, o algo breve), en el tercer renglón el precio (solo números) y en el cuarto tu ciudad (es obligatorio hacer envíos).
+
+Ejemplos:
+https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
+Nuevo
+10000
+Córdoba
+
+https://www.boardgamegeek.com/boardgame/266192/wingspan
+Usado
+12000
+Lanús
+"""
+
+    query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
+    return VENTA
+
+######### Guarda el juego a vender
+def vender_juego(update: Update, context: CallbackContext) -> int:
+    usuario_nom = update.message.from_user.full_name
+    usuario_id = update.message.from_user.id
+    username = update.message.from_user.username
+    dat = update.message.text.split("\n")
+
+    if len(dat) != 4:
+        update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de BGG, el estado, el precio y tu ciudad.")
+        return VENTA
+
+    bgg_url = dat[0]
+    estado = dat[1]
+    precio = dat[2]
+    ciudad = dat[3]
+
+    busca_id = re.search('boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)', bgg_url)
+    if busca_id:
+        bgg_id = busca_id.group(2)
+    else:
+        update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
+        return VENTA
+
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO juegos_venta_sugeridos (usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad) VALUES (?,?,?,?,?,?,?)',[usuario_nom, usuario_id, username, bgg_id, estado, precio, ciudad])
+    conn.commit()
+    texto = f"{usuario_nom} quiere vender {bgg_url}"
+    manda.send_message(id_aviso, texto)
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text(text = 'El juego va a ser revisado y vas a recibir un mensaje si es aprobado o rechazado.', reply_markup=reply_markup)
+    return PRINCIPAL
+
 ######### Módulo de administración
 def admin(update: Update, context: CallbackContext) -> None:
     usuario = update.message.from_user
@@ -1346,6 +1415,7 @@ def admin(update: Update, context: CallbackContext) -> None:
         reply_markup = InlineKeyboardMarkup(keyboard)
         keyboard = [
             [InlineKeyboardButton("\U00002753 Administrar juegos sugeridos", callback_data='admin_juegos_sugeridos')],
+            [InlineKeyboardButton("\U00002753 Administrar juegos a vender", callback_data='admin_juegos_vender')],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
@@ -1361,7 +1431,7 @@ def admin(update: Update, context: CallbackContext) -> None:
         update.message.reply_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
         return PRINCIPAL
 
-######### Administrar juegos sugeridos
+######### Administrar juegos a agregar
 def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
@@ -1459,7 +1529,112 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     conn.commit()
     texto = "Juego procesado"
     keyboard = [
-        [InlineKeyboardButton("\U00002753 Más juegos sugeridos", callback_data='admin_juegos_sugeridos')],
+        [InlineKeyboardButton("\U00002753 Siguiente juego sugerido", callback_data='admin_juegos_sugeridos')],
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    return ADMIN
+
+######### Administrar juegos a vender
+def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT id_juego_sug_venta, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad, FROM juegos_venta_sugeridos')
+    juegos = cursor.fetchone()
+    if juegos is None:
+        texto = "No hay juegos a vender"
+        keyboard = [
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    else:
+        id_juego_sug_venta, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad = juegos
+        texto = f"Usuario: {usuario_nom} ({usuario_username})\n"
+        url = f'https://api.geekdo.com/xmlapi2/thing?id={bgg_id}&stats=1'
+        req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
+        data = urllib.request.urlopen(req).read()
+        data = data.decode('utf-8')
+        votos = {}
+
+        nombre = html.unescape(re.search('<name type=\"primary\" sortindex=\".*?\" value=\"(.*?)\"',data)[1])
+        ranking = html.unescape(re.search('name=\"boardgame\".*?value=\"(.*?)\"',data)[1])
+
+        votos_dep = float(re.search('poll name=\"language_dependence\".*?totalvotes=\"(.*?)\"',data)[1])
+        if votos_dep >= 3:
+            votos[1] = float(re.search('result level.*? value=\"No necessary in-game text\" numvotes=\"(.*?)\"',data)[1])
+            votos[2] = float(re.search('result level.*? value=\"Some necessary text - easily memorized or small crib sheet\" numvotes=\"(.*?)\"',data)[1])
+            votos[3] = float(re.search('result level.*? value=\"Moderate in-game text - needs crib sheet or paste ups\" numvotes=\"(.*?)\"',data)[1])
+            votos[4] = float(re.search('result level.*? value=\"Extensive use of text - massive conversion needed to be playable\" numvotes=\"(.*?)\"',data)[1])
+            votos[5] = float(re.search('result level.*? value=\"Unplayable in another language\" numvotes=\"(.*?)\"',data)[1])
+            dependencia_leng = int(max(votos, key=votos.get))
+        else:
+            dependencia_leng = 0
+
+        texto += f"Juego: <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>\n"
+        texto += f"Estado: {estado}\n"
+        texto += f"Precio: \${precio}\n"
+
+        keyboard = [
+            [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_ventas_aprobar')],
+            [InlineKeyboardButton("\U0000274C Rechazar no Argentina", callback_data=f'admin_ventas_rechazar')],
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+        context.chat_data["id_juego_sug_venta"] = id_juego_sug_venta
+        context.chat_data["bgg_id"] = bgg_id
+        context.chat_data["nombre"] = nombre
+        context.chat_data["ranking"] = ranking
+        context.chat_data["dependencia_leng"] = dependencia_leng
+        context.chat_data["usuario"] = usuario_username
+        context.chat_data["usuario_id"] = usuario_id
+        context.chat_data["precio"] = precio
+        context.chat_data["estado"] = estado
+        context.chat_data["ciudad"] = ciudad
+        return ADMIN
+
+######### Procesa sugeridos
+def admin_ventas_r(update: Update, context: CallbackContext) -> int:
+    id_juego_sug_venta = context.chat_data["id_juego_sug_venta"]
+    bgg_id = context.chat_data["bgg_id"]
+    nombre = context.chat_data["nombre"]
+    ranking = context.chat_data["ranking"]
+    dependencia_leng = context.chat_data["dependencia_leng"]
+    usuario_username = context.chat_data["usuario"]
+    usuario_id = context.chat_data["usuario_id"]
+    precio = context.chat_data["precio"]
+    estado = context.chat_data["estado"]
+    ciudad = context.chat_data["ciudad"]
+    query = update.callback_query
+    query.answer()
+    resul = query.data.split("_")[2]
+    conn = conecta_db()
+    cursor = conn.cursor()
+
+    if resul == "rechazar":
+        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a \${precio}, desde {ciudad} no se puede vender. Contactá a @Luis_Olcese por más detalles.')
+    elif resul == "aprobar":
+        nombre = context.chat_data["nombre"]
+        ranking = context.chat_data["ranking"]
+        dependencia_leng = context.chat_data["dependencia_leng"]
+        fecha = datetime.now()
+        nombre_noacentos = strip_accents(nombre)
+        nombre_noacentos = re.sub(r'[^\w\s]','',nombre_noacentos)
+        nombre_noacentos = re.sub(r'\s+',' ',nombre_noacentos)
+        conn.execute ('INSERT INTO ventas (username, usuario_id, precio, estado, ciudad, fecha) VALUES (?,?,?,?,?,?)',(usuario_username, usuario_id, precio, estado, ciudad, fecha))
+        id_venta = cursor.lastrowid
+        conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", 0, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
+        conn.commit()
+        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a \${precio}, desde {ciudad} fue agregado al listado por una semana.')
+    conn.execute ('DELETE FROM juegos_venta_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sug_venta])
+    conn.commit()
+    texto = "Juego procesado"
+    keyboard = [
+        [InlineKeyboardButton("\U00002753 Siguiente venta", callback_data='admin_juegos_vender')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -1548,6 +1723,7 @@ def main() -> PRINCIPAL:
             ],
             ADMIN: [
                 CallbackQueryHandler(admin_juegos_sugeridos,   pattern='^admin_juegos_sugeridos$'),
+                CallbackQueryHandler(admin_ventas_sugeridos,   pattern='^admin_ventas_sugeridos$'),
                 CallbackQueryHandler(admin_sugeridos_r,        pattern='^admin_sugeridos_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
