@@ -407,14 +407,15 @@ def main():
                     if reposicion != "Nuevo":
                         reposicion = "Sí"
 # Dispara alarma reposiciones
-                        if sitio == "BLIB" or sitio == "BLAM":
-                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
-                        else:
-                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
-                        usuarios_ofertas = cursor.fetchall()
-                        for u in usuarios_ofertas:
-                            texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
-                            manda.send_message(u[0], texto)
+                        if precio < constantes.sitio_URL["precio_max_avisos"]:
+                            if sitio == "BLIB" or sitio == "BLAM":
+                                cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
+                            else:
+                                cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
+                            usuarios_ofertas = cursor.fetchall()
+                            for u in usuarios_ofertas:
+                                texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
+                                manda.send_message(u[0], texto)
                     else:
                         reposicion = "No"
 
@@ -431,16 +432,17 @@ def main():
 
 # Dispara alarma ofertas
                 if precio != None and precio <= precio_prom * 0.9:
-                    porc = (precio_prom - precio) / precio_prom * 100
-                    if sitio == "BLIB" or sitio =="BLAM":
-                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
-                    else:
-                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
-                    if oferta == "No":
-                        usuarios_ofertas = cursor.fetchall()
-                        for u in usuarios_ofertas:
-                            texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
-                            manda.send_message(u[0], texto)
+                    if precio < constantes.sitio_URL["precio_max_avisos"]:
+                        porc = (precio_prom - precio) / precio_prom * 100
+                        if sitio == "BLIB" or sitio =="BLAM":
+                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
+                        else:
+                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
+                        if oferta == "No":
+                            usuarios_ofertas = cursor.fetchall()
+                            for u in usuarios_ofertas:
+                                texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
+                                manda.send_message(u[0], texto)
                     oferta = "Sí"
                 else:
                     oferta = "No"

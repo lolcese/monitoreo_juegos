@@ -869,6 +869,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+17/07/2022: Precio máximo para envío de avisos
 15/07/2022: Agregado de precios históricos
 12/07/2022: Posibilidad de anular las alarmas en las notificaciones
 10/07/2022: Cambio de imagen gracias a <a href='https://www.instagram.com/bousantiago/'>Bou</a>
