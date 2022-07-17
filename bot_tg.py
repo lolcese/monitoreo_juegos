@@ -1627,7 +1627,7 @@ def admin_ventas_r(update: Update, context: CallbackContext) -> int:
         nombre_noacentos = re.sub(r'\s+',' ',nombre_noacentos)
         conn.execute ('INSERT INTO ventas (username, usuario_id, precio, estado, ciudad, fecha) VALUES (?,?,?,?,?,?)',(usuario_username, usuario_id, precio, estado, ciudad, fecha))
         id_venta = cursor.lastrowid
-        conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", 0, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
+        conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
         conn.commit()
         manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a \${precio}, desde {ciudad} fue agregado al listado por una semana.')
     conn.execute ('DELETE FROM juegos_venta_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sug_venta])
