@@ -23,7 +23,7 @@ import unicodedata
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS, VENTA = range(11)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS, VENTAS = range(11)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -1340,16 +1340,16 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 
 
 ######### Pide que se ingrese el juego a vender
-def vender_juego_datos(update: Update, context: CallbackContext) -> int:
+def agregar_venta(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if update.message.from_user.username == "":
+    if update.message.from_user.username is None:
         update.message.reply_text(text = 'Para que te puedan contactar, tenés que definir tu <i>username</i> en telegram.', reply_markup=reply_markup)
-        return VENTA
+        return VENTAS
 
     texto = """<b>Ingresá el juego a vender</b>
     
@@ -1368,7 +1368,7 @@ Lanús
 """
 
     query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
-    return VENTA
+    return VENTAS
 
 ######### Guarda el juego a vender
 def vender_juego(update: Update, context: CallbackContext) -> int:
@@ -1379,7 +1379,7 @@ def vender_juego(update: Update, context: CallbackContext) -> int:
 
     if len(dat) != 4:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de BGG, el estado, el precio y tu ciudad.")
-        return VENTA
+        return VENTAS
 
     bgg_url = dat[0]
     estado = dat[1]
@@ -1391,7 +1391,7 @@ def vender_juego(update: Update, context: CallbackContext) -> int:
         bgg_id = busca_id.group(2)
     else:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
-        return VENTA
+        return VENTAS
 
     conn = conecta_db()
     cursor = conn.cursor()
@@ -1625,7 +1625,7 @@ def admin_ventas_r(update: Update, context: CallbackContext) -> int:
         nombre_noacentos = strip_accents(nombre)
         nombre_noacentos = re.sub(r'[^\w\s]','',nombre_noacentos)
         nombre_noacentos = re.sub(r'\s+',' ',nombre_noacentos)
-        conn.execute ('INSERT INTO ventas (username, usuario_id, precio, estado, ciudad, fecha) VALUES (?,?,?,?,?,?)',(usuario_username, usuario_id, precio, estado, ciudad, fecha))
+        conn.execute ('INSERT INTO ventas (username, usuario_id, precio, estado, ciudad, fecha, activo) VALUES (?,?,?,?,?,?,?)',(usuario_username, usuario_id, precio, estado, ciudad, fecha, "Sí"))
         id_venta = cursor.lastrowid
         conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
         conn.commit()
@@ -1721,9 +1721,15 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(histo_juego_info,         pattern='^Histo_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
+            VENTAS: [
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, historicos_nom),
+                CallbackQueryHandler(agregar_venta,            pattern='^agregar_venta$'),
+                CallbackQueryHandler(vender_juego,             pattern='^vender_juego$'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
+            ],
             ADMIN: [
                 CallbackQueryHandler(admin_juegos_sugeridos,   pattern='^admin_juegos_sugeridos$'),
-                CallbackQueryHandler(admin_ventas_sugeridos,   pattern='^admin_ventas_sugeridos$'),
+                CallbackQueryHandler(admin_juegos_vender,      pattern='^admin_juegos_vender$'),
                 CallbackQueryHandler(admin_sugeridos_r,        pattern='^admin_sugeridos_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
