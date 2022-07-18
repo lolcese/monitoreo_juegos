@@ -407,7 +407,7 @@ def main():
                     if reposicion != "Nuevo":
                         reposicion = "Sí"
 # Dispara alarma reposiciones
-                        if precio < constantes.sitio_URL["precio_max_avisos"]:
+                        if precio < constantes.var["precio_max_avisos"]:
                             if sitio == "BLIB" or sitio == "BLAM":
                                 cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
                             else:
@@ -432,7 +432,7 @@ def main():
 
 # Dispara alarma ofertas
                 if precio != None and precio <= precio_prom * 0.9:
-                    if precio < constantes.sitio_URL["precio_max_avisos"]:
+                    if precio < constantes.var["precio_max_avisos"]:
                         porc = (precio_prom - precio) / precio_prom * 100
                         if sitio == "BLIB" or sitio =="BLAM":
                             cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
