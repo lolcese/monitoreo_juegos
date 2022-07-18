@@ -1347,7 +1347,7 @@ def agregar_venta(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if update.message.from_user.username is None:
+    if update.callback_query.username is None:
         update.message.reply_text(text = 'Para que te puedan contactar, tenés que definir tu <i>username</i> en telegram.', reply_markup=reply_markup)
         return VENTAS
 
