@@ -1663,6 +1663,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(ayuda,                    pattern='^ayuda$'),
                 CallbackQueryHandler(consejos,                 pattern='^consejos$'),
                 CallbackQueryHandler(historicos,               pattern='^historicos$'),
+                CallbackQueryHandler(agregar_venta,            pattern='^agregar_venta$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],  
             LISTA_JUEGOS: [
@@ -1678,7 +1679,6 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(juegos_lista_ULT,         pattern='^juegos_lista_ULT$'),
                 CallbackQueryHandler(juegos_baratos,           pattern='^juegos_baratos_'),
                 CallbackQueryHandler(sugerir_juego_datos,      pattern='^sugerir_juego_datos$'),
-                CallbackQueryHandler(agregar_venta,            pattern='^agregar_venta$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, sugerir_juego)
             ],
