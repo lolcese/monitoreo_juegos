@@ -620,11 +620,6 @@ def texto_info_juego(BGG_id):
             else:
                 texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
         ju += 1
-    if min(precio_ju) != 999999:
-        ini = "\U0001F449 "
-    else:
-        ini = "\U000027A1 "
-    texto += ini + '\U000027A1 '.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
 
 # Busca Cazagangas
     url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
@@ -635,9 +630,17 @@ def texto_info_juego(BGG_id):
         if cazagangas["disponible"] == True:
             precio_cazagangas = cazagangas["precio"]
             url_cazagangas = cazagangas["url"]
-            texto += f"\U0001F1Fa\U0001F1F8 <a href='{url_cazagangas}'>Cazagangas</a>: Mejor precio <b>${precio_cazagangas:.0f}</b>\n"
+            texto_ju[ju] += f"\U0001F1E6\U0001F1F7 <a href='{url_cazagangas}'>Cazagangas</a>: <b>${precio_cazagangas:.0f}</b>\n"
+            precio_ju.append(precio_cazagangas)
     except:
         pass
+
+    if min(precio_ju) != 999999:
+        ini = "\U0001F449 "
+    else:
+        ini = "\U000027A1 "
+    texto += ini + '\U000027A1 '.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
+
 
     return [nombre, texto]
 
