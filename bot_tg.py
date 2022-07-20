@@ -643,8 +643,8 @@ def texto_info_juego(BGG_id):
     if min(precio_ju) != 999999:
         ini = "\U0001F449 "
     else:
-        ini = "\U000027A1 "
-    texto += ini + '\U000027A1 '.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
+        ini = ""
+    texto += ini + ''.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
 
 
     return [nombre, texto]
