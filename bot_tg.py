@@ -17,7 +17,6 @@ import html
 import manda
 import hace_grafico
 import urllib.request
-from urllib.request import urlopen
 from decouple import config
 import unicodedata
 import json
@@ -601,10 +600,21 @@ def texto_info_juego(BGG_id):
     for j in juegos:
         nombre_sitio = constantes.sitio_nom[j[2]]
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
+        pais_sitio = constantes.sitio_pais[j[2]]
         precio_actual = j[6]
         precio_mejor = j[7]
         fecha_mejor = j[8]
 
+        if pais_sitio == "AR":
+            band = "\U0001F1E6\U0001F1F7"
+        elif pais_sitio == "US":
+            band = "\U0001F1FA\U0001F1F8"
+        elif pais_sitio == "UK":
+            band = "\U0001F1EC\U0001F1E7"
+        elif pais_sitio == "ES":
+            band = "\U0001F1EA\U0001F1F8"
+        elif pais_sitio == "DE":
+            band = "\U0001F1E9\U0001F1EA"
         if precio_actual == None:
             precio_ju.append(999999)
             texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, ")
@@ -622,18 +632,13 @@ def texto_info_juego(BGG_id):
         ju += 1
 
 # Busca Cazagangas
-    url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
-    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
-    try:
-        data = urllib.request.urlopen(req)
-        cazagangas = json.loads(data.read())
-        if cazagangas["disponible"] == True:
-            precio_cazagangas = cazagangas["precio"]
-            url_cazagangas = cazagangas["url"]
-            texto_ju[ju] += f"\U0001F1E6\U0001F1F7 <a href='{url_cazagangas}'>Cazagangas</a>: <b>${precio_cazagangas:.0f}</b>\n"
-            precio_ju.append(precio_cazagangas)
-    except:
-        pass
+    # url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
+    # req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
+    # data = urllib.request.urlopen(req)
+    # cazagangas = json.loads(data.read())
+    # if cazagangas["disponible"] == True:
+    #     texto_ju.append(f"\U0001F1E6\U0001F1F7 <a href='{cazagangas['url']}'>Cazagangas</a>: <b>${cazagangas['precio']:.0f}</b>\n")
+    #     precio_ju.append(cazagangas["precio"])
 
     if min(precio_ju) != 999999:
         ini = "\U0001F449 "

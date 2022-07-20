@@ -14,12 +14,14 @@ cursor = conn.cursor()
 
 sitio_nom = {}
 sitio_URL = {}
-cursor.execute('SELECT sitio_ID, nombre_sitio, URL_base FROM sitios')
+sitio_pais = {}
+cursor.execute('SELECT sitio_ID, nombre_sitio, URL_base, pais FROM sitios')
 variables = cursor.fetchall()
 for variable in variables:
-    sitio_ID, nombre_sitio, URL_base = variable
+    sitio_ID, nombre_sitio, URL_base, pais = variable
     sitio_nom[sitio_ID] = nombre_sitio
     sitio_URL[sitio_ID] = URL_base
+    sitio_pais[sitio_ID] = pais
 
 var = {}
 cursor.execute('SELECT variable, valor, descripcion FROM variables')
