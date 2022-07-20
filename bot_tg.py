@@ -17,8 +17,10 @@ import html
 import manda
 import hace_grafico
 import urllib.request
+from urllib.request import urlopen
 from decouple import config
 import unicodedata
+import json
 
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
@@ -623,6 +625,19 @@ def texto_info_juego(BGG_id):
     else:
         ini = "\U000027A1 "
     texto += ini + '\U000027A1 '.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
+
+# Busca Cazagangas
+    url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
+    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
+    try:
+        data = urllib.request.urlopen(req)
+        cazagangas = json.loads(data.read())
+        if cazagangas["disponible"] == True:
+            precio_cazagangas = cazagangas["precio"]
+            url_cazagangas = cazagangas["url"]
+            texto += f"\n\U0001F1E6 <a href='{url_cazagangas}'>Cazagangas</a>: Mejor precio <b>${precio_cazagangas:.0f}</b>"
+    except:
+        pass
 
     return [nombre, texto]
 
