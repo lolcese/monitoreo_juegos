@@ -431,7 +431,7 @@ def main():
                     reposicion = "No"
 
 # Dispara aviso ofertas
-                if precio <= precio_prom * 0.9:
+                if precio != None and precio <= precio_prom * 0.9:
                     if precio < constantes.var["precio_max_avisos"]:
                         porc = (precio_prom - precio) / precio_prom * 100
                         if sitio == "BLIB" or sitio =="BLAM":
