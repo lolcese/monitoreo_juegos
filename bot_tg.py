@@ -619,7 +619,7 @@ def texto_info_juego(BGG_id):
             precio_ju.append(999999)
             texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, ")
             if precio_mejor == None:
-                texto_ju[ju] += "y no lo estuvo en los últimos 15 días.\n"
+                texto_ju[ju] += "ni en los últimos 15 días.\n"
             else:
                 texto_ju[ju] += f"pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n"
         else:
@@ -628,17 +628,17 @@ def texto_info_juego(BGG_id):
             if precio_mejor == precio_actual:
                 texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
             else:
-                texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
+                texto_ju[ju] += f"El mínimo para los últimos 15 días fue ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
         ju += 1
 
 # Busca Cazagangas
-    # url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
-    # req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
-    # data = urllib.request.urlopen(req)
-    # cazagangas = json.loads(data.read())
-    # if cazagangas["disponible"] == True:
-    #     texto_ju.append(f"\U0001F1E6\U0001F1F7 <a href='{cazagangas['url']}'>Cazagangas</a>: <b>${cazagangas['precio']:.0f}</b>\n")
-    #     precio_ju.append(cazagangas["precio"])
+    url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
+    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
+    data = urllib.request.urlopen(req)
+    cazagangas = json.loads(data.read())
+    if cazagangas["disponible"] == True:
+        texto_ju.append(f"\U0001F1E6\U0001F1F7 <a href='{cazagangas['url']}'>Cazagangas</a>: <b>${cazagangas['precio']:.0f}</b>\n")
+        precio_ju.append(cazagangas["precio"])
 
     if min(precio_ju) != 999999:
         ini = "\U0001F449 "
@@ -838,7 +838,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Ayuda</b>
     
-@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton y Miniaturemarket) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
+@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton y Miniaturemarket, más la referencia de Cazagangas) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
     
 Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
     
@@ -892,6 +892,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+20/07/2022: Agregado Cazagangas
 17/07/2022: Precio máximo para envío de avisos
 15/07/2022: Agregado de precios históricos
 12/07/2022: Posibilidad de anular las alarmas en las notificaciones
