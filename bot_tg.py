@@ -635,7 +635,7 @@ def texto_info_juego(BGG_id):
         if cazagangas["disponible"] == True:
             precio_cazagangas = cazagangas["precio"]
             url_cazagangas = cazagangas["url"]
-            texto += f"\n\U0001F1E6 <a href='{url_cazagangas}'>Cazagangas</a>: Mejor precio <b>${precio_cazagangas:.0f}</b>"
+            texto += f"\U0001F1F7 <a href='{url_cazagangas}'>Cazagangas</a>: Mejor precio <b>${precio_cazagangas:.0f}</b>\n"
     except:
         pass
 
