@@ -618,9 +618,9 @@ def texto_info_juego(BGG_id):
         if precio_actual == None:
             precio_ju.append(999999)
             if precio_mejor == None:
-                texto_ju[ju].append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: No estuvo en stock en los últimos 15 días.")
+                texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: No estuvo en stock en los últimos 15 días.\n")
             else:
-                texto_ju[ju].append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} salía ${precio_mejor:.0f}.\n")
+                texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n")
         else:
             precio_ju.append(precio_actual)
             texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
