@@ -617,11 +617,10 @@ def texto_info_juego(BGG_id):
             band = "\U0001F1E9\U0001F1EA"
         if precio_actual == None:
             precio_ju.append(999999)
-            texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, ")
             if precio_mejor == None:
-                texto_ju[ju] += "ni en los últimos 15 días.\n"
+                texto_ju[ju].append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: No estuvo en stock en los últimos 15 días.")
             else:
-                texto_ju[ju] += f"pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n"
+                texto_ju[ju].append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} salía ${precio_mejor:.0f}.\n")
         else:
             precio_ju.append(precio_actual)
             texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
@@ -838,7 +837,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Ayuda</b>
     
-@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton y Miniaturemarket, más la referencia de Cazagangas) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
+@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton y Miniaturemarket, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
     
 Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
     
