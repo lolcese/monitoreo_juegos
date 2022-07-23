@@ -351,6 +351,34 @@ def lee_pagina_mm(ju_id, precio_envio):
 
     return precio_final_ad
 
+######### Lee información de Casa del Libro
+def lee_pagina_cdl(ju_id, precio_envio):
+    url = "https://www.casadellibro.com/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
+
+    precio_eur = re.search('\"Price\":\"(.*?)\"',text)
+    stock = '\"availability\":\"InStock\"' in text
+    if not precio_eur or stock == 1:
+        return None
+
+    precio_eur = float(precio_eur[1])
+    # if precio_eur > constantes.var['limite_descuento_planeton']:
+    #     precio_eur -= constantes.var['descuento_montoalto_planeton']
+    precio_eur /= constantes.var['descuento_iva_CDL']
+    precio_eur += precio_envio
+    precio_pesos = precio_eur * constantes.var['euro'] 
+    # precio_dol = precio_pesos / constantes.var['dolar']
+
+    # imp_aduana = 0
+    # if precio_dol > 50:
+    #     imp_aduana = (precio_dol - 50) * 0.5
+
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
+
+    return precio_final_ad
+
 ######### Programa principal
 def main():
     conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -391,6 +419,8 @@ def main():
                 precio = lee_pagina_planeton(sitio_id, precio_envio)
             elif sitio == "MM":
                 precio = lee_pagina_mm(sitio_id, precio_envio)
+            elif sitio == "CDL":
+                precio = lee_pagina_cdl(sitio_id, precio_envio)
 
             if precio is not None:
                 precio = round(precio)

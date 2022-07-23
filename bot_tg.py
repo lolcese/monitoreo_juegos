@@ -176,31 +176,32 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
     query.answer()
     keyboard = [
         [
-            InlineKeyboardButton("\U0001F4D5 Buscalibre", callback_data='juegos_todos_sitio_BLIB'),
-            InlineKeyboardButton("\U0001F4D5 Buscalibre Amazon", callback_data='juegos_todos_sitio_BLAM')
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre", callback_data='juegos_todos_sitio_BLIB'),
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre Amazon", callback_data='juegos_todos_sitio_BLAM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Amazon", callback_data='juegos_todos_sitio_TMAM'),
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Walmart", callback_data='juegos_todos_sitio_TMWM')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Amazon", callback_data='juegos_todos_sitio_TMAM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Walmart", callback_data='juegos_todos_sitio_TMWM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_todos_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_todos_sitio_grooves')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_todos_sitio_TMEB'),
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Bookdepository", callback_data='juegos_todos_sitio_grooves')
         ],
         [
-            InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_todos_sitio_BOOK'),
-            InlineKeyboardButton("\U0001F4D2 365games", callback_data='juegos_todos_sitio_365')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_todos_sitio_BOOK'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 365games", callback_data='juegos_todos_sitio_365')
         ],
         [
-            InlineKeyboardButton("\U0001F4D2 shop4es", callback_data='juegos_todos_sitio_shop4es'),
-            InlineKeyboardButton("\U0001F4D2 shop4world", callback_data='juegos_todos_sitio_shop4world')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4es", callback_data='juegos_todos_sitio_shop4es'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4world", callback_data='juegos_todos_sitio_shop4world')
         ],
         [
-            InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_todos_sitio_deep'),
-            InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_todos_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_todos_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Casa del Libro", callback_data='juegos_todos_sitio_CDL'),
         ],
         [
-            InlineKeyboardButton("\U000024C2 Miniature Market", callback_data='juegos_todos_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_todos_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_todos_sitio_deep'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -249,31 +250,32 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
     query.answer()
     keyboard = [
         [
-            InlineKeyboardButton("\U0001F4D5 Buscalibre", callback_data='juegos_stockalfab_sitio_BLIB'),
-            InlineKeyboardButton("\U0001F4D5 Buscalibre Amazon", callback_data='juegos_stockalfab_sitio_BLAM')
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre", callback_data='juegos_stockalfab_sitio_BLIB'),
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre Amazon", callback_data='juegos_stockalfab_sitio_BLAM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Amazon", callback_data='juegos_stockalfab_sitio_TMAM'),
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Walmart", callback_data='juegos_stockalfab_sitio_TMWM')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Amazon", callback_data='juegos_stockalfab_sitio_TMAM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Walmart", callback_data='juegos_stockalfab_sitio_TMWM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_stockalfab_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockalfab_sitio_grooves')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_stockalfab_sitio_TMEB'),
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Bookdepository", callback_data='juegos_stockalfab_sitio_grooves')
         ],
         [
-            InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_stockalfab_sitio_BOOK'),
-            InlineKeyboardButton("\U0001F4D2 365games", callback_data='juegos_stockalfab_sitio_365')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockalfab_sitio_BOOK'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 365games", callback_data='juegos_stockalfab_sitio_365')
         ],
         [
-            InlineKeyboardButton("\U0001F4D2 shop4es", callback_data='juegos_stockalfab_sitio_shop4es'),
-            InlineKeyboardButton("\U0001F4D2 shop4world", callback_data='juegos_stockalfab_sitio_shop4world')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4es", callback_data='juegos_stockalfab_sitio_shop4es'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4world", callback_data='juegos_stockalfab_sitio_shop4world')
         ],
         [
-            InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_stockalfab_sitio_deep'),
-            InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_stockalfab_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_stockalfab_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Casa del Libro", callback_data='juegos_stockalfab_sitio_CDL'),
         ],
         [
-            InlineKeyboardButton("\U000024C2 Miniature Market", callback_data='juegos_stockalfab_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockalfab_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockalfab_sitio_deep'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -318,31 +320,32 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
     query.answer()
     keyboard = [
         [
-            InlineKeyboardButton("\U0001F4D5 Buscalibre", callback_data='juegos_stockprecio_sitio_BLIB'),
-            InlineKeyboardButton("\U0001F4D5 Buscalibre Amazon", callback_data='juegos_stockprecio_sitio_BLAM')
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre", callback_data='juegos_stockprecio_sitio_BLIB'),
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre Amazon", callback_data='juegos_stockprecio_sitio_BLAM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Amazon", callback_data='juegos_stockprecio_sitio_TMAM'),
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Walmart", callback_data='juegos_stockprecio_sitio_TMWM')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Amazon", callback_data='juegos_stockprecio_sitio_TMAM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Walmart", callback_data='juegos_stockprecio_sitio_TMWM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_stockprecio_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockprecio_sitio_grooves')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_stockprecio_sitio_TMEB'),
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Bookdepository", callback_data='juegos_stockprecio_sitio_grooves')
         ],
         [
-            InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_stockprecio_sitio_BOOK'),
-            InlineKeyboardButton("\U0001F4D2 365games", callback_data='juegos_stockprecio_sitio_365')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockprecio_sitio_BOOK'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 365games", callback_data='juegos_stockprecio_sitio_365')
         ],
         [
-            InlineKeyboardButton("\U0001F4D2 shop4es", callback_data='juegos_stockprecio_sitio_shop4es'),
-            InlineKeyboardButton("\U0001F4D2 shop4world", callback_data='juegos_stockprecio_sitio_shop4world')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4es", callback_data='juegos_stockprecio_sitio_shop4es'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4world", callback_data='juegos_stockprecio_sitio_shop4world')
         ],
         [
-            InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
-            InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_stockprecio_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_stockprecio_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Casa del Libro", callback_data='juegos_stockprecio_sitio_CDL'),
         ],
         [
-            InlineKeyboardButton("\U000024C2 Miniature Market", callback_data='juegos_stockprecio_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockprecio_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -835,11 +838,12 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
 def ayuda(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = """<b>Ayuda</b>
+    texto = """
+<b>Ayuda</b>
     
-@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton y Miniaturemarket, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
+@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton, Casa del Libro y Miniaturemarket, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
     
-Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
+Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 75% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
     
 Para ver la información de un juego en particular, elegí la opción <i>Ver un juego y poner/sacar alarmas</i> y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio, o borrarla si lo querés.
     
@@ -854,7 +858,8 @@ Si un menú no responde, escribí nuevamente /start.
 <b>@matiliza armó un tutorial sobre todas las funciones del bot, miralo <a href='https://www.dropbox.com/s/15abm8a78x1jcwf/tuto-bot.mov?dl=0'>acá.</a></b>
 <b>La imagen del bot es cortesía del maravilloso <a href='https://www.instagram.com/bousantiago/'>Bou</a>.</b>
 
-Cualquier duda, mandame un mensaje a @Luis_Olcese."""
+Cualquier duda, mandame un mensaje a @Luis_Olcese.
+"""
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -869,14 +874,16 @@ def consejos(update: Update, context: CallbackContext) -> int:
     texto = """<b>Consejos</b>
     
 Todos los precios que se muestran acá son finales, considerando los impuestos del 35%, 30% y aduana.
-\U000027A1 <a href='https://www.buscalibre.com.ar/'>Buscalibre</a>: Los precios en la página son finales, y los juegos llegan directamente a tu casa sin trámite de aduana. Podés pagar en Ahora 3.
-\U000027A1 <a href='https://www.tiendamia.com/'>Tiendamía</a>: Siempre hay cupones que se pueden usar para bajar el precio. Buscalos en los mensajes fijados de https://t.me/comprasjuegosexterior.
-\U000027A1 <a href='https://www.bookdepository.com/'>Bookdepository</a>: Si sacás tarjeta de débito de Mercadopago y pagás con eso, no te cobra el 65% de impuestos.
-\U000027A1 <a href='https://www.365games.co.uk/'>365games</a> / <a href='https://www.shop4es.com/'>shop4es</a> / <a href='https://www.shop4world.com/'>shop4world</a>: A algunos juegos los mandan por courier, por lo que tenés que pagar un extra al recibirlos.
-\U000027A1 <a href='http://grooves.land/'>Grooves.land</a>: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.
-\U000027A1 <a href='http://www.planeton.com/'>Planeton</a>: Los juegos son en español, pero los precios son aproximados (por el envío). Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
-\U000027A1 <a href='http://www.miniaturemarket.com/'>Miniature Market</a>: Se toma el envío más barato. Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
-\U000027A1 <a href='https://www.deepdiscount.com/'>Deepdiscount</a>: El envío es caro, pero a veces aparecen ofertas."""
+\U0001F1E6\U0001F1F7 <a href='https://www.buscalibre.com.ar/'>Buscalibre</a>: Los precios en la página son finales, y los juegos llegan directamente a tu casa sin trámite de aduana. Podés pagar en Ahora 3.
+\U0001F1FA\U0001F1F8 <a href='https://www.tiendamia.com/'>Tiendamía</a>: Siempre hay cupones que se pueden usar para bajar el precio. Buscalos en los mensajes fijados de https://t.me/comprasjuegosexterior.
+\U0001F1EC\U0001F1E7 <a href='https://www.bookdepository.com/'>Bookdepository</a>: Si sacás tarjeta de débito de Mercadopago y pagás con eso, no te cobra el 75% de impuestos.
+\U0001F1EC\U0001F1E7 <a href='https://www.365games.co.uk/'>365games</a> / <a href='https://www.shop4es.com/'>shop4es</a> / <a href='https://www.shop4world.com/'>shop4world</a>: A algunos juegos los mandan por courier, por lo que tenés que pagar un extra al recibirlos.
+\U0001F1E9\U0001F1EA <a href='http://grooves.land/'>Grooves.land</a>: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.
+\U0001F1EA\U0001F1F8 <a href='http://www.planeton.com/'>Planeton</a>: Los juegos son en español, pero los precios son aproximados (por el envío). Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
+\U0001F1EA\U0001F1F8 <a href='https://www.casadellibro.com/'>Casa del Libro</a>: Los juegos son en español, mandan por courier, hay que tener cuidado que el máximo son 5 por año.
+\U0001F1FA\U0001F1F8 <a href='http://www.miniaturemarket.com/'>Miniature Market</a>: Se toma el envío más barato. Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
+\U0001F1FA\U0001F1F8 <a href='https://www.deepdiscount.com/'>Deepdiscount</a>: El envío es caro, pero a veces aparecen ofertas.
+"""
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -997,7 +1004,7 @@ def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
 
 Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton y Miniature Market).
 En el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).
-<b>En el caso que agregues un juego de Planeton o Miniature Market, poné también el costo (en euros) del envío a Argentina que aparece cuando lo agregás al carrito.</b>
+<b>En el caso que agregues un juego de Planeton, Casa del Libro o Miniature Market, poné también el costo (en euros / dólares) del envío a Argentina que aparece cuando lo agregás al carrito.</b>
 
 Ejemplos:
 <i>Deepdiscount</i>
@@ -1005,7 +1012,7 @@ https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
 https://www.deepdiscount.com/splendor-marvel/3558380055334
 2.43
 
-<i>Planeton / Miniature Market</i>
+<i>Planeton / Casa del Libro / Miniature Market</i>
 https://boardgamegeek.com/boardgame/266192/wingspan
 https://www.planetongames.com/es/wingspan-p-8175.html
 34.85
@@ -1038,8 +1045,8 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
         return LISTA_JUEGOS
 
-    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves|planeton|miniaturemarket", url):
-        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land o Planeton")
+    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves|planeton|casadellibro|miniaturemarket", url):
+        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton, MiniatureMarket o Casa del Libro.")
         return LISTA_JUEGOS
 
     sitio_nom, sitio_id = extrae_sitio(url)
@@ -1059,8 +1066,8 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")
         return LISTA_JUEGOS
 
-    if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url)):
-        update.message.reply_text("Cuando agregás un juego de Planeton, tenés que poner el monto del envío.")
+    if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url)):
+        update.message.reply_text("Cuando agregás un juego de ese sitio, tenés que poner el monto del envío.")
         return LISTA_JUEGOS
 
     peso = None
@@ -1068,7 +1075,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
     if len(dat) > 2 and re.search("deepdiscount", url):
         peso = dat[2]
-    if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url)):
+    if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url)):
         precio_envio = dat[2]
 
     conn = conecta_db()
@@ -1167,6 +1174,12 @@ def extrae_sitio(sitio_url):
     sitio_id = re.search('miniaturemarket\.com\/(.*?html)',sitio_url)
     if sitio_id:
         sitio_nom = "MM"
+        sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
+
+    sitio_id = re.search('casadellibro\.com\/(.*?)$',sitio_url)
+    if sitio_id:
+        sitio_nom = "CDL"
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
