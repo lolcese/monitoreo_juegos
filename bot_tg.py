@@ -1407,7 +1407,7 @@ def agregar_venta(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     if username is None:
-        update.message.reply_text(text = 'Para que te puedan contactar, tenés que definir tu <i>username</i> en telegram.', reply_markup=reply_markup)
+        query.edit_message_text(text = 'Para que te puedan contactar, tenés que definir tu <i>username</i> en telegram.', reply_markup=reply_markup)
         return VENTAS
 
     texto = """<b>Ingresá el juego a vender</b>
