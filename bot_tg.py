@@ -898,6 +898,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+23/07/2022: Agregado Casa del Libro
 20/07/2022: Agregado Cazagangas
 17/07/2022: Precio máximo para envío de avisos
 15/07/2022: Agregado de precios históricos
@@ -905,8 +906,6 @@ def novedades(update: Update, context: CallbackContext) -> int:
 10/07/2022: Cambio de imagen gracias a <a href='https://www.instagram.com/bousantiago/'>Bou</a>
 10/07/2022: Cambio en el sistema de ofertas y reposiciones
 10/07/2022: Se pueden buscar los nombres sin acentos
-03/07/2022: Cambio de server
-02/07/2022: Campaña para cambio de server
 """
 
     keyboard = [
