@@ -37,6 +37,9 @@ def baja_pagina(url):
         return "Error"
     except URLError as e:
         return "Error"
+    except TimeoutError as e:
+        print(f"Timeout bajando {url}")
+        return "Error"
 
     if data.headers.get_content_charset() is None:
         encoding='utf-8'
