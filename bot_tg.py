@@ -1399,7 +1399,7 @@ def vender_juego(update: Update, context: CallbackContext) -> int:
 
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO juegos_venta_sugeridos (usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad) VALUES (?,?,?,?,?,?,?)',[usuario_nom, usuario_id, username, bgg_id, estado, precio, ciudad])
+    cursor.execute('INSERT INTO venta_sugeridos (usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad) VALUES (?,?,?,?,?,?,?)',[usuario_nom, usuario_id, username, bgg_id, estado, precio, ciudad])
     conn.commit()
     texto = f"{usuario_nom} quiere vender {bgg_url}"
     manda.send_message(id_aviso, texto)
@@ -1508,7 +1508,7 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     estado = query.data.split("_")[3]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio FROM juegos_sugeridos WHERE id_juego_sugerido = ?', [sug_id])
+    cursor.execute('SELECT id_venta_sugerido, usuario_nom, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio FROM venta_sugeridos WHERE id_juego_sugerido = ?', [sug_id])
     juegos = cursor.fetchone()
     _, _, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio = juegos
 
@@ -1546,7 +1546,7 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
     query.answer()
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego_sug_venta, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad FROM juegos_venta_sugeridos')
+    cursor.execute('SELECT id_juego_sug_venta, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad FROM venta_sugeridos')
     juegos = cursor.fetchone()
     if juegos is None:
         texto = "No hay juegos a vender"
@@ -1634,7 +1634,7 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
         conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
         conn.commit()
         manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a \${precio}, desde {ciudad} fue agregado al listado por una semana.')
-    conn.execute ('DELETE FROM juegos_venta_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sug_venta])
+    conn.execute ('DELETE FROM venta_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sug_venta])
     conn.commit()
     texto = "Juego procesado"
     keyboard = [

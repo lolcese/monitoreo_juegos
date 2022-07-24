@@ -97,7 +97,7 @@ CREATE TABLE colaboradores (
                             usuario_tg TEXT,
                             mostrar TEXT
                             );
-CREATE TABLE juegos_venta_sugeridos (
+CREATE TABLE venta_sugeridos (
                             id_venta_sugerido INTEGER PRIMARY KEY,
                             usuario_nom TEXT NOT NULL,
                             usuario_id INTEGER NOT NULL,
