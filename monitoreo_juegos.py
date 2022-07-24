@@ -32,7 +32,7 @@ updater = Updater(bot_token)
 def baja_pagina(url):
     req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
     try:
-        data = urllib.request.urlopen(req, timeout = 10)
+        data = urllib.request.urlopen(req)
     except HTTPError as e:
         return "Error"
     except URLError as e:
