@@ -364,7 +364,7 @@ def lee_pagina_cdl(ju_id, precio_envio):
         return None
 
     precio_eur = re.search('\"Price\":\"(.*?)€?\"',text)
-    stock = '\"availability\":\"InStock\"' in text
+    stock = '"availability":"OutOfStock"' in text
     if not precio_eur or stock == 1:
         return None
 
