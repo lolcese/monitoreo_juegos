@@ -1345,12 +1345,13 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 ######### Pide que se ingrese el juego a vender
 def agregar_venta(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
+    username = context.chat_data["username"]
     query.answer()
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if query.username is None:
+    if username is None:
         update.message.reply_text(text = 'Para que te puedan contactar, tenés que definir tu <i>username</i> en telegram.', reply_markup=reply_markup)
         return VENTAS
 
@@ -1377,7 +1378,7 @@ Lanús
 def vender_juego(update: Update, context: CallbackContext) -> int:
     usuario_nom = update.message.from_user.full_name
     usuario_id = update.message.from_user.id
-    username = update.message.from_user.username
+    username = context.chat_data["username"]
     dat = update.message.text.split("\n")
 
     if len(dat) != 4:
