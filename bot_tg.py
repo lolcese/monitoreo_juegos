@@ -91,7 +91,7 @@ def inicio(update: Update, context: CallbackContext) -> int:
     usuario = query.from_user
     nombre = usuario.full_name
     usuario_id = usuario.id
-    context.chat_data["username"] = usuario.username
+    # context.chat_data["username"] = usuario.username
     fecha = datetime.now()
     conn = conecta_db()
     cursor = conn.cursor()
@@ -112,7 +112,7 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     usuario_id = update.callback_query.from_user.id
-    context.chat_data["username"] = update.callback_query.from_user.id.username
+    # context.chat_data["username"] = update.callback_query.from_user.id.username
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
