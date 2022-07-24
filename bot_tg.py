@@ -1727,8 +1727,8 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             VENTAS: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, historicos_nom),
-                CallbackQueryHandler(vender_juego,             pattern='^vender_juego$'),
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, vender_juego),
+                # CallbackQueryHandler(vender_juego,             pattern='^vender_juego$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
