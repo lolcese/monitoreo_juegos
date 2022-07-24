@@ -1546,7 +1546,7 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
     query.answer()
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego_sug_venta, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad, FROM juegos_venta_sugeridos')
+    cursor.execute('SELECT id_juego_sug_venta, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad FROM juegos_venta_sugeridos')
     juegos = cursor.fetchone()
     if juegos is None:
         texto = "No hay juegos a vender"
@@ -1584,7 +1584,7 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
 
         keyboard = [
             [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_ventas_aprobar')],
-            [InlineKeyboardButton("\U0000274C Rechazar no Argentina", callback_data=f'admin_ventas_rechazar')],
+            [InlineKeyboardButton("\U0000274C Rechazar", callback_data=f'admin_ventas_rechazar')],
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -1602,7 +1602,7 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
         return ADMIN
 
 ######### Procesa sugeridos
-def admin_ventas_r(update: Update, context: CallbackContext) -> int:
+def admin_vender_r(update: Update, context: CallbackContext) -> int:
     id_juego_sug_venta = context.chat_data["id_juego_sug_venta"]
     bgg_id = context.chat_data["bgg_id"]
     nombre = context.chat_data["nombre"]
@@ -1728,13 +1728,13 @@ def main() -> PRINCIPAL:
             ],
             VENTAS: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, vender_juego),
-                # CallbackQueryHandler(vender_juego,             pattern='^vender_juego$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
                 CallbackQueryHandler(admin_juegos_sugeridos,   pattern='^admin_juegos_sugeridos$'),
-                CallbackQueryHandler(admin_juegos_vender,      pattern='^admin_juegos_vender$'),
                 CallbackQueryHandler(admin_sugeridos_r,        pattern='^admin_sugeridos_'),
+                CallbackQueryHandler(admin_juegos_vender,      pattern='^admin_juegos_vender$'),
+                CallbackQueryHandler(admin_vender_r,           pattern='^admin_vender_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },
