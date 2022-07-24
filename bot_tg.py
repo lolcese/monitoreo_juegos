@@ -204,6 +204,9 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_todos_sitio_deep'),
         ],
         [
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas locales", callback_data='juegos_todos_sitio_ventas'),
+        ],
+        [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
@@ -278,6 +281,9 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockalfab_sitio_deep'),
         ],
         [
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas locales", callback_data='juegos_stockalfab_sitio_ventas'),
+        ],
+        [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
@@ -348,6 +354,9 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
         ],
         [
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas locales", callback_data='juegos_stockprecio_sitio_ventas'),
+        ],
+        [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
@@ -356,7 +365,13 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
     id = query.edit_message_text(text = "Elegí los juegos a listar", reply_markup=reply_markup)
     context.chat_data["mensaje_id"] = id.message_id
     return LISTA_JUEGOS
-   
+
+
+####################################################
+# Arrancar acá
+####################################################
+
+
 ######### Lista de juegos disponibles de un sitio en orden de precios
 def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
