@@ -1385,10 +1385,10 @@ def vender_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de BGG, el estado, el precio y tu ciudad.")
         return VENTAS
 
-    bgg_url = dat[0]
-    estado = dat[1]
-    precio = dat[2]
-    ciudad = dat[3]
+    bgg_url = dat[0].strip()
+    estado = dat[1].strip()
+    precio = dat[2].strip()
+    ciudad = dat[3].strip()
 
     busca_id = re.search('boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)', bgg_url)
     if busca_id:
@@ -1556,7 +1556,7 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
         reply_markup = InlineKeyboardMarkup(keyboard)
         query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     else:
-        id_juego_sug_venta, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad = juegos
+        id_venta_sugerido, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad = juegos
         texto = f"Usuario: {usuario_nom} ({usuario_username})\n"
         url = f'https://api.geekdo.com/xmlapi2/thing?id={bgg_id}&stats=1'
         req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
@@ -1590,7 +1590,7 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
-        context.chat_data["id_juego_sug_venta"] = id_juego_sug_venta
+        context.chat_data["id_venta_sugerido"] = id_venta_sugerido
         context.chat_data["bgg_id"] = bgg_id
         context.chat_data["nombre"] = nombre
         context.chat_data["ranking"] = ranking
@@ -1604,7 +1604,7 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
 
 ######### Procesa sugeridos
 def admin_vender_r(update: Update, context: CallbackContext) -> int:
-    id_juego_sug_venta = context.chat_data["id_juego_sug_venta"]
+    id_venta_sugerido = context.chat_data["id_venta_sugerido"]
     bgg_id = context.chat_data["bgg_id"]
     nombre = context.chat_data["nombre"]
     ranking = context.chat_data["ranking"]
@@ -1637,7 +1637,7 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
         conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
         conn.commit()
         manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} fue agregado al listado por una semana.')
-    conn.execute ('DELETE FROM venta_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sug_venta])
+    conn.execute ('DELETE FROM venta_sugeridos WHERE id_venta_sugerido = ?',[id_venta_sugerido])
     conn.commit()
     texto = "Juego procesado"
     keyboard = [
