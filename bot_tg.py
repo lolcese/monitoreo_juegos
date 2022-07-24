@@ -1546,7 +1546,7 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
     query.answer()
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego_sug_venta, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad FROM venta_sugeridos')
+    cursor.execute('SELECT id_venta_sugerido, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad FROM venta_sugeridos')
     juegos = cursor.fetchone()
     if juegos is None:
         texto = "No hay juegos a vender"
