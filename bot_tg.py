@@ -225,17 +225,28 @@ def juegos_todos_sitio(update: Update, context: CallbackContext) -> int:
     query.answer()
     usuario_id = update.callback_query.from_user.id
     sitio = query.data.split("_")[3]
-    texto = f"<b>Juegos en {constantes.sitio_nom[sitio]}</b>\n\n"
-    conn = conecta_db()
-    cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
-    juegos = cursor.fetchall()
-    for j in juegos:
-        nombre, sitio_id, precio_actual = j
-        if precio_actual == None:
-            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (No disponible)\n"
-        else:
-            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
+    if sitio == "ventas":
+        texto = f"<b>Juegos en venta (Contactá directamente al usuario)</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT BGG_id, nombre, ventas.username, ventas.precio, ventas.estado, ventas.ciudad FROM juegos INNER JOIN ventas on ventas.id_venta = juegos.sitio_ID order by nombre')
+        juegos = cursor.fetchall()
+        for j in juegos:
+            bgg_id, nombre, username, precio, estado, ciudad = j
+            precio = int(precio)
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>: ${precio:.0f} ({estado}) - @{username} ({ciudad})\n"
+    else:
+        texto = f"<b>Juegos en {constantes.sitio_nom[sitio]}</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
+        juegos = cursor.fetchall()
+        for j in juegos:
+            nombre, sitio_id, precio_actual = j
+            if precio_actual == None:
+                texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (No disponible)\n"
+            else:
+                texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_todos'),
@@ -302,14 +313,25 @@ def juegos_stockalfab_sitio(update: Update, context: CallbackContext) -> int:
     query.answer()
     usuario_id = update.callback_query.from_user.id
     sitio = query.data.split("_")[3]
-    texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
-    conn = conecta_db()
-    cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY nombre',[sitio])
-    juegos = cursor.fetchall()
-    for j in juegos:
-        nombre, sitio_id, precio_actual = j
-        texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
+    if sitio == "ventas":
+        texto = f"<b>Juegos en venta (Contactá directamente al usuario)</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT BGG_id, nombre, ventas.username, ventas.precio, ventas.estado, ventas.ciudad FROM juegos INNER JOIN ventas on ventas.id_venta = juegos.sitio_ID order by nombre')
+        juegos = cursor.fetchall()
+        for j in juegos:
+            bgg_id, nombre, username, precio, estado, ciudad = j
+            precio = int(precio)
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>: ${precio:.0f} ({estado}) - @{username} ({ciudad})\n"
+    else:
+        texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY nombre',[sitio])
+        juegos = cursor.fetchall()
+        for j in juegos:
+            nombre, sitio_id, precio_actual = j
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_stockalfab'),
@@ -376,13 +398,14 @@ def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
     usuario_id = update.callback_query.from_user.id
     sitio = query.data.split("_")[3]
     if sitio == "ventas":
-        texto = f"<b>Juegos en venta</b>\n\n"
+        texto = f"<b>Juegos en venta (Contactá directamente al usuario)</b>\n\n"
         conn = conecta_db()
         cursor = conn.cursor()
         cursor.execute('SELECT BGG_id, nombre, ventas.username, ventas.precio, ventas.estado, ventas.ciudad FROM juegos INNER JOIN ventas on ventas.id_venta = juegos.sitio_ID order by ventas.precio')
         juegos = cursor.fetchall()
         for j in juegos:
             bgg_id, nombre, username, precio, estado, ciudad = j
+            precio = int(precio)
             texto += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>: ${precio:.0f} ({estado}) - @{username} ({ciudad})\n"
     else:
         texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
@@ -623,27 +646,37 @@ def texto_info_juego(BGG_id):
     precio_ju = []
     ju = 0
     for j in juegos:
-        nombre_sitio = constantes.sitio_nom[j[2]]
-        url_sitio = constantes.sitio_URL[j[2]] + j[3]
-        precio_actual = j[6]
-        precio_mejor = j[7]
-        fecha_mejor = j[8]
-
-        if precio_actual == None:
-            precio_ju.append(999999)
-            texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, ")
-            if precio_mejor == None:
-                texto_ju[ju] += "y no lo estuvo en los últimos 15 días.\n"
-            else:
-                texto_ju[ju] += f"pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n"
+        sitio = j[2]
+        sitio_ID = j[3]
+        if sitio == "Usuario":
+            cursor.execute('SELECT username, precio, estado, ciudad FROM ventas WHERE id_venta = ?', [sitio_ID])
+            juego = cursor.fetchone()
+            username, precio, estado, ciudad = juego
+            precio = int(precio)
+            precio_ju.append(precio)
+            texto_ju.append(f"@{username} lo vende a ${precio:.0f} ({estado}, en {ciudad}).\n")
         else:
-            precio_ju.append(precio_actual)
-            texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
-            if precio_mejor == precio_actual:
-                texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
+            nombre_sitio = constantes.sitio_nom[sitio]
+            url_sitio = constantes.sitio_URL[sitio] + sitio_ID
+            precio_actual = j[6]
+            precio_mejor = j[7]
+            fecha_mejor = j[8]
+
+            if precio_actual == None:
+                precio_ju.append(999999)
+                texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, ")
+                if precio_mejor == None:
+                    texto_ju[ju] += "y no lo estuvo en los últimos 15 días.\n"
+                else:
+                    texto_ju[ju] += f"pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n"
             else:
-                texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
-        ju += 1
+                precio_ju.append(precio_actual)
+                texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
+                if precio_mejor == precio_actual:
+                    texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
+                else:
+                    texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
+            ju += 1
     if min(precio_ju) != 999999:
         ini = "\U0001F449 "
     else:
@@ -757,7 +790,7 @@ def ayuda_info(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = "Elegí lo que quieras ver", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
-######### Pide que se escriba el nombre del juego para ver precios histórics
+######### Pide que se escriba el nombre del juego para ver precios históricos
 def historicos(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
@@ -1624,7 +1657,7 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
         context.chat_data["ciudad"] = ciudad
         return ADMIN
 
-######### Procesa sugeridos
+######### Procesa agregar juego a vender
 def admin_vender_r(update: Update, context: CallbackContext) -> int:
     id_venta_sugerido = context.chat_data["id_venta_sugerido"]
     bgg_id = context.chat_data["bgg_id"]
@@ -1652,9 +1685,9 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
         nombre_noacentos = strip_accents(nombre)
         nombre_noacentos = re.sub(r'[^\w\s]','',nombre_noacentos)
         nombre_noacentos = re.sub(r'\s+',' ',nombre_noacentos)
-        conn.execute ('INSERT INTO ventas (username, usuario_id, precio, estado, ciudad, fecha, activo) VALUES (?,?,?,?,?,?,?)',(usuario_username, usuario_id, precio, estado, ciudad, fecha, "Sí"))
+        cur = conn.execute ('INSERT INTO ventas (username, usuario_id, precio, estado, ciudad, fecha, activo) VALUES (?,?,?,?,?,?,?)',(usuario_username, usuario_id, precio, estado, ciudad, fecha, "Sí"))
+        id_venta = cur.lastrowid
         conn.commit()
-        id_venta = cursor.lastrowid
         conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
         conn.commit()
         manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} fue agregado al listado por una semana.')
