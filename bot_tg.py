@@ -1580,11 +1580,12 @@ def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
 
         texto += f"Juego: <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>\n"
         texto += f"Estado: {estado}\n"
-        texto += f"Precio: \${precio}\n"
+        texto += f"Ciuadad: {ciudad}\n"
+        texto += f"Precio: ${precio}\n"
 
         keyboard = [
-            [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_ventas_aprobar')],
-            [InlineKeyboardButton("\U0000274C Rechazar", callback_data=f'admin_ventas_rechazar')],
+            [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_vender_aprobar')],
+            [InlineKeyboardButton("\U0000274C Rechazar", callback_data=f'admin_vender_rechazar')],
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -1633,7 +1634,7 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
         id_venta = cursor.lastrowid
         conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
         conn.commit()
-        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a \${precio}, desde {ciudad} fue agregado al listado por una semana.')
+        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} fue agregado al listado por una semana.')
     conn.execute ('DELETE FROM venta_sugeridos WHERE id_juego_sugerido = ?',[id_juego_sug_venta])
     conn.commit()
     texto = "Juego procesado"
