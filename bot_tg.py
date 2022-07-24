@@ -1621,7 +1621,7 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
     cursor = conn.cursor()
 
     if resul == "rechazar":
-        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a \${precio}, desde {ciudad} no se puede vender. Contactá a @Luis_Olcese por más detalles.')
+        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} no se puede vender. Contactá a @Luis_Olcese por más detalles.')
     elif resul == "aprobar":
         nombre = context.chat_data["nombre"]
         ranking = context.chat_data["ranking"]
