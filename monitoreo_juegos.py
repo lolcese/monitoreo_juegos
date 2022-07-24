@@ -365,7 +365,7 @@ def main():
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
         bgg_id, nombre = jb
-        cursor.execute('SELECT id_juego, sitio, sitio_id, peso, precio_envio FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
+        cursor.execute('SELECT id_juego, sitio, sitio_id, peso, precio_envio FROM juegos WHERE BGG_id = ? and sitio != "Usuario" ORDER BY sitio', [bgg_id])
         juegos_id = cursor.fetchall()
         for j in juegos_id: # Cada repetición del mismo juego
             fecha = datetime.now()

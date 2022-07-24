@@ -179,31 +179,35 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
     query.answer()
     keyboard = [
         [
-            InlineKeyboardButton("\U0001F4D5 Buscalibre", callback_data='juegos_todos_sitio_BLIB'),
-            InlineKeyboardButton("\U0001F4D5 Buscalibre Amazon", callback_data='juegos_todos_sitio_BLAM')
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre", callback_data='juegos_todos_sitio_BLIB'),
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre Amazon", callback_data='juegos_todos_sitio_BLAM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Amazon", callback_data='juegos_todos_sitio_TMAM'),
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Walmart", callback_data='juegos_todos_sitio_TMWM')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Amazon", callback_data='juegos_todos_sitio_TMAM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Walmart", callback_data='juegos_todos_sitio_TMWM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_todos_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_todos_sitio_grooves')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_todos_sitio_TMEB'),
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_todos_sitio_grooves')
         ],
         [
-            InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_todos_sitio_BOOK'),
-            InlineKeyboardButton("\U0001F4D2 365games", callback_data='juegos_todos_sitio_365')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_todos_sitio_BOOK'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 365games", callback_data='juegos_todos_sitio_365')
         ],
         [
-            InlineKeyboardButton("\U0001F4D2 shop4es", callback_data='juegos_todos_sitio_shop4es'),
-            InlineKeyboardButton("\U0001F4D2 shop4world", callback_data='juegos_todos_sitio_shop4world')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4es", callback_data='juegos_todos_sitio_shop4es'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4world", callback_data='juegos_todos_sitio_shop4world')
         ],
         [
-            InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_todos_sitio_deep'),
-            InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_todos_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_todos_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Casa del Libro", callback_data='juegos_todos_sitio_CDL'),
         ],
         [
-            InlineKeyboardButton("\U000024C2 Miniature Market", callback_data='juegos_todos_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_todos_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_todos_sitio_deep'),
+        ],
+        [
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas", callback_data='juegos_todos_sitio_ventas'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -252,31 +256,35 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
     query.answer()
     keyboard = [
         [
-            InlineKeyboardButton("\U0001F4D5 Buscalibre", callback_data='juegos_stockalfab_sitio_BLIB'),
-            InlineKeyboardButton("\U0001F4D5 Buscalibre Amazon", callback_data='juegos_stockalfab_sitio_BLAM')
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre", callback_data='juegos_stockalfab_sitio_BLIB'),
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre Amazon", callback_data='juegos_stockalfab_sitio_BLAM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Amazon", callback_data='juegos_stockalfab_sitio_TMAM'),
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Walmart", callback_data='juegos_stockalfab_sitio_TMWM')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Amazon", callback_data='juegos_stockalfab_sitio_TMAM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Walmart", callback_data='juegos_stockalfab_sitio_TMWM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_stockalfab_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockalfab_sitio_grooves')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_stockalfab_sitio_TMEB'),
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockalfab_sitio_grooves')
         ],
         [
-            InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_stockalfab_sitio_BOOK'),
-            InlineKeyboardButton("\U0001F4D2 365games", callback_data='juegos_stockalfab_sitio_365')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockalfab_sitio_BOOK'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 365games", callback_data='juegos_stockalfab_sitio_365')
         ],
         [
-            InlineKeyboardButton("\U0001F4D2 shop4es", callback_data='juegos_stockalfab_sitio_shop4es'),
-            InlineKeyboardButton("\U0001F4D2 shop4world", callback_data='juegos_stockalfab_sitio_shop4world')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4es", callback_data='juegos_stockalfab_sitio_shop4es'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4world", callback_data='juegos_stockalfab_sitio_shop4world')
         ],
         [
-            InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_stockalfab_sitio_deep'),
-            InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_stockalfab_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_stockalfab_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Casa del Libro", callback_data='juegos_stockalfab_sitio_CDL'),
         ],
         [
-            InlineKeyboardButton("\U000024C2 Miniature Market", callback_data='juegos_stockalfab_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockalfab_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockalfab_sitio_deep'),
+        ],
+        [
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas", callback_data='juegos_stockalfab_sitio_ventas'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -321,31 +329,35 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
     query.answer()
     keyboard = [
         [
-            InlineKeyboardButton("\U0001F4D5 Buscalibre", callback_data='juegos_stockprecio_sitio_BLIB'),
-            InlineKeyboardButton("\U0001F4D5 Buscalibre Amazon", callback_data='juegos_stockprecio_sitio_BLAM')
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre", callback_data='juegos_stockprecio_sitio_BLIB'),
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Buscalibre Amazon", callback_data='juegos_stockprecio_sitio_BLAM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Amazon", callback_data='juegos_stockprecio_sitio_TMAM'),
-            InlineKeyboardButton("\U0001F4D8 Tiendamia Walmart", callback_data='juegos_stockprecio_sitio_TMWM')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Amazon", callback_data='juegos_stockprecio_sitio_TMAM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Walmart", callback_data='juegos_stockprecio_sitio_TMWM')
         ],
         [
-            InlineKeyboardButton("\U0001F4D8 Tiendamia EBAY", callback_data='juegos_stockprecio_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F4D3 Grooves.land", callback_data='juegos_stockprecio_sitio_grooves')
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_stockprecio_sitio_TMEB'),
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockprecio_sitio_grooves')
         ],
         [
-            InlineKeyboardButton("\U0001F4D9 Bookdepository", callback_data='juegos_stockprecio_sitio_BOOK'),
-            InlineKeyboardButton("\U0001F4D2 365games", callback_data='juegos_stockprecio_sitio_365')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockprecio_sitio_BOOK'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 365games", callback_data='juegos_stockprecio_sitio_365')
         ],
         [
-            InlineKeyboardButton("\U0001F4D2 shop4es", callback_data='juegos_stockprecio_sitio_shop4es'),
-            InlineKeyboardButton("\U0001F4D2 shop4world", callback_data='juegos_stockprecio_sitio_shop4world')
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4es", callback_data='juegos_stockprecio_sitio_shop4es'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 shop4world", callback_data='juegos_stockprecio_sitio_shop4world')
         ],
         [
-            InlineKeyboardButton("\U0001F4D7 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
-            InlineKeyboardButton("\U0001FA90 Planeton", callback_data='juegos_stockprecio_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_stockprecio_sitio_planeton'),
+            InlineKeyboardButton("\U0001F1EA\U0001F1F8 Casa del Libro", callback_data='juegos_stockprecio_sitio_CDL'),
         ],
         [
-            InlineKeyboardButton("\U000024C2 Miniature Market", callback_data='juegos_stockprecio_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockprecio_sitio_MM'),
+            InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
+        ],
+        [
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas", callback_data='juegos_stockprecio_sitio_ventas'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -356,21 +368,31 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
     id = query.edit_message_text(text = "Elegí los juegos a listar", reply_markup=reply_markup)
     context.chat_data["mensaje_id"] = id.message_id
     return LISTA_JUEGOS
-   
+
 ######### Lista de juegos disponibles de un sitio en orden de precios
 def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     usuario_id = update.callback_query.from_user.id
     sitio = query.data.split("_")[3]
-    texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
-    conn = conecta_db()
-    cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY precio_actual',[sitio])
-    juegos = cursor.fetchall()
-    for j in juegos:
-        nombre, sitio_id, precio_actual = j
-        texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
+    if sitio == "ventas":
+        texto = f"<b>Juegos en venta</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT BGG_id, nombre, ventas.username, ventas.precio, ventas.estado, ventas.ciudad FROM juegos INNER JOIN ventas on ventas.id_venta = juegos.sitio_ID order by ventas.precio')
+        juegos = cursor.fetchall()
+        for j in juegos:
+            bgg_id, nombre, username, precio, estado, ciudad = j
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>: ${precio:.0f} ({estado}) - @{username} ({ciudad})\n"
+    else:
+        texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY precio_actual',[sitio])
+        juegos = cursor.fetchall()
+        for j in juegos:
+            nombre, sitio_id, precio_actual = j
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_stockprecio'),
@@ -392,7 +414,7 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
     texto = "<b>Últimos 30 juegos agregados</b>\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio, sitio_id, precio_actual FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
+    cursor.execute('SELECT nombre, sitio, sitio_id, precio_actual FROM juegos WHERE sitio != "Usuario" ORDER BY fecha_agregado DESC LIMIT 30')
     juegos = cursor.fetchall()
     for j in juegos:
         nombre, sitio, sitio_id, precio_actual = j
@@ -416,7 +438,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE precio_actual NOT NULL ORDER BY precio_actual LIMIT 30 OFFSET ?',[num])
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE precio_actual NOT NULL and sitio != "Usuario" ORDER BY precio_actual LIMIT 30 OFFSET ?',[num])
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
@@ -446,7 +468,7 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     else:
         alar = []
         for a in alarmas:
-            cursor.execute('SELECT nombre, precio_actual FROM juegos WHERE BGG_id = ? ORDER BY precio_actual NULLS LAST',[a[0]])
+            cursor.execute('SELECT nombre, precio_actual FROM juegos WHERE BGG_id = ? and sitio != "Usuario" ORDER BY precio_actual NULLS LAST',[a[0]])
             juegos = cursor.fetchone()
             if juegos[1] == None:
                 pre_act = "No disponible"
@@ -520,7 +542,7 @@ def juego_nom_otra(update: Update, context: CallbackContext) -> int:
     nombre_juego = context.chat_data["nombre_juego"]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',['%'+nombre_juego+'%'])
+    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%'))
     juegos = cursor.fetchall()
     keyboard = []
     for j in juegos:
@@ -1025,7 +1047,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     sitio_nom, sitio_id = extrae_sitio(url)
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute ('SELECT * FROM juegos WHERE sitio = ? AND sitio_ID = ?',[sitio_nom, sitio_id])
+    cursor.execute ('SELECT * FROM juegos WHERE sitio = ? AND sitio_ID = ? and sitio != "Usuario"',[sitio_nom, sitio_id])
     moni = cursor.fetchall()
     if moni:
         keyboard = [
@@ -1318,7 +1340,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',["%"+query+"%"])
+    cursor.execute('SELECT DISTINCT BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+query+'%','%'+query+'%'))
     juegos = cursor.fetchall()
     results = []
 
@@ -1631,9 +1653,8 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
         nombre_noacentos = re.sub(r'[^\w\s]','',nombre_noacentos)
         nombre_noacentos = re.sub(r'\s+',' ',nombre_noacentos)
         conn.execute ('INSERT INTO ventas (username, usuario_id, precio, estado, ciudad, fecha, activo) VALUES (?,?,?,?,?,?,?)',(usuario_username, usuario_id, precio, estado, ciudad, fecha, "Sí"))
+        conn.commit()
         id_venta = cursor.lastrowid
-        if id_venta == None:
-            id_venta = 0
         conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
         conn.commit()
         manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} fue agregado al listado por una semana.')
