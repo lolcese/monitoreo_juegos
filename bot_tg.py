@@ -185,7 +185,7 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_todos_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F1E9\U0001F1EA Bookdepository", callback_data='juegos_todos_sitio_grooves')
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_todos_sitio_grooves')
         ],
         [
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_todos_sitio_BOOK'),
@@ -202,9 +202,6 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
         [
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_todos_sitio_MM'),
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_todos_sitio_deep'),
-        ],
-        [
-            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas locales", callback_data='juegos_todos_sitio_ventas'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -262,7 +259,7 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_stockalfab_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F1E9\U0001F1EA Bookdepository", callback_data='juegos_stockalfab_sitio_grooves')
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockalfab_sitio_grooves')
         ],
         [
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockalfab_sitio_BOOK'),
@@ -279,9 +276,6 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
         [
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockalfab_sitio_MM'),
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockalfab_sitio_deep'),
-        ],
-        [
-            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas locales", callback_data='juegos_stockalfab_sitio_ventas'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -335,7 +329,7 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_stockprecio_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F1E9\U0001F1EA Bookdepository", callback_data='juegos_stockprecio_sitio_grooves')
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockprecio_sitio_grooves')
         ],
         [
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockprecio_sitio_BOOK'),
@@ -352,9 +346,6 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         [
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockprecio_sitio_MM'),
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
-        ],
-        [
-            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas locales", callback_data='juegos_stockprecio_sitio_ventas'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
