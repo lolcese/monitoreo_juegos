@@ -1415,6 +1415,8 @@ def agregar_venta(update: Update, context: CallbackContext) -> int:
     
 Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX), en el renglón siguiente el estado del juego (nuevo, usado, o algo breve), en el tercer renglón el precio (solo números) y en el cuarto tu ciudad (es obligatorio hacer envíos).
 
+<b>La compraventa de juegos es exclusiva responsabilidad de las partes. El bot es inanimado y legalmente inocente.</b>
+
 Ejemplos:
 https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
 Nuevo
@@ -1443,7 +1445,7 @@ def vender_juego(update: Update, context: CallbackContext) -> int:
 
     bgg_url = dat[0].strip()
     estado = dat[1].strip()
-    precio = dat[2].strip()
+    precio = re.sub("\D", "", dat[2])
     ciudad = dat[3].strip()
 
     busca_id = re.search('boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)', bgg_url)
@@ -1699,7 +1701,7 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
         if len(alarmas) > 0:
             for alarma in alarmas:
                 id_persona, precio_al = alarma
-                texto = f'\U000023F0\U000023F0\U000023F0\n\n{usuario_username} vende <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> ({estado}, en {ciudad}) y tenés una alarma a los ${precio_al:.0f}.\n\n\U000023F0\U000023F0\U000023F0'
+                texto = f'\U000023F0\U000023F0\U000023F0\n\n@{usuario_username} vende <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> {precio} ({estado}, en {ciudad}) y tenés una alarma a los ${precio_al:.0f}.\n\n\U000023F0\U000023F0\U000023F0'
                 manda.send_message(id_persona, texto)
 
     conn.execute ('DELETE FROM venta_sugeridos WHERE id_venta_sugerido = ?',[id_venta_sugerido])
