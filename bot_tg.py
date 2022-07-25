@@ -533,6 +533,7 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
     else:
         nombre_juego = update.message.text
     context.chat_data["nombre_juego"] = nombre_juego
+    context.chat_data["username"] = update.message.from_user.username
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%'))
@@ -837,7 +838,7 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
     BGG_id = query.data.split("_")[1]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego, nombre, ranking, dependencia_leng FROM juegos WHERE BGG_id = ?',[BGG_id])
+    cursor.execute('SELECT id_juego, nombre, ranking, dependencia_leng FROM juegos WHERE BGG_id = ? and sitio != "Usuario"',[BGG_id])
     juegos = cursor.fetchone()
     nombre = juegos[1]
     ranking = juegos[2]
@@ -1691,6 +1692,16 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
         conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
         conn.commit()
         manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} fue agregado al listado por una semana.')
+
+# Manda alarmas
+        cursor.execute('SELECT id_persona, precio_alarma FROM alarmas WHERE BGG_id = ? and precio_alarma >= ?',(bgg_id, precio))
+        alarmas = cursor.fetchall()
+        if len(alarmas) > 0:
+            for alarma in alarmas:
+                id_persona, precio_al = alarma
+                texto = f'\U000023F0\U000023F0\U000023F0\n\n{usuario_username} vende <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> ({estado}, en {ciudad}) y tenés una alarma a los ${precio_al:.0f}.\n\n\U000023F0\U000023F0\U000023F0'
+                manda.send_message(id_persona, texto)
+
     conn.execute ('DELETE FROM venta_sugeridos WHERE id_venta_sugerido = ?',[id_venta_sugerido])
     conn.commit()
     texto = "Juego procesado"
