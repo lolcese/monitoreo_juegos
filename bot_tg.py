@@ -655,7 +655,7 @@ def texto_info_juego(BGG_id):
             username, precio, estado, ciudad = juego
             precio = int(precio)
             precio_ju.append(precio)
-            texto_ju.append(f"@{username} lo vende a ${precio:.0f} ({estado}, en {ciudad}).\n")
+            texto_ju.append(f"@{username} lo vende a <b>${precio:.0f}</b> ({estado}, en {ciudad}).\n")
         else:
             nombre_sitio = constantes.sitio_nom[sitio]
             url_sitio = constantes.sitio_URL[sitio] + sitio_ID
