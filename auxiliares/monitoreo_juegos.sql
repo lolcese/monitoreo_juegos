@@ -97,3 +97,23 @@ CREATE TABLE colaboradores (
                             usuario_tg TEXT,
                             mostrar TEXT
                             );
+CREATE TABLE venta_sugeridos (
+                            id_venta_sugerido INTEGER PRIMARY KEY,
+                            usuario_nom TEXT NOT NULL,
+                            usuario_id INTEGER NOT NULL,
+                            usuario_username TEXT NOT NULL,
+                            bgg_id INTEGER NOT NULL,
+                            estado TEXT NOT NULL,
+                            precio INTEGER NOT NULL,
+                            ciudad TEXT NOT NULL
+                            );                            
+CREATE TABLE ventas (
+                            id_venta INTEGER PRIMARY KEY,
+                            usuario_id INTEGER NOT NULL,
+                            username TEXT NOT NULL,
+                            precio TEXT NOT NULL,
+                            estado TEXT NOT NULL,
+                            ciudad TEXT NOT NULL,
+                            fecha datetime NOT NULL,
+                            activo TEXT NOT NULL
+                            );                            

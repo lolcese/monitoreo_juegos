@@ -24,7 +24,7 @@ import json
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS = range(11)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS, VENTAS = range(12)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -69,6 +69,7 @@ def start(update: Update, context: CallbackContext) -> int:
     usuario = update.message.from_user
     nombre = usuario.full_name
     usuario_id = usuario.id
+    context.chat_data["username"] = usuario.username
     fecha = datetime.now()
     conn = conecta_db()
     cursor = conn.cursor()
@@ -91,6 +92,7 @@ def inicio(update: Update, context: CallbackContext) -> int:
     usuario = query.from_user
     nombre = usuario.full_name
     usuario_id = usuario.id
+    # context.chat_data["username"] = usuario.username
     fecha = datetime.now()
     conn = conecta_db()
     cursor = conn.cursor()
@@ -111,6 +113,7 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     usuario_id = update.callback_query.from_user.id
+    # context.chat_data["username"] = update.callback_query.from_user.id.username
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
@@ -122,6 +125,7 @@ def menu():
     keyboard = [
         [InlineKeyboardButton("\U0001F4DA Ver Listas de juegos \U0001F4DA", callback_data='juegos_lista_menu')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego y mis alarmas \U0001F3B2", callback_data='juego_ver')],
+        [InlineKeyboardButton("\U0001F4B0 Poner mi juego a la venta \U0001F4B0", callback_data='agregar_venta')],
         [InlineKeyboardButton("\U00002753 Ayuda e información \U00002753", callback_data='ayuda_info')],
         [InlineKeyboardButton("\U0001F932 Colaborá con el server \U0001F932", callback_data='colaborar')]
     ]
@@ -204,6 +208,9 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_todos_sitio_deep'),
         ],
         [
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas", callback_data='juegos_todos_sitio_ventas'),
+        ],
+        [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
@@ -219,17 +226,28 @@ def juegos_todos_sitio(update: Update, context: CallbackContext) -> int:
     query.answer()
     usuario_id = update.callback_query.from_user.id
     sitio = query.data.split("_")[3]
-    texto = f"<b>Juegos en {constantes.sitio_nom[sitio]}</b>\n\n"
-    conn = conecta_db()
-    cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
-    juegos = cursor.fetchall()
-    for j in juegos:
-        nombre, sitio_id, precio_actual = j
-        if precio_actual == None:
-            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (No disponible)\n"
-        else:
-            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
+    if sitio == "ventas":
+        texto = f"<b>Juegos en venta (Contactá directamente al usuario)</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT BGG_id, nombre, ventas.username, ventas.precio, ventas.estado, ventas.ciudad FROM juegos INNER JOIN ventas on ventas.id_venta = juegos.sitio_ID order by nombre')
+        juegos = cursor.fetchall()
+        for j in juegos:
+            bgg_id, nombre, username, precio, estado, ciudad = j
+            precio = int(precio)
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>: ${precio:.0f} ({estado}) - @{username} ({ciudad})\n"
+    else:
+        texto = f"<b>Juegos en {constantes.sitio_nom[sitio]}</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? ORDER BY nombre',[sitio])
+        juegos = cursor.fetchall()
+        for j in juegos:
+            nombre, sitio_id, precio_actual = j
+            if precio_actual == None:
+                texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (No disponible)\n"
+            else:
+                texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_todos'),
@@ -278,6 +296,9 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockalfab_sitio_deep'),
         ],
         [
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas", callback_data='juegos_stockalfab_sitio_ventas'),
+        ],
+        [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
@@ -293,14 +314,25 @@ def juegos_stockalfab_sitio(update: Update, context: CallbackContext) -> int:
     query.answer()
     usuario_id = update.callback_query.from_user.id
     sitio = query.data.split("_")[3]
-    texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
-    conn = conecta_db()
-    cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY nombre',[sitio])
-    juegos = cursor.fetchall()
-    for j in juegos:
-        nombre, sitio_id, precio_actual = j
-        texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
+    if sitio == "ventas":
+        texto = f"<b>Juegos en venta (Contactá directamente al usuario)</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT BGG_id, nombre, ventas.username, ventas.precio, ventas.estado, ventas.ciudad FROM juegos INNER JOIN ventas on ventas.id_venta = juegos.sitio_ID order by nombre')
+        juegos = cursor.fetchall()
+        for j in juegos:
+            bgg_id, nombre, username, precio, estado, ciudad = j
+            precio = int(precio)
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>: ${precio:.0f} ({estado}) - @{username} ({ciudad})\n"
+    else:
+        texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY nombre',[sitio])
+        juegos = cursor.fetchall()
+        for j in juegos:
+            nombre, sitio_id, precio_actual = j
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_stockalfab'),
@@ -348,6 +380,9 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
         ],
         [
+            InlineKeyboardButton("\U0001F1E6\U0001F1F7 Ventas", callback_data='juegos_stockprecio_sitio_ventas'),
+        ],
+        [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
             InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
         ],
@@ -357,26 +392,31 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
     context.chat_data["mensaje_id"] = id.message_id
     return LISTA_JUEGOS
 
-
-####################################################
-# Arrancar acá
-####################################################
-
-
 ######### Lista de juegos disponibles de un sitio en orden de precios
 def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
     usuario_id = update.callback_query.from_user.id
     sitio = query.data.split("_")[3]
-    texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
-    conn = conecta_db()
-    cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY precio_actual',[sitio])
-    juegos = cursor.fetchall()
-    for j in juegos:
-        nombre, sitio_id, precio_actual = j
-        texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
+    if sitio == "ventas":
+        texto = f"<b>Juegos en venta (Contactá directamente al usuario)</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT BGG_id, nombre, ventas.username, ventas.precio, ventas.estado, ventas.ciudad FROM juegos INNER JOIN ventas on ventas.id_venta = juegos.sitio_ID order by ventas.precio')
+        juegos = cursor.fetchall()
+        for j in juegos:
+            bgg_id, nombre, username, precio, estado, ciudad = j
+            precio = int(precio)
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>: ${precio:.0f} ({estado}) - @{username} ({ciudad})\n"
+    else:
+        texto = f"<b>Juegos disponibles en {constantes.sitio_nom[sitio]}</b>\n\n"
+        conn = conecta_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT nombre, sitio_id, precio_actual FROM juegos WHERE sitio = ? AND precio_actual NOT NULL ORDER BY precio_actual',[sitio])
+        juegos = cursor.fetchall()
+        for j in juegos:
+            nombre, sitio_id, precio_actual = j
+            texto += f"\U000027A1 <a href='{constantes.sitio_URL[sitio]+str(sitio_id)}'>{html.escape(nombre)}</a> (${precio_actual:.0f})\n"
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_stockprecio'),
@@ -398,7 +438,7 @@ def juegos_lista_ULT(update: Update, context: CallbackContext) -> int:
     texto = "<b>Últimos 30 juegos agregados</b>\n\n"
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT nombre, sitio, sitio_id, precio_actual FROM juegos ORDER BY fecha_agregado DESC LIMIT 30')
+    cursor.execute('SELECT nombre, sitio, sitio_id, precio_actual FROM juegos WHERE sitio != "Usuario" ORDER BY fecha_agregado DESC LIMIT 30')
     juegos = cursor.fetchall()
     for j in juegos:
         nombre, sitio, sitio_id, precio_actual = j
@@ -422,7 +462,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     conn = conecta_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE precio_actual NOT NULL ORDER BY precio_actual LIMIT 30 OFFSET ?',[num])
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE precio_actual NOT NULL and sitio != "Usuario" ORDER BY precio_actual LIMIT 30 OFFSET ?',[num])
     baratos = cursor.fetchall()
     barato = ""
     for b in baratos:
@@ -452,7 +492,7 @@ def alarmas_muestra(update: Update, context: CallbackContext) -> int:
     else:
         alar = []
         for a in alarmas:
-            cursor.execute('SELECT nombre, precio_actual FROM juegos WHERE BGG_id = ? ORDER BY precio_actual NULLS LAST',[a[0]])
+            cursor.execute('SELECT nombre, precio_actual FROM juegos WHERE BGG_id = ? and sitio != "Usuario" ORDER BY precio_actual NULLS LAST',[a[0]])
             juegos = cursor.fetchone()
             if juegos[1] == None:
                 pre_act = "No disponible"
@@ -494,6 +534,7 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
     else:
         nombre_juego = update.message.text
     context.chat_data["nombre_juego"] = nombre_juego
+    context.chat_data["username"] = update.message.from_user.username
     conn = conecta_db()
     cursor = conn.cursor()
     cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%'))
@@ -526,7 +567,7 @@ def juego_nom_otra(update: Update, context: CallbackContext) -> int:
     nombre_juego = context.chat_data["nombre_juego"]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',['%'+nombre_juego+'%'])
+    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%'))
     juegos = cursor.fetchall()
     keyboard = []
     for j in juegos:
@@ -607,6 +648,39 @@ def texto_info_juego(BGG_id):
     precio_ju = []
     ju = 0
     for j in juegos:
+
+        sitio = j[2]
+        sitio_ID = j[3]
+        if sitio == "Usuario":
+            cursor.execute('SELECT username, precio, estado, ciudad FROM ventas WHERE id_venta = ?', [sitio_ID])
+            juego = cursor.fetchone()
+            username, precio, estado, ciudad = juego
+            precio = int(precio)
+            precio_ju.append(precio)
+            texto_ju.append(f"@{username} lo vende a <b>${precio:.0f}</b> ({estado}, en {ciudad}).\n")
+        else:
+            nombre_sitio = constantes.sitio_nom[sitio]
+            url_sitio = constantes.sitio_URL[sitio] + sitio_ID
+            precio_actual = j[6]
+            precio_mejor = j[7]
+            fecha_mejor = j[8]
+
+            if precio_actual == None:
+                precio_ju.append(999999)
+                texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, ")
+                if precio_mejor == None:
+                    texto_ju[ju] += "y no lo estuvo en los últimos 15 días.\n"
+                else:
+                    texto_ju[ju] += f"pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n"
+            else:
+                precio_ju.append(precio_actual)
+                texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
+                if precio_mejor == precio_actual:
+                    texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
+                else:
+                    texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
+            ju += 1
+=======
         nombre_sitio = constantes.sitio_nom[j[2]]
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
         pais_sitio = constantes.sitio_pais[j[2]]
@@ -647,6 +721,7 @@ def texto_info_juego(BGG_id):
     if cazagangas["disponible"] == True:
         texto_ju.append(f"\U0001F1E6\U0001F1F7 <a href='{cazagangas['url']}'>Cazagangas</a>: <b>${cazagangas['precio']:.0f}</b>\n")
         precio_ju.append(cazagangas["precio"])
+
 
     if min(precio_ju) != 999999:
         ini = "\U0001F449 "
@@ -762,7 +837,7 @@ def ayuda_info(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = "Elegí lo que quieras ver", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return PRINCIPAL
 
-######### Pide que se escriba el nombre del juego para ver precios histórics
+######### Pide que se escriba el nombre del juego para ver precios históricos
 def historicos(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
@@ -809,7 +884,7 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
     BGG_id = query.data.split("_")[1]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego, nombre, ranking, dependencia_leng FROM juegos WHERE BGG_id = ?',[BGG_id])
+    cursor.execute('SELECT id_juego, nombre, ranking, dependencia_leng FROM juegos WHERE BGG_id = ? and sitio != "Usuario"',[BGG_id])
     juegos = cursor.fetchone()
     nombre = juegos[1]
     ranking = juegos[2]
@@ -1057,7 +1132,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     sitio_nom, sitio_id = extrae_sitio(url)
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute ('SELECT * FROM juegos WHERE sitio = ? AND sitio_ID = ?',[sitio_nom, sitio_id])
+    cursor.execute ('SELECT * FROM juegos WHERE sitio = ? AND sitio_ID = ? and sitio != "Usuario"',[sitio_nom, sitio_id])
     moni = cursor.fetchall()
     if moni:
         keyboard = [
@@ -1104,7 +1179,7 @@ def extrae_sitio(sitio_url):
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&)',sitio_url)
+    sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&|#)',sitio_url)
     if sitio_id:
         sitio_nom = "BLAM"
         sitio_id = sitio_id[1]
@@ -1356,7 +1431,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT BGG_id FROM juegos WHERE nombre LIKE ? ORDER BY nombre',["%"+query+"%"])
+    cursor.execute('SELECT DISTINCT BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+query+'%','%'+query+'%'))
     juegos = cursor.fetchall()
     results = []
 
@@ -1379,6 +1454,77 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
         cursor.execute('INSERT INTO usuarios (nombre, id, fecha, accion) VALUES (?,?,?,?)',["-",0,fecha,"Inline "+query])
         conn.commit()
 
+
+######### Pide que se ingrese el juego a vender
+def agregar_venta(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    username = context.chat_data["username"]
+    query.answer()
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    if username is None:
+        query.edit_message_text(text = 'Para que te puedan contactar, tenés que definir tu <i>username</i> en telegram.', reply_markup=reply_markup)
+        return VENTAS
+
+    texto = """<b>Ingresá el juego a vender</b>
+    
+Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX), en el renglón siguiente el estado del juego (nuevo, usado, o algo breve), en el tercer renglón el precio (solo números) y en el cuarto tu ciudad (es obligatorio hacer envíos).
+
+<b>La compraventa de juegos es exclusiva responsabilidad de las partes. El bot es inanimado y legalmente inocente.</b>
+
+Ejemplos:
+https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
+Nuevo
+10000
+Córdoba
+
+https://www.boardgamegeek.com/boardgame/266192/wingspan
+Usado
+12000
+Lanús
+"""
+
+    query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
+    return VENTAS
+
+######### Guarda el juego a vender
+def vender_juego(update: Update, context: CallbackContext) -> int:
+    usuario_nom = update.message.from_user.full_name
+    usuario_id = update.message.from_user.id
+    username = context.chat_data["username"]
+    dat = update.message.text.split("\n")
+
+    if len(dat) != 4:
+        update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de BGG, el estado, el precio y tu ciudad.")
+        return VENTAS
+
+    bgg_url = dat[0].strip()
+    estado = dat[1].strip()
+    precio = re.sub("\D", "", dat[2])
+    ciudad = dat[3].strip()
+
+    busca_id = re.search('boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)', bgg_url)
+    if busca_id:
+        bgg_id = busca_id.group(2)
+    else:
+        update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
+        return VENTAS
+
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO venta_sugeridos (usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad) VALUES (?,?,?,?,?,?,?)',[usuario_nom, usuario_id, username, bgg_id, estado, precio, ciudad])
+    conn.commit()
+    texto = f"{usuario_nom} quiere vender {bgg_url}"
+    manda.send_message(id_aviso, texto)
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text(text = 'El juego va a ser revisado y vas a recibir un mensaje si es aprobado o rechazado.', reply_markup=reply_markup)
+    return PRINCIPAL
+
 ######### Módulo de administración
 def admin(update: Update, context: CallbackContext) -> None:
     usuario = update.message.from_user
@@ -1388,6 +1534,7 @@ def admin(update: Update, context: CallbackContext) -> None:
         reply_markup = InlineKeyboardMarkup(keyboard)
         keyboard = [
             [InlineKeyboardButton("\U00002753 Administrar juegos sugeridos", callback_data='admin_juegos_sugeridos')],
+            [InlineKeyboardButton("\U00002753 Administrar juegos a vender", callback_data='admin_juegos_vender')],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
@@ -1403,7 +1550,7 @@ def admin(update: Update, context: CallbackContext) -> None:
         update.message.reply_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup)
         return PRINCIPAL
 
-######### Administrar juegos sugeridos
+######### Administrar juegos a agregar
 def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
@@ -1476,7 +1623,7 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     estado = query.data.split("_")[3]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio FROM juegos_sugeridos WHERE id_juego_sugerido = ?', [sug_id])
+    cursor.execute('SELECT id_venta_sugerido, usuario_nom, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio FROM venta_sugeridos WHERE id_juego_sugerido = ?', [sug_id])
     juegos = cursor.fetchone()
     _, _, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio = juegos
 
@@ -1501,7 +1648,124 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     conn.commit()
     texto = "Juego procesado"
     keyboard = [
-        [InlineKeyboardButton("\U00002753 Más juegos sugeridos", callback_data='admin_juegos_sugeridos')],
+        [InlineKeyboardButton("\U00002753 Siguiente juego sugerido", callback_data='admin_juegos_sugeridos')],
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    return ADMIN
+
+######### Administrar juegos a vender
+def admin_juegos_vender(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT id_venta_sugerido, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad FROM venta_sugeridos')
+    juegos = cursor.fetchone()
+    if juegos is None:
+        texto = "No hay juegos a vender"
+        keyboard = [
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+    else:
+        id_venta_sugerido, usuario_nom, usuario_id, usuario_username, bgg_id, estado, precio, ciudad = juegos
+        texto = f"Usuario: {usuario_nom} ({usuario_username})\n"
+        url = f'https://api.geekdo.com/xmlapi2/thing?id={bgg_id}&stats=1'
+        req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
+        data = urllib.request.urlopen(req).read()
+        data = data.decode('utf-8')
+        votos = {}
+
+        nombre = html.unescape(re.search('<name type=\"primary\" sortindex=\".*?\" value=\"(.*?)\"',data)[1])
+        ranking = html.unescape(re.search('name=\"boardgame\".*?value=\"(.*?)\"',data)[1])
+
+        votos_dep = float(re.search('poll name=\"language_dependence\".*?totalvotes=\"(.*?)\"',data)[1])
+        if votos_dep >= 3:
+            votos[1] = float(re.search('result level.*? value=\"No necessary in-game text\" numvotes=\"(.*?)\"',data)[1])
+            votos[2] = float(re.search('result level.*? value=\"Some necessary text - easily memorized or small crib sheet\" numvotes=\"(.*?)\"',data)[1])
+            votos[3] = float(re.search('result level.*? value=\"Moderate in-game text - needs crib sheet or paste ups\" numvotes=\"(.*?)\"',data)[1])
+            votos[4] = float(re.search('result level.*? value=\"Extensive use of text - massive conversion needed to be playable\" numvotes=\"(.*?)\"',data)[1])
+            votos[5] = float(re.search('result level.*? value=\"Unplayable in another language\" numvotes=\"(.*?)\"',data)[1])
+            dependencia_leng = int(max(votos, key=votos.get))
+        else:
+            dependencia_leng = 0
+
+        texto += f"Juego: <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>\n"
+        texto += f"Estado: {estado}\n"
+        texto += f"Ciuadad: {ciudad}\n"
+        texto += f"Precio: ${precio}\n"
+
+        keyboard = [
+            [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_vender_aprobar')],
+            [InlineKeyboardButton("\U0000274C Rechazar", callback_data=f'admin_vender_rechazar')],
+            [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+        context.chat_data["id_venta_sugerido"] = id_venta_sugerido
+        context.chat_data["bgg_id"] = bgg_id
+        context.chat_data["nombre"] = nombre
+        context.chat_data["ranking"] = ranking
+        context.chat_data["dependencia_leng"] = dependencia_leng
+        context.chat_data["usuario"] = usuario_username
+        context.chat_data["usuario_id"] = usuario_id
+        context.chat_data["precio"] = precio
+        context.chat_data["estado"] = estado
+        context.chat_data["ciudad"] = ciudad
+        return ADMIN
+
+######### Procesa agregar juego a vender
+def admin_vender_r(update: Update, context: CallbackContext) -> int:
+    id_venta_sugerido = context.chat_data["id_venta_sugerido"]
+    bgg_id = context.chat_data["bgg_id"]
+    nombre = context.chat_data["nombre"]
+    ranking = context.chat_data["ranking"]
+    dependencia_leng = context.chat_data["dependencia_leng"]
+    usuario_username = context.chat_data["usuario"]
+    usuario_id = context.chat_data["usuario_id"]
+    precio = context.chat_data["precio"]
+    estado = context.chat_data["estado"]
+    ciudad = context.chat_data["ciudad"]
+    query = update.callback_query
+    query.answer()
+    resul = query.data.split("_")[2]
+    conn = conecta_db()
+    cursor = conn.cursor()
+
+    if resul == "rechazar":
+        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} no se puede vender. Contactá a @Luis_Olcese por más detalles.')
+    elif resul == "aprobar":
+        nombre = context.chat_data["nombre"]
+        ranking = context.chat_data["ranking"]
+        dependencia_leng = context.chat_data["dependencia_leng"]
+        fecha = datetime.now()
+        nombre_noacentos = strip_accents(nombre)
+        nombre_noacentos = re.sub(r'[^\w\s]','',nombre_noacentos)
+        nombre_noacentos = re.sub(r'\s+',' ',nombre_noacentos)
+        cur = conn.execute ('INSERT INTO ventas (username, usuario_id, precio, estado, ciudad, fecha, activo) VALUES (?,?,?,?,?,?,?)',(usuario_username, usuario_id, precio, estado, ciudad, fecha, "Sí"))
+        id_venta = cur.lastrowid
+        conn.commit()
+        conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
+        conn.commit()
+        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} fue agregado al listado por una semana.')
+
+# Manda alarmas
+        cursor.execute('SELECT id_persona, precio_alarma FROM alarmas WHERE BGG_id = ? and precio_alarma >= ?',(bgg_id, precio))
+        alarmas = cursor.fetchall()
+        if len(alarmas) > 0:
+            for alarma in alarmas:
+                id_persona, precio_al = alarma
+                texto = f'\U000023F0\U000023F0\U000023F0\n\n@{usuario_username} vende <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> {precio} ({estado}, en {ciudad}) y tenés una alarma a los ${precio_al:.0f}.\n\n\U000023F0\U000023F0\U000023F0'
+                manda.send_message(id_persona, texto)
+
+    conn.execute ('DELETE FROM venta_sugeridos WHERE id_venta_sugerido = ?',[id_venta_sugerido])
+    conn.commit()
+    texto = "Juego procesado"
+    keyboard = [
+        [InlineKeyboardButton("\U00002753 Siguiente venta", callback_data='admin_juegos_vender')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -1530,6 +1794,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(ayuda,                    pattern='^ayuda$'),
                 CallbackQueryHandler(consejos,                 pattern='^consejos$'),
                 CallbackQueryHandler(historicos,               pattern='^historicos$'),
+                CallbackQueryHandler(agregar_venta,            pattern='^agregar_venta$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],  
             LISTA_JUEGOS: [
@@ -1588,9 +1853,15 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(histo_juego_info,         pattern='^Histo_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
+            VENTAS: [
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, vender_juego),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
+            ],
             ADMIN: [
                 CallbackQueryHandler(admin_juegos_sugeridos,   pattern='^admin_juegos_sugeridos$'),
                 CallbackQueryHandler(admin_sugeridos_r,        pattern='^admin_sugeridos_'),
+                CallbackQueryHandler(admin_juegos_vender,      pattern='^admin_juegos_vender$'),
+                CallbackQueryHandler(admin_vender_r,           pattern='^admin_vender_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
         },

@@ -386,7 +386,7 @@ def main():
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
         bgg_id, nombre = jb
-        cursor.execute('SELECT id_juego, sitio, sitio_id, peso, precio_envio FROM juegos WHERE BGG_id = ? ORDER BY sitio', [bgg_id])
+        cursor.execute('SELECT id_juego, sitio, sitio_id, peso, precio_envio FROM juegos WHERE BGG_id = ? and sitio != "Usuario" ORDER BY sitio', [bgg_id])
         juegos_id = cursor.fetchall()
         for j in juegos_id: # Cada repetición del mismo juego
             fecha = datetime.now()
@@ -508,7 +508,6 @@ def main():
                 for alarma in alarmas:
                     id_persona, precio_al = alarma
                     texto = f'\U000023F0\U000023F0\U000023F0\n\n<a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está a <b>${precio:.0f}</b> en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> (tenés una alarma a los ${precio_al:.0f}).\n\n\U000023F0\U000023F0\U000023F0'
-                    # manda.send_photo(id_persona, texto, arch)
                     manda.send_photo(id_persona, "", arch)
                     keyboard = [
                         [InlineKeyboardButton("Borrar alarma (después apretar START)", url=f"https://t.me/Monitor_Juegos_bot?start=borraalarma_{id_persona}_{bgg_id}")],
