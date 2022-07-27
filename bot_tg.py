@@ -1128,7 +1128,7 @@ def extrae_sitio(sitio_url):
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&)',sitio_url)
+    sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&|#)',sitio_url)
     if sitio_id:
         sitio_nom = "BLAM"
         sitio_id = sitio_id[1]
