@@ -20,7 +20,7 @@ def main():
     ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
     juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos WJERE sitio_ID != "Usuario" ORDER BY nombre')
+    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos WHERE sitio_ID != "Usuario" ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
         nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_min, ranking = j
