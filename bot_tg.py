@@ -659,58 +659,37 @@ def texto_info_juego(BGG_id):
             precio_ju.append(precio)
             texto_ju.append(f"@{username} lo vende a <b>${precio:.0f}</b> ({estado}, en {ciudad}).\n")
         else:
-            nombre_sitio = constantes.sitio_nom[sitio]
-            url_sitio = constantes.sitio_URL[sitio] + sitio_ID
+            nombre_sitio = constantes.sitio_nom[j[2]]
+            url_sitio = constantes.sitio_URL[j[2]] + j[3]
+            pais_sitio = constantes.sitio_pais[j[2]]
             precio_actual = j[6]
             precio_mejor = j[7]
             fecha_mejor = j[8]
 
+            if pais_sitio == "AR":
+                band = "\U0001F1E6\U0001F1F7"
+            elif pais_sitio == "US":
+                band = "\U0001F1FA\U0001F1F8"
+            elif pais_sitio == "UK":
+                band = "\U0001F1EC\U0001F1E7"
+            elif pais_sitio == "ES":
+                band = "\U0001F1EA\U0001F1F8"
+            elif pais_sitio == "DE":
+                band = "\U0001F1E9\U0001F1EA"
             if precio_actual == None:
                 precio_ju.append(999999)
-                texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: No está en stock actualmente, ")
                 if precio_mejor == None:
-                    texto_ju[ju] += "y no lo estuvo en los últimos 15 días.\n"
+                    texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: Sin stock en los últimos 15 días.\n")
                 else:
-                    texto_ju[ju] += f"pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n"
+                    texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: Sin stock actualmente, pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n")
             else:
                 precio_ju.append(precio_actual)
-                texto_ju.append(f"<a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
+                texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
                 if precio_mejor == precio_actual:
                     texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
                 else:
-                    texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
+                    texto_ju[ju] += f"El mínimo para los últimos 15 días fue ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
             ju += 1
-        nombre_sitio = constantes.sitio_nom[j[2]]
-        url_sitio = constantes.sitio_URL[j[2]] + j[3]
-        pais_sitio = constantes.sitio_pais[j[2]]
-        precio_actual = j[6]
-        precio_mejor = j[7]
-        fecha_mejor = j[8]
-
-        if pais_sitio == "AR":
-            band = "\U0001F1E6\U0001F1F7"
-        elif pais_sitio == "US":
-            band = "\U0001F1FA\U0001F1F8"
-        elif pais_sitio == "UK":
-            band = "\U0001F1EC\U0001F1E7"
-        elif pais_sitio == "ES":
-            band = "\U0001F1EA\U0001F1F8"
-        elif pais_sitio == "DE":
-            band = "\U0001F1E9\U0001F1EA"
-        if precio_actual == None:
-            precio_ju.append(999999)
-            if precio_mejor == None:
-                texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: Sin stock en los últimos 15 días.\n")
-            else:
-                texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: Sin stock actualmente, pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n")
-        else:
-            precio_ju.append(precio_actual)
-            texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
-            if precio_mejor == precio_actual:
-                texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
-            else:
-                texto_ju[ju] += f"El mínimo para los últimos 15 días fue ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
-        ju += 1
 
 # Busca Cazagangas
     url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
