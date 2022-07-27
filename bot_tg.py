@@ -488,7 +488,7 @@ def juego_ver(update: Update, context: CallbackContext) -> int:
 def juego_nom(update: Update, context: CallbackContext) -> int:
     if context.args is not None:
         if len(context.args) > 0:
-            nombre_juego = context.args[0]
+            nombre_juego = ' '.join(context.args)
         else:
             return
     else:
