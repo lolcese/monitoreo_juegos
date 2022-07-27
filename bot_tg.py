@@ -19,6 +19,7 @@ import hace_grafico
 import urllib.request
 from decouple import config
 import unicodedata
+import json
 
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
@@ -527,7 +528,7 @@ def juego_ver(update: Update, context: CallbackContext) -> int:
 def juego_nom(update: Update, context: CallbackContext) -> int:
     if context.args is not None:
         if len(context.args) > 0:
-            nombre_juego = context.args[0]
+            nombre_juego = ' '.join(context.args)
         else:
             return
     else:
@@ -647,6 +648,7 @@ def texto_info_juego(BGG_id):
     precio_ju = []
     ju = 0
     for j in juegos:
+
         sitio = j[2]
         sitio_ID = j[3]
         if sitio == "Usuario":
@@ -678,11 +680,55 @@ def texto_info_juego(BGG_id):
                 else:
                     texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
             ju += 1
+=======
+        nombre_sitio = constantes.sitio_nom[j[2]]
+        url_sitio = constantes.sitio_URL[j[2]] + j[3]
+        pais_sitio = constantes.sitio_pais[j[2]]
+        precio_actual = j[6]
+        precio_mejor = j[7]
+        fecha_mejor = j[8]
+
+        if pais_sitio == "AR":
+            band = "\U0001F1E6\U0001F1F7"
+        elif pais_sitio == "US":
+            band = "\U0001F1FA\U0001F1F8"
+        elif pais_sitio == "UK":
+            band = "\U0001F1EC\U0001F1E7"
+        elif pais_sitio == "ES":
+            band = "\U0001F1EA\U0001F1F8"
+        elif pais_sitio == "DE":
+            band = "\U0001F1E9\U0001F1EA"
+        if precio_actual == None:
+            precio_ju.append(999999)
+            if precio_mejor == None:
+                texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: Sin stock en los últimos 15 días.\n")
+            else:
+                texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: Sin stock actualmente, pero el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year} tuvo un precio de ${precio_mejor:.0f}.\n")
+        else:
+            precio_ju.append(precio_actual)
+            texto_ju.append(f"{band} <a href='{url_sitio}'>{nombre_sitio}</a>: <b>${precio_actual:.0f}</b> - ")
+            if precio_mejor == precio_actual:
+                texto_ju[ju] += "Es el precio más barato de los últimos 15 días.\n"
+            else:
+                texto_ju[ju] += f"El mínimo para los últimos 15 días fue ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
+        ju += 1
+
+# Busca Cazagangas
+    url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
+    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
+    data = urllib.request.urlopen(req)
+    cazagangas = json.loads(data.read())
+    if cazagangas["disponible"] == True:
+        texto_ju.append(f"\U0001F1E6\U0001F1F7 <a href='{cazagangas['url']}'>Cazagangas</a>: <b>${cazagangas['precio']:.0f}</b>\n")
+        precio_ju.append(cazagangas["precio"])
+
+
     if min(precio_ju) != 999999:
         ini = "\U0001F449 "
     else:
-        ini = "\U000027A1 "
-    texto += ini + '\U000027A1 '.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
+        ini = ""
+    texto += ini + ''.join([x for _, x in sorted(zip(precio_ju,texto_ju))])
+
 
     return [nombre, texto]
 
@@ -873,11 +919,12 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
 def ayuda(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
-    texto = """<b>Ayuda</b>
+    texto = """
+<b>Ayuda</b>
     
-@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton y Miniaturemarket) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
+@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton, Casa del Libro y Miniaturemarket, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
     
-Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 65% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
+Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 75% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
     
 Para ver la información de un juego en particular, elegí la opción <i>Ver un juego y poner/sacar alarmas</i> y escribí parte de su nombre. Ahí mismo vas a poder agregar alarmas cuando llegue a un determinado precio, o borrarla si lo querés.
     
@@ -892,7 +939,8 @@ Si un menú no responde, escribí nuevamente /start.
 <b>@matiliza armó un tutorial sobre todas las funciones del bot, miralo <a href='https://www.dropbox.com/s/15abm8a78x1jcwf/tuto-bot.mov?dl=0'>acá.</a></b>
 <b>La imagen del bot es cortesía del maravilloso <a href='https://www.instagram.com/bousantiago/'>Bou</a>.</b>
 
-Cualquier duda, mandame un mensaje a @Luis_Olcese."""
+Cualquier duda, mandame un mensaje a @Luis_Olcese.
+"""
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -907,14 +955,16 @@ def consejos(update: Update, context: CallbackContext) -> int:
     texto = """<b>Consejos</b>
     
 Todos los precios que se muestran acá son finales, considerando los impuestos del 35%, 30% y aduana.
-\U000027A1 <a href='https://www.buscalibre.com.ar/'>Buscalibre</a>: Los precios en la página son finales, y los juegos llegan directamente a tu casa sin trámite de aduana. Podés pagar en Ahora 3.
-\U000027A1 <a href='https://www.tiendamia.com/'>Tiendamía</a>: Siempre hay cupones que se pueden usar para bajar el precio. Buscalos en los mensajes fijados de https://t.me/comprasjuegosexterior.
-\U000027A1 <a href='https://www.bookdepository.com/'>Bookdepository</a>: Si sacás tarjeta de débito de Mercadopago y pagás con eso, no te cobra el 65% de impuestos.
-\U000027A1 <a href='https://www.365games.co.uk/'>365games</a> / <a href='https://www.shop4es.com/'>shop4es</a> / <a href='https://www.shop4world.com/'>shop4world</a>: A algunos juegos los mandan por courier, por lo que tenés que pagar un extra al recibirlos.
-\U000027A1 <a href='http://grooves.land/'>Grooves.land</a>: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.
-\U000027A1 <a href='http://www.planeton.com/'>Planeton</a>: Los juegos son en español, pero los precios son aproximados (por el envío). Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
-\U000027A1 <a href='http://www.miniaturemarket.com/'>Miniature Market</a>: Se toma el envío más barato. Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
-\U000027A1 <a href='https://www.deepdiscount.com/'>Deepdiscount</a>: El envío es caro, pero a veces aparecen ofertas."""
+\U0001F1E6\U0001F1F7 <a href='https://www.buscalibre.com.ar/'>Buscalibre</a>: Los precios en la página son finales, y los juegos llegan directamente a tu casa sin trámite de aduana. Podés pagar en Ahora 3.
+\U0001F1FA\U0001F1F8 <a href='https://www.tiendamia.com/'>Tiendamía</a>: Siempre hay cupones que se pueden usar para bajar el precio. Buscalos en los mensajes fijados de https://t.me/comprasjuegosexterior.
+\U0001F1EC\U0001F1E7 <a href='https://www.bookdepository.com/'>Bookdepository</a>: Si sacás tarjeta de débito de Mercadopago y pagás con eso, no te cobra el 75% de impuestos.
+\U0001F1EC\U0001F1E7 <a href='https://www.365games.co.uk/'>365games</a> / <a href='https://www.shop4es.com/'>shop4es</a> / <a href='https://www.shop4world.com/'>shop4world</a>: A algunos juegos los mandan por courier, por lo que tenés que pagar un extra al recibirlos.
+\U0001F1E9\U0001F1EA <a href='http://grooves.land/'>Grooves.land</a>: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.
+\U0001F1EA\U0001F1F8 <a href='http://www.planeton.com/'>Planeton</a>: Los juegos son en español, pero los precios son aproximados (por el envío). Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
+\U0001F1EA\U0001F1F8 <a href='https://www.casadellibro.com/'>Casa del Libro</a>: Los juegos son en español, mandan por courier, hay que tener cuidado que el máximo son 5 por año.
+\U0001F1FA\U0001F1F8 <a href='http://www.miniaturemarket.com/'>Miniature Market</a>: Se toma el envío más barato. Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
+\U0001F1FA\U0001F1F8 <a href='https://www.deepdiscount.com/'>Deepdiscount</a>: El envío es caro, pero a veces aparecen ofertas.
+"""
 
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
@@ -929,13 +979,14 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+23/07/2022: Agregado Casa del Libro
+20/07/2022: Agregado Cazagangas
+17/07/2022: Precio máximo para envío de avisos
 15/07/2022: Agregado de precios históricos
 12/07/2022: Posibilidad de anular las alarmas en las notificaciones
 10/07/2022: Cambio de imagen gracias a <a href='https://www.instagram.com/bousantiago/'>Bou</a>
-10/07/2022: Cambio en el sistena de ofertas y reposiciones
+10/07/2022: Cambio en el sistema de ofertas y reposiciones
 10/07/2022: Se pueden buscar los nombres sin acentos
-03/07/2022: Cambio de server
-02/07/2022: Campaña para cambio de server
 """
 
     keyboard = [
@@ -1033,7 +1084,7 @@ def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
 
 Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton y Miniature Market).
 En el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).
-<b>En el caso que agregues un juego de Planeton o Miniature Market, poné también el costo (en euros) del envío a Argentina que aparece cuando lo agregás al carrito.</b>
+<b>En el caso que agregues un juego de Planeton, Casa del Libro o Miniature Market, poné también el costo (en euros / dólares) del envío a Argentina que aparece cuando lo agregás al carrito.</b>
 
 Ejemplos:
 <i>Deepdiscount</i>
@@ -1041,7 +1092,7 @@ https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
 https://www.deepdiscount.com/splendor-marvel/3558380055334
 2.43
 
-<i>Planeton / Miniature Market</i>
+<i>Planeton / Casa del Libro / Miniature Market</i>
 https://boardgamegeek.com/boardgame/266192/wingspan
 https://www.planetongames.com/es/wingspan-p-8175.html
 34.85
@@ -1074,8 +1125,8 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
         return LISTA_JUEGOS
 
-    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves|planeton|miniaturemarket", url):
-        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land o Planeton")
+    if not re.search("tiendamia|bookdepository|buscalibre|365games|shop4es|shop4world|deepdiscount|grooves|planeton|casadellibro|miniaturemarket", url):
+        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, 365games, Shop4es, Shop4world, Deepdiscount, Grooves.land, Planeton, MiniatureMarket o Casa del Libro.")
         return LISTA_JUEGOS
 
     sitio_nom, sitio_id = extrae_sitio(url)
@@ -1095,8 +1146,8 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")
         return LISTA_JUEGOS
 
-    if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url)):
-        update.message.reply_text("Cuando agregás un juego de Planeton, tenés que poner el monto del envío.")
+    if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url)):
+        update.message.reply_text("Cuando agregás un juego de ese sitio, tenés que poner el monto del envío.")
         return LISTA_JUEGOS
 
     peso = None
@@ -1104,7 +1155,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
     if len(dat) > 2 and re.search("deepdiscount", url):
         peso = dat[2]
-    if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url)):
+    if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url)):
         precio_envio = dat[2]
 
     conn = conecta_db()
@@ -1206,6 +1257,12 @@ def extrae_sitio(sitio_url):
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
+    sitio_id = re.search('casadellibro\.com\/(.*?)$',sitio_url)
+    if sitio_id:
+        sitio_nom = "CDL"
+        sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
+
 ######### Muestra los juegos en oferta y restock
 def ofertas_restock(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
@@ -1266,16 +1323,16 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_al = "Según tus preferencias actuales, "
         tipo_alarma_oferta, tipo_alarma_reposicion = alarmas_ofertas
         if tipo_alarma_oferta == "BLP":
-            texto_al += "vas a recibir un mensaje cuando haya una oferta en Buscalibre, Buscalibre Amazon o Planeton, "
+            texto_al += f"vas a recibir un mensaje cuando haya una oferta (menor a ${int(constantes.var['precio_max_avisos'])}) en Buscalibre, Buscalibre Amazon o Planeton, "
         elif tipo_alarma_oferta == "Todo":
-            texto_al += "vas a recibir un mensaje cuando haya una oferta en cualquier sitio, "
+            texto_al += f"vas a recibir un mensaje cuando haya una oferta (menor a ${int(constantes.var['precio_max_avisos'])}) en cualquier sitio, "
         else:
             texto_al += "no vas a recibir mensajes cuando haya una oferta, "
 
         if tipo_alarma_reposicion == "BLP":
-            texto_al += "y vas a recibir un mensaje cuando haya una reposición en Buscalibre, Buscalibre Amazon o Planeton."
+            texto_al += f"y vas a recibir un mensaje cuando haya una reposición (menor a ${int(constantes.var['precio_max_avisos'])}) en Buscalibre, Buscalibre Amazon o Planeton."
         elif tipo_alarma_reposicion == "Todo":
-            texto_al += "y vas a recibir un mensaje cuando haya una reposición en cualquier sitio."
+            texto_al += f"y vas a recibir un mensaje cuando haya una reposición (menor a ${int(constantes.var['precio_max_avisos'])}) en cualquier sitio."
         else:
             texto_al += "y no vas a recibir mensajes cuando haya reposiciones."
 

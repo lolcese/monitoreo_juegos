@@ -20,6 +20,7 @@ import constantes
 import manda
 import hace_grafico
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
+from socket import timeout
 
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
@@ -32,15 +33,15 @@ updater = Updater(bot_token)
 def baja_pagina(url):
     req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
     try:
-        data = urllib.request.urlopen(req, timeout = 20)
+        data = urllib.request.urlopen(req, timeout = 60)
     except HTTPError as e:
         print(f"**** HTTPError bajando {url}")
         return "Error"
     except URLError as e:
-        print(f"**** URLError bajando {url}")
-        return "Error"
-    except TimeoutError as e:
-        print(f"**** Timeout bajando {url}")
+        if isinstance(e.reason, timeout):
+            print(f"**** Timeout bajando {url}")
+        else:
+            print(f"**** URLError bajando {url}")
         return "Error"
 
     if data.headers.get_content_charset() is None:
@@ -356,6 +357,26 @@ def lee_pagina_mm(ju_id, precio_envio):
 
     return precio_final_ad
 
+######### Lee información de Casa del Libro
+def lee_pagina_cdl(ju_id, precio_envio):
+    url = "https://www.casadellibro.com/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
+
+    precio_eur = re.search('\"Price\":\"(.*?)€?\"',text)
+    stock = '"availability":"OutOfStock"' in text
+    if not precio_eur or stock == 1:
+        return None
+
+    precio_eur = float(precio_eur[1])
+    precio_eur /= constantes.var['descuento_iva_CDL']
+    precio_eur += precio_envio
+    precio_pesos = precio_eur * constantes.var['euro'] 
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
+
+    return precio_final_ad
+
 ######### Programa principal
 def main():
     conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -396,6 +417,8 @@ def main():
                 precio = lee_pagina_planeton(sitio_id, precio_envio)
             elif sitio == "MM":
                 precio = lee_pagina_mm(sitio_id, precio_envio)
+            elif sitio == "CDL":
+                precio = lee_pagina_cdl(sitio_id, precio_envio)
 
             if precio is not None:
                 precio = round(precio)
@@ -411,15 +434,16 @@ def main():
                 else:
                     if reposicion != "Nuevo":
                         reposicion = "Sí"
-# Dispara alarma reposiciones
-                        if sitio == "BLIB" or sitio == "BLAM":
-                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
-                        else:
-                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
-                        usuarios_ofertas = cursor.fetchall()
-                        for u in usuarios_ofertas:
-                            texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
-                            manda.send_message(u[0], texto)
+# Dispara aviso reposiciones
+                        if precio < constantes.var["precio_max_avisos"]:
+                            if sitio == "BLIB" or sitio == "BLAM":
+                                cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
+                            else:
+                                cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
+                            usuarios_ofertas = cursor.fetchall()
+                            for u in usuarios_ofertas:
+                                texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
+                                manda.send_message(u[0], texto)
                     else:
                         reposicion = "No"
 
@@ -434,19 +458,22 @@ def main():
                 else:
                     reposicion = "No"
 
-# Dispara alarma ofertas
+# Dispara aviso ofertas
                 if precio != None and precio <= precio_prom * 0.9:
-                    porc = (precio_prom - precio) / precio_prom * 100
-                    if sitio == "BLIB" or sitio =="BLAM":
-                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
-                    else:
-                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
-                    if oferta == "No":
-                        usuarios_ofertas = cursor.fetchall()
-                        for u in usuarios_ofertas:
-                            texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
-                            manda.send_message(u[0], texto)
+                    if precio < constantes.var["precio_max_avisos"]:
+                        porc = (precio_prom - precio) / precio_prom * 100
+                        if sitio == "BLIB" or sitio =="BLAM":
+                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
+                        else:
+                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
+                        if oferta == "No":
+                            usuarios_ofertas = cursor.fetchall()
+                            for u in usuarios_ofertas:
+                                texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
+                                manda.send_message(u[0], texto)
                     oferta = "Sí"
+                elif precio == None:
+                    oferta = "Sin stock"
                 else:
                     oferta = "No"
 

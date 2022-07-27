@@ -1,1 +1,1 @@
-Este directorio puede ser borrado
+Este directorio no puede ser borrado
