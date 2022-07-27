@@ -680,7 +680,6 @@ def texto_info_juego(BGG_id):
                 else:
                     texto_ju[ju] += f"El mínimo para los últimos 15 días fue de ${precio_mejor:.0f} (el {fecha_mejor.day}/{fecha_mejor.month}/{fecha_mejor.year}).\n"
             ju += 1
-=======
         nombre_sitio = constantes.sitio_nom[j[2]]
         url_sitio = constantes.sitio_URL[j[2]] + j[3]
         pais_sitio = constantes.sitio_pais[j[2]]
