@@ -1622,7 +1622,7 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     estado = query.data.split("_")[3]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_venta_sugerido, usuario_nom, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio FROM venta_sugeridos WHERE id_juego_sugerido = ?', [sug_id])
+    cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio FROM juegos_sugeridos WHERE id_juego_sugerido = ?', [sug_id])
     juegos = cursor.fetchone()
     _, _, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio = juegos
 
