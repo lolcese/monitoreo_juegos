@@ -20,7 +20,8 @@ import constantes
 import manda
 import hace_grafico
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
-from socket import timeout
+import socket
+
 
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
@@ -37,11 +38,11 @@ def baja_pagina(url):
     except HTTPError as e:
         print(f"**** HTTPError bajando {url}")
         return "Error"
+    except socket.timeout:
+        print(f"**** Timeout bajando {url}")
+        return "Error"
     except URLError as e:
-        if isinstance(e.reason, timeout):
-            print(f"**** Timeout bajando {url}")
-        else:
-            print(f"**** URLError bajando {url}")
+        print(f"**** URLError bajando {url}")
         return "Error"
 
     if data.headers.get_content_charset() is None:
