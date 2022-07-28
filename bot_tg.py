@@ -402,7 +402,7 @@ def juegos_stockprecio_sitio(update: Update, context: CallbackContext) -> int:
         texto = f"<b>Juegos en venta (Contactá directamente al usuario)</b>\n\n"
         conn = conecta_db()
         cursor = conn.cursor()
-        cursor.execute('SELECT BGG_id, nombre, ventas.username, ventas.precio, ventas.estado, ventas.ciudad FROM juegos INNER JOIN ventas on ventas.id_venta = juegos.sitio_ID order by ventas.precio')
+        cursor.execute('SELECT BGG_id, nombre, ventas.username, ventas.precio, ventas.estado, ventas.ciudad FROM juegos INNER JOIN ventas on ventas.id_venta = juegos.sitio_ID order by abs(ventas.precio)')
         juegos = cursor.fetchall()
         for j in juegos:
             bgg_id, nombre, username, precio, estado, ciudad = j
