@@ -445,7 +445,7 @@ def juegos_baratos(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = f"<b>Juegos más baratos en las últimas 24 horas</b>\n\n{barato}", parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return LISTA_JUEGOS
 
-######### Muestra el menú de compraventa
+######### Muestra el menú de compras y ventas
 def compraventa_menu(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     query.answer()
