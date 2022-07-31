@@ -452,14 +452,15 @@ def compraventa_menu(update: Update, context: CallbackContext) -> int:
     usuario_id = update.callback_query.from_user.id
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT tipo_aviso_venta FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
-    tipo_aviso_venta = cursor.fetchone()
-    if tipo_aviso_venta == "Sí":
-        txt = "Actualmente recibís avisos de ventas."
-        men = [InlineKeyboardButton("\U00002796 No recibir avisos de ventas", callback_data='avisos_venta_no')],
-    else:
+    cursor.execute('SELECT tipo_aviso_ventas FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
+    aviso_ventas = cursor.fetchone()
+    if aviso_ventas == None or aviso_ventas[0] != "Sí":
         txt = "Actualmente no recibís avisos de ventas."
-        men = [InlineKeyboardButton("\U00002795 Recibir avisos de ventas", callback_data='avisos_venta_si')],
+        men = [InlineKeyboardButton("\U00002795 Recibir avisos de ventas", callback_data='avisos_venta_si')]
+    else:
+        txt = "Actualmente recibís avisos de ventas."
+        men = [InlineKeyboardButton("\U00002796 No recibir avisos de ventas", callback_data='avisos_venta_no')]
+
     keyboard = [
         [InlineKeyboardButton("\U0001F4C5 Lista de juegos (fecha)", callback_data='juegos_fecha_venta')],
         [InlineKeyboardButton("\U0001F4B8 Lista de juegos (precio)", callback_data='juegos_precio_venta')],
@@ -469,8 +470,7 @@ def compraventa_menu(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    id = query.edit_message_text(text = f"{txt}\nElegí qué querés hacer", reply_markup=reply_markup)
-    context.chat_data["mensaje_id"] = id.message_id
+    query.edit_message_text(text = f"{txt}\nElegí qué querés hacer", reply_markup=reply_markup)
     return VENTAS
 
 ######### Lista de juegos en venta en orden de fecha
@@ -628,17 +628,22 @@ def avisos_venta(update: Update, context: CallbackContext) -> int:
     query.answer()
     usuario_id = update.callback_query.from_user.id
     aviso = query.data.split("_")[2]
-    if aviso == "Sí":
+    if aviso == "si":
         txt = "A partir de ahora, te voy a mandar un mensaje cada vez que un usuario agregue un juego a la venta."
         val = "Sí"
     else:
         txt = "A partir de ahora, no te voy a mandar más un mensaje cada vez que un usuario agregue un juego a la venta."
-        val = ""
+        val = None
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('UPDATE alarmas_ofertas SET aviso_ventas = ? WHERE id_alarma_id = ?',[val, usuario_id])
-    conn.commit()
 
+    cursor.execute('SELECT tipo_aviso_ventas FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
+    aviso_ventas = cursor.fetchone()
+    if aviso_ventas == None:
+        cursor.execute('INSERT INTO alarmas_ofertas (id_usuario, tipo_alarma, tipo_aviso_ventas) VALUES (?, ?, ?)',[usuario_id, 3, val])
+    else:
+        cursor.execute('UPDATE alarmas_ofertas SET tipo_aviso_ventas = ? WHERE id_usuario = ?',[val, usuario_id])
+    conn.commit()
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='compraventa_menu'),
@@ -647,7 +652,7 @@ def avisos_venta(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_text(text = txt, reply_markup=reply_markup)
+    query.edit_message_text(text = txt, reply_markup=reply_markup)
     return VENTAS
 
 ######### Muestra todas las alarmas de un usuario
@@ -1833,20 +1838,19 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
 # Manda alarmas
         cursor.execute('SELECT id_persona, precio_alarma FROM alarmas WHERE BGG_id = ? and precio_alarma >= ?',(bgg_id, precio))
         alarmas = cursor.fetchall()
-        if len(alarmas) > 0:
-            for alarma in alarmas:
-                id_persona, precio_al = alarma
-                texto = f'\U000023F0\U000023F0\U000023F0\n\n@{usuario_username} vende <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> {precio} ({estado}, en {ciudad}) y tenés una alarma a los ${precio_al:.0f}.\n\n\U000023F0\U000023F0\U000023F0'
-                manda.send_message(id_persona, texto)
+        for a in alarmas:
+            id_persona, precio_al = a
+            texto = f'\U000023F0\U000023F0\U000023F0\n\n@{usuario_username} vende <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> a ${precio} ({estado}, en {ciudad}) y tenés una alarma a los ${precio_al:.0f}.\n\n\U000023F0\U000023F0\U000023F0'
+            manda.send_message(id_persona, texto)
 
 # Manda avisos
-        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE aviso_ventas = "Sí"')
+        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_aviso_ventas = "Sí"')
         avisos = cursor.fetchall()
-        if len(alarmas) > 0:
-            for a in avisos:
-                id_persona = a
-                texto = f'\U0001F4B0\U0001F4B0\U0001F4B0\n\n@{usuario_username} vende <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> {precio} ({estado}, en {ciudad})\n\n\U0001F4B0\U0001F4B0\U0001F4B0'
-                manda.send_message(id_persona, texto)
+        for a in avisos:
+            print(a)
+            id_persona = a[0]
+            texto = f'\U0001F4B0\U0001F4B0\U0001F4B0\n\n@{usuario_username} vende <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> a ${precio} ({estado}, en {ciudad})\n\n\U0001F4B0\U0001F4B0\U0001F4B0'
+            manda.send_message(id_persona, texto)
 
     conn.execute ('DELETE FROM venta_sugeridos WHERE id_venta_sugerido = ?',[id_venta_sugerido])
     conn.commit()
@@ -1949,6 +1953,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(avisos_venta,             pattern='^avisos_venta_'),
                 CallbackQueryHandler(vender_juego,             pattern='^vender_juego$'),
                 CallbackQueryHandler(avisos_venta,             pattern='^avisos_venta$'),
+                CallbackQueryHandler(compraventa_menu,         pattern='^compraventa_menu$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
