@@ -640,7 +640,7 @@ def avisos_venta(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT tipo_aviso_ventas FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
     aviso_ventas = cursor.fetchone()
     if aviso_ventas == None:
-        cursor.execute('INSERT INTO alarmas_ofertas (id_usuario, tipo_alarma, tipo_aviso_ventas) VALUES (?, ?, ?)',[usuario_id, 3, val])
+        cursor.execute('INSERT INTO alarmas_ofertas (id_usuario, tipo_alarma, tipo_aviso_ventas, tipo_alarma_oferta, tipo_alarma_reposicion) VALUES (?, ?, ?)',[usuario_id, 3, val, "No", "No"])
     else:
         cursor.execute('UPDATE alarmas_ofertas SET tipo_aviso_ventas = ? WHERE id_usuario = ?',[val, usuario_id])
     conn.commit()
@@ -1134,6 +1134,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+01/08/2022: Precios de Tiendamia en dólares
 23/07/2022: Avisos de ventas
 27/07/2022: Posibilidad de vender juegos
 23/07/2022: Agregado Casa del Libro
