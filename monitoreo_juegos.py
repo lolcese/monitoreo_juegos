@@ -379,6 +379,28 @@ def lee_pagina_cdl(ju_id, precio_envio):
 
     return precio_final_ad
 
+######### Lee información de Magic Madhouse
+def lee_pagina_mmadhouse(ju_id):
+    url = "https://magicmadhouse.co.uk/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
+
+    precio_gbp = re.search('"itemSalePrice": "(.*?)",',text)
+    stock = '"stock":0,' in text
+    if not precio_gbp or stock == 1:
+        return None
+
+    precio_gbp = float(precio_gbp[1])
+    precio_gbp /= constantes.var['descuento_iva_MMadhouse']
+    precio_envio = constantes.var['envio_MMadhouse']
+    precio_imp = precio_gbp * constantes.var['fraccion_imp_MMadhouse'] + constantes.var['fijo_imp_MMadhouse']
+    precio_gbp += precio_envio + precio_imp
+    precio_pesos = precio_gbp * constantes.var['libra'] 
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
+
+    return precio_final_ad
+
 ######### Programa principal
 def main():
     conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -421,6 +443,8 @@ def main():
                 precio = lee_pagina_mm(sitio_id, precio_envio)
             elif sitio == "CDL":
                 precio = lee_pagina_cdl(sitio_id, precio_envio)
+            elif sitio == "MMadhouse":
+                precio = lee_pagina_mmadhouse(sitio_id)
 
             if precio is not None:
                 precio = round(precio)
