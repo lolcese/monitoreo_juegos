@@ -94,15 +94,17 @@ def lee_pagina_tmam(ju_id):
     if not peso or peso[1] == "":
         return None
     peso = float(peso[1])
+
+    stock = 'Disponibilidad: <span>En stock<\/span>' in text
  
-    precio_ar = re.search('<meta property="product:price:amount" content="(.*?)">',text)
-    if not precio_ar:
+    precio_dol = re.search('"final_price":{"label":"","value":{"dollar_price":"U$S (.*?)"',text)
+    if not precio_dol or not stock:
         return None
-    precio_ar = float(precio_ar[1])
-    if precio_ar < 1000:
+    precio_dol = float(precio_dol[1])
+    if precio_dol < 1:
         return None
 
-    pr_tm = precio_tm(peso,precio_ar)
+    pr_tm = precio_tm(peso,precio_dol)
     return pr_tm
 
 ######### Lee información de TMWM
@@ -118,14 +120,14 @@ def lee_pagina_tmwm(ju_id):
 
     stock = '<span class="notranslate">Sin stock<\/span>' in text
 
-    precio_ar = re.search('<meta property="product:price:amount" content="(.*?)">',text)
-    if not precio_ar or not stock:
+    precio_dol = re.search('"final_price":{"label":"","value":{"dollar_price":"U$S (.*?)"',text)
+    if not precio_dol or not stock:
         return None
-    precio_ar = float(precio_ar[1])
-    if precio_ar < 1000:
+    precio_dol = float(precio_dol[1])
+    if precio_dol < 1:
         return None
 
-    pr_tm = precio_tm(peso,precio_ar)
+    pr_tm = precio_tm(peso,precio_dol)
     return pr_tm
 
 ######### Lee información de TMEB
@@ -142,18 +144,18 @@ def lee_pagina_tmeb(ju_id):
 
     stock = '<span id="stock_producto_ajax">Sin Stock<\/span>' in text
 
-    precio_ar = re.search('<meta property="product:price:amount" content="(.*?)">',text)
-    if not precio_ar or not stock:
+    precio_dol = re.search('"final_price":{"label":"","value":{"dollar_price":"U$S (.*?)"',text)
+    if not precio_dol or not stock:
         return None
-    precio_ar = float(precio_ar[1])
-    if precio_ar < 1000:
+    precio_dol = float(precio_dol[1])
+    if precio_dol < 1:
         return None
 
-    pr_tm = precio_tm(peso,precio_ar)
+    pr_tm = precio_tm(peso,precio_dol)
     return pr_tm
 
 ######### Calcula precio para TM
-def precio_tm(peso,precio_ar):
+def precio_tm(peso,precio_dol):
     costo_peso = peso * constantes.var['precio_kg']
     if peso > 3:
         desc_3kg = 0.3 * (peso - 3) * constantes.var['precio_kg']
@@ -163,12 +165,11 @@ def precio_tm(peso,precio_ar):
         desc_5kg = 0.5 * (peso - 5) * constantes.var['precio_kg']
     else:
         desc_5kg = 0
-    precio_ar = precio_ar * 1.1 + constantes.var['tasa_tm'] + costo_peso - desc_3kg - desc_5kg
-    precio_dol = precio_ar / constantes.var['dolar_tm']
+    precio_dol = precio_dol * 1.1 + constantes.var['tasa_tm'] + costo_peso - desc_3kg - desc_5kg
     imp = 0
     if precio_dol > 50:
         imp = (precio_dol - 50) * 0.5
-    precio_final_arg = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
+    precio_final_arg = (precio_dol + imp * constantes.var['dolar']) + constantes.var['tasa_correo']
     return precio_final_arg
 
 ######### Lee información de BOOK

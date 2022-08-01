@@ -9,6 +9,7 @@ import requests
 from requests import get
 from urllib.error import URLError, HTTPError
 from decouple import config
+import manda
 
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
@@ -79,14 +80,14 @@ url = 'https://tiendamia.com/ar/tarifas'
 response = get(url)
 data = response.content.decode('utf-8', errors='ignore')
 
-datos1 = re.search('el shipping internacional tiene un costo de <span class="price dollar_price">\nU\$S .*? .*?\n.*?\nAR\$ (.*?) ',data)
+datos1 = re.search('el shipping internacional tiene un costo de <span class="price dollar_price">\nU\$S (.*?) <\/span>',data)
 env_int_dol = datos1[1]
 env_int_dol = float(re.sub("\.", "", env_int_dol))
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "tasa_tm"',(env_int_dol, fecha))
 conn.commit()
 
-datos2 = re.search('<td class="indent">0.1<\/td>\n.*?\n.*?\n.*?\n.*?\n.*?\nAR\$ (.*?) ',data)
+datos2 = re.search('<td class="indent">0\.1<\/td>\n.*?\n.*?\n.*?\nU\$S (.*?) ',data)
 tasa_kg = datos2[1]
 tasa_kg = float(re.sub("\.", "", tasa_kg))
 
@@ -115,5 +116,20 @@ env_bl = float(datos1[1])
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "envio_BL"',(env_bl, fecha))
 conn.commit()
+
+# ######### Elimina avisos de ventas
+# cursor.execute('SELECT id_juego, BGG_id, nombre, sitio_ID FROM juegos WHERE sitio = "Usuario" AND fecha_agregado < datetime("now", "-7 days", "localtime")')
+# vencidos = cursor.fetchall()
+# for v in vencidos:
+#     id_juego, bgg_id, nombre, sitio_ID = v
+#     cursor.execute('SELECT usuario_id, precio, estado, ciudad FROM ventas WHERE id_venta = ?', [sitio_ID])
+#     ventas_vencido = cursor.fetchone()
+#     usuario_id, precio, estado, ciudad = ventas_vencido
+#     texto = f"Tu publicación para {nombre} venció. Si querés republicarlo, estos son los datos:\n{constantes.sitio_URL['BGG']+str(bgg_id)}\n{estado}\n{precio}\n{ciudad}"
+#     manda.send_message(usuario_id, texto)
+#     cursor.execute('DELETE FROM juegos WHERE id_juego = ?', [id_juego])
+#     conn.commit()
+#     cursor.execute('DELETE FROM ventas WHERE id_venta = ?', [sitio_ID])
+#     conn.commit()
 
 cursor.close()
