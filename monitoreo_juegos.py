@@ -197,8 +197,10 @@ def lee_pagina_365(ju_id):
     if text == "Error":
         return None
 
+    stock = '<meta name="twitter:data2" content="Available">' in text
+
     precio_lb = re.search('value: (.*?),',text)
-    if not precio_lb:
+    if not precio_lb or stock == 0:
         return None
     precio_pesos = (float(precio_lb[1]) + constantes.var['envio_365']) * constantes.var['libra'] 
     precio_dol = precio_pesos / constantes.var['dolar']
@@ -218,8 +220,10 @@ def lee_pagina_shop4es(ju_id):
     if text == "Error":
         return None
 
+    stock = '<meta name="twitter:data2" content="Available">' in text
+
     precio_eu = re.search('value: (.*?),',text)
-    if not precio_eu:
+    if not precio_eu or stock == 0:
         return None
     precio_pesos = (float(precio_eu[1]) + constantes.var['envio_shop4es']) * constantes.var['euro'] 
     precio_dol = precio_pesos / constantes.var['dolar']
@@ -239,8 +243,10 @@ def lee_pagina_shop4world(ju_id):
     if text == "Error":
         return None
 
+    stock = '<meta name="twitter:data2" content="Available">' in text
+
     precio_lb = re.search('value: (.*?),',text)
-    if not precio_lb:
+    if not precio_lb or stock == 0:
         return None
     precio_pesos = (float(precio_lb[1]) + constantes.var['envio_shop4world']) * constantes.var['libra'] 
     precio_dol = precio_pesos / constantes.var['dolar']
