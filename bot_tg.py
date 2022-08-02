@@ -1862,7 +1862,6 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
         cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_aviso_ventas = "Sí"')
         avisos = cursor.fetchall()
         for a in avisos:
-            print(a)
             id_persona = a[0]
             texto = f'\U0001F4B0\U0001F4B0\U0001F4B0\n\n@{usuario_username} vende <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> a ${precio} ({estado}, en {ciudad})\n\n\U0001F4B0\U0001F4B0\U0001F4B0'
             manda.send_message(id_persona, texto)

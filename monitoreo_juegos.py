@@ -36,13 +36,13 @@ def baja_pagina(url):
     try:
         data = urllib.request.urlopen(req, timeout = 60)
     except HTTPError as e:
-        print(f"**** HTTPError bajando {url}")
+        # print(f"**** HTTPError bajando {url}")
         return "Error"
     except socket.timeout:
-        print(f"**** Timeout bajando {url}")
+        # print(f"**** Timeout bajando {url}")
         return "Error"
     except URLError as e:
-        print(f"**** URLError bajando {url}")
+        # print(f"**** URLError bajando {url}")
         return "Error"
 
     if data.headers.get_content_charset() is None:
