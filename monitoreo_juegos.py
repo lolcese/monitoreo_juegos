@@ -95,7 +95,7 @@ def lee_pagina_tmam(ju_id):
         return None
     peso = float(peso[1])
 
-    stock = 'Disponibilidad: <span>En stock<\/span>' in text
+    stock = 'Disponibilidad: <span>En stock</span>' in text
  
     precio_dol = re.search('"final_price":{"label":"","value":{"dollar_price":"U$S (.*?)"',text)
     if not precio_dol or not stock:
@@ -121,7 +121,7 @@ def lee_pagina_tmwm(ju_id):
     stock = '<span class="notranslate">Sin stock<\/span>' in text
 
     precio_dol = re.search('"final_price":{"label":"","value":{"dollar_price":"U$S (.*?)"',text)
-    if not precio_dol or not stock:
+    if not precio_dol or stock:
         return None
     precio_dol = float(precio_dol[1])
     if precio_dol < 1:
@@ -142,10 +142,10 @@ def lee_pagina_tmeb(ju_id):
         return None
     peso = float(peso[1])
 
-    stock = '<span id="stock_producto_ajax">Sin Stock<\/span>' in text
+    stock = '<span id="stock_producto_ajax">Sin Stock</span>' in text
 
     precio_dol = re.search('"final_price":{"label":"","value":{"dollar_price":"U$S (.*?)"',text)
-    if not precio_dol or not stock:
+    if not precio_dol or stock:
         return None
     precio_dol = float(precio_dol[1])
     if precio_dol < 1:
