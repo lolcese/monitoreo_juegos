@@ -116,7 +116,7 @@ cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "envi
 conn.commit()
 
 # ######### Elimina avisos de ventas
-cursor.execute('SELECT id_juego, BGG_id, nombre, sitio_ID FROM juegos WHERE sitio = "Usuario" AND fecha_agregado < datetime("now", "-7 days", "localtime")')
+cursor.execute('SELECT id_juego, BGG_id, nombre, sitio_ID FROM juegos WHERE sitio = "Usuario" AND fecha_agregado < datetime("now", "-15 days", "localtime")')
 vencidos = cursor.fetchall()
 for v in vencidos:
     id_juego, bgg_id, nombre, sitio_ID = v
