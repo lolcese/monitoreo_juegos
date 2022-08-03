@@ -461,34 +461,31 @@ def compraventa_menu(update: Update, context: CallbackContext) -> int:
     usuario_id = update.callback_query.from_user.id
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT tipo_aviso_ventas FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
-    aviso_ventas = cursor.fetchone()
-    if aviso_ventas == None or aviso_ventas[0] != "Sí":
-        txt = "Actualmente no recibís avisos de ventas."
-        men = [InlineKeyboardButton("\U00002795 Recibir avisos de ventas", callback_data='avisos_venta_si')]
-    else:
-        txt = "Actualmente recibís avisos de ventas."
-        men = [InlineKeyboardButton("\U00002796 No recibir avisos de ventas", callback_data='avisos_venta_no')]
-
-    cursor.execute('SELECT id_ventas FROM ventas WHERE id_usuario = ?',[usuario_id])
-    ventas = cursor.fetchall()
-    if len(ventas) > 0:
-        jue = []
-        for v in ventas:
-            id_venta = v[0]
-            cursor.execute('SELECT nombre FROM juegos WHERE id_venta = ?',[id_venta])
-            j = cursor.fetchone()
-            jue.append([InlineKeyboardButton(f"\U00002796 Borrar {j[0]}", callback_data=f'borrar_venta_{id_venta}')])
-
     keyboard = [
         [InlineKeyboardButton("\U0001F4C5 Lista de juegos (fecha)", callback_data='juegos_fecha_venta')],
         [InlineKeyboardButton("\U0001F4B8 Lista de juegos (precio)", callback_data='juegos_precio_venta')],
         [InlineKeyboardButton("\U0001F520 Lista de juegos (alfabética)", callback_data='juegos_alfab_venta')],
         [InlineKeyboardButton("\U0001F4B2 Agregar un juego a la venta", callback_data='agregar_venta')],
-        jue,
-        men,
-        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
+    cursor.execute('SELECT id_venta FROM ventas WHERE usuario_id = ?',[usuario_id])
+    ventas = cursor.fetchall()
+    if len(ventas) > 0:
+        for v in ventas:
+            id_venta = v[0]
+            cursor.execute('SELECT nombre FROM juegos WHERE sitio_ID = ?',[id_venta])
+            j = cursor.fetchone()
+            keyboard.append([InlineKeyboardButton(f"\U00002716 Borrar {j[0]}", callback_data=f'borrar_venta_{id_venta}')])
+
+    cursor.execute('SELECT tipo_aviso_ventas FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
+    aviso_ventas = cursor.fetchone()
+    if aviso_ventas == None or aviso_ventas[0] != "Sí":
+        txt = "Actualmente no recibís avisos de ventas."
+        keyboard.append([InlineKeyboardButton("\U00002795 Recibir avisos de ventas", callback_data='avisos_venta_si')])
+    else:
+        txt = "Actualmente recibís avisos de ventas."
+        keyboard.append([InlineKeyboardButton("\U00002796 No recibir avisos de ventas", callback_data='avisos_venta_no')])
+
+    keyboard.append([InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = f"{txt}\nElegí qué querés hacer", reply_markup=reply_markup)
     return VENTAS
