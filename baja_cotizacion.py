@@ -116,18 +116,18 @@ cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "envi
 conn.commit()
 
 # ######### Elimina avisos de ventas
-# cursor.execute('SELECT id_juego, BGG_id, nombre, sitio_ID FROM juegos WHERE sitio = "Usuario" AND fecha_agregado < datetime("now", "-7 days", "localtime")')
-# vencidos = cursor.fetchall()
-# for v in vencidos:
-#     id_juego, bgg_id, nombre, sitio_ID = v
-#     cursor.execute('SELECT usuario_id, precio, estado, ciudad FROM ventas WHERE id_venta = ?', [sitio_ID])
-#     ventas_vencido = cursor.fetchone()
-#     usuario_id, precio, estado, ciudad = ventas_vencido
-#     texto = f"Tu publicación para {nombre} venció. Si querés republicarlo, estos son los datos:\n{constantes.sitio_URL['BGG']+str(bgg_id)}\n{estado}\n{precio}\n{ciudad}"
-#     manda.send_message(usuario_id, texto)
-#     cursor.execute('DELETE FROM juegos WHERE id_juego = ?', [id_juego])
-#     conn.commit()
-#     cursor.execute('DELETE FROM ventas WHERE id_venta = ?', [sitio_ID])
-#     conn.commit()
+cursor.execute('SELECT id_juego, BGG_id, nombre, sitio_ID FROM juegos WHERE sitio = "Usuario" AND fecha_agregado < datetime("now", "-7 days", "localtime")')
+vencidos = cursor.fetchall()
+for v in vencidos:
+    id_juego, bgg_id, nombre, sitio_ID = v
+    cursor.execute('SELECT usuario_id, precio, estado, ciudad FROM ventas WHERE id_venta = ?', [sitio_ID])
+    ventas_vencido = cursor.fetchone()
+    usuario_id, precio, estado, ciudad = ventas_vencido
+    texto = f"Tu publicación para {nombre} venció. Si querés republicarlo, estos son los datos:\n{constantes.sitio_URL['BGG']+str(bgg_id)}\n{estado}\n{precio}\n{ciudad}"
+    manda.send_message(usuario_id, texto)
+    cursor.execute('DELETE FROM juegos WHERE id_juego = ?', [id_juego])
+    conn.commit()
+    cursor.execute('DELETE FROM ventas WHERE id_venta = ?', [sitio_ID])
+    conn.commit()
 
 cursor.close()

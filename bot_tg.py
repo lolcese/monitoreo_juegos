@@ -470,17 +470,49 @@ def compraventa_menu(update: Update, context: CallbackContext) -> int:
         txt = "Actualmente recibís avisos de ventas."
         men = [InlineKeyboardButton("\U00002796 No recibir avisos de ventas", callback_data='avisos_venta_no')]
 
+    cursor.execute('SELECT id_ventas FROM ventas WHERE id_usuario = ?',[usuario_id])
+    ventas = cursor.fetchall()
+    if len(ventas) > 0:
+        jue = []
+        for v in ventas:
+            id_venta = v[0]
+            cursor.execute('SELECT nombre FROM juegos WHERE id_venta = ?',[id_venta])
+            j = cursor.fetchone()
+            jue.append([InlineKeyboardButton(f"\U00002796 Borrar {j[0]}", callback_data=f'borrar_venta_{id_venta}')])
+
     keyboard = [
         [InlineKeyboardButton("\U0001F4C5 Lista de juegos (fecha)", callback_data='juegos_fecha_venta')],
         [InlineKeyboardButton("\U0001F4B8 Lista de juegos (precio)", callback_data='juegos_precio_venta')],
         [InlineKeyboardButton("\U0001F520 Lista de juegos (alfabética)", callback_data='juegos_alfab_venta')],
         [InlineKeyboardButton("\U0001F4B2 Agregar un juego a la venta", callback_data='agregar_venta')],
+        jue,
         men,
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     query.edit_message_text(text = f"{txt}\nElegí qué querés hacer", reply_markup=reply_markup)
     return VENTAS
+
+######### Borra juegos en venta
+def borrar_venta(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    id_venta = query.data.split("_")[2]
+    conn = conecta_db()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM juegos WHERE id_juego = ? and sitio_ID = "Usuario"', [id_venta])
+    conn.commit()
+    cursor.execute('DELETE FROM ventas WHERE id_venta = ?', [id_venta])
+    conn.commit()
+    texto = "Juego borrado"
+    keyboard = [
+        [
+            InlineKeyboardButton("\U00002B05 Anterior", callback_data='compraventa_menu'),
+            InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')
+        ],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
 
 ######### Lista de juegos en venta en orden de fecha
 def juegos_fecha_venta(update: Update, context: CallbackContext) -> int:
@@ -1968,6 +2000,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(vender_juego,             pattern='^vender_juego$'),
                 CallbackQueryHandler(avisos_venta,             pattern='^avisos_venta$'),
                 CallbackQueryHandler(compraventa_menu,         pattern='^compraventa_menu$'),
+                CallbackQueryHandler(borrar_venta,             pattern='^borrar_venta_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
