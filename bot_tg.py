@@ -1754,11 +1754,11 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     juegos = cursor.fetchone()
     _, _, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio = juegos
 
-    if estado == "rechazarnoARG":
+    if estado.startswith("rechazarnoARG"):
         manda.send_message(usuario_id, f'Gracias por la sugerencia, pero {constantes.sitio_URL[sitio_nom]+sitio_id} no se envía a Argentina')
-    elif estado == "rechazarequiv":
+    elif estado.startswith("rechazarequiv"):
         manda.send_message(usuario_id, f'Gracias por la sugerencia, pero {constantes.sitio_URL[sitio_nom]+sitio_id} no corresponde a <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a>')
-    elif estado == "rechazarotro":
+    elif estado.startswith("rechazarotro"):
         manda.send_message(usuario_id, f'Gracias por la sugerencia, pero <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} no puede ser monitoreado')
     elif estado.startswith("aprobar"):
         nombre = context.chat_data["nombre"]
