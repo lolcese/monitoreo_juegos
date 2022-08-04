@@ -1753,15 +1753,15 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT id_juego_sugerido, usuario_nom, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio FROM juegos_sugeridos WHERE id_juego_sugerido = ?', [sug_id])
     juegos = cursor.fetchone()
     _, _, usuario_id, bgg_id, sitio_nom, sitio_id, peso, precio_envio = juegos
+    nombre = context.chat_data["nombre"]
 
-    if estado.startswith("rechazarnoARG"):
+    if estado == "rechazarnoARG":
         manda.send_message(usuario_id, f'Gracias por la sugerencia, pero {constantes.sitio_URL[sitio_nom]+sitio_id} no se envía a Argentina')
-    elif estado.startswith("rechazarequiv"):
+    elif estado == "rechazarequiv":
         manda.send_message(usuario_id, f'Gracias por la sugerencia, pero {constantes.sitio_URL[sitio_nom]+sitio_id} no corresponde a <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a>')
-    elif estado.startswith("rechazarotro"):
+    elif estado == "rechazarotro":
         manda.send_message(usuario_id, f'Gracias por la sugerencia, pero <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} no puede ser monitoreado')
     elif estado.startswith("aprobar"):
-        nombre = context.chat_data["nombre"]
         ranking = context.chat_data["ranking"]
         dependencia_leng = context.chat_data["dependencia_leng"]
         fecha = datetime.now()
