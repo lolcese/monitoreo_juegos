@@ -1732,6 +1732,7 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
             [InlineKeyboardButton("\U00002705 Aprobar", callback_data=f'admin_sugeridos_{id_juego_sugerido}_aprobar')],
             [InlineKeyboardButton("\U0000274C Rechazar no Argentina", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarnoARG')],
             [InlineKeyboardButton("\U0000274C Rechazar juego equivocado", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarequiv')],
+            [InlineKeyboardButton("\U0000274C Rechazar ya monitoreado", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazaryamonitoreado')],
             [InlineKeyboardButton("\U0000274C Rechazar otro", callback_data=f'admin_sugeridos_{id_juego_sugerido}_rechazarotro')],
             [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
         ]
@@ -1761,6 +1762,8 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
         manda.send_message(usuario_id, f'Gracias por la sugerencia, pero {constantes.sitio_URL[sitio_nom]+sitio_id} no corresponde a <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a>')
     elif estado == "rechazarotro":
         manda.send_message(usuario_id, f'Gracias por la sugerencia, pero <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} no puede ser monitoreado')
+    elif estado == "rechazaryamonitoreado":
+        manda.send_message(usuario_id, f'Gracias por la sugerencia, pero <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> ya está siendo monitoreado desde ese sitio')
     elif estado.startswith("aprobar"):
         ranking = context.chat_data["ranking"]
         dependencia_leng = context.chat_data["dependencia_leng"]
