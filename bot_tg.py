@@ -20,6 +20,7 @@ import urllib.request
 from decouple import config
 import unicodedata
 import json
+from urllib.parse import unquote
 
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
@@ -1308,7 +1309,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         return LISTA_JUEGOS
 
     bgg_url = dat[0]
-    url = dat[1]
+    url = unquote(dat[1])
 
     busca_id = re.search('boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)',bgg_url)
     if busca_id:
