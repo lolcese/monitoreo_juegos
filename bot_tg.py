@@ -79,7 +79,7 @@ def start(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT monto, fecha from colaboradores WHERE id_persona = ?',[usuario_id])
     cola = cursor.fetchone()
     txt = ""
-    if cola != None:
+    if cola is not None:
         txt = f"\U0000FE0F Gracias por colaborar con ${cola[0]} el {cola[1]} \U0000FE0F\n"
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -102,7 +102,7 @@ def inicio(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT monto, fecha from colaboradores WHERE id_persona = ?',[usuario_id])
     cola = cursor.fetchone()
     txt = ""
-    if cola != None:
+    if cola is not None:
         txt = f"Gracias por colaborar con ${cola[0]} el {cola[1]}\n"
     keyboard = menu()
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -833,7 +833,7 @@ def juego_info(update: Update, context: CallbackContext) -> int:
     
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     
-    if arch != None:
+    if arch is not None:
         id = context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
         os.remove(arch)
     id = context.bot.send_message(chat_id = update.effective_chat.id, text = texto, parse_mode="HTML", disable_web_page_preview = True, reply_markup=reply_markup)
@@ -1097,7 +1097,7 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
     
     context.bot.deleteMessage(chat_id = usuario_id, message_id = context.chat_data["mensaje_id"])
     
-    if arch != None:
+    if arch is not None:
         context.bot.sendPhoto(chat_id = update.effective_chat.id, photo = open(arch, "rb"))
         os.remove(arch)
     else:
@@ -1478,7 +1478,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     porc_15 = []
     porc_20 = []
     texto_of = "<b>Juegos en oferta</b>\n\n"
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual FROM juegos WHERE oferta = "Sí" and precio_actual > 0')
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual FROM juegos WHERE fecha_oferta < datetime("now", "-7 days", "localtime") and precio_actual > 0')
     ofertas = cursor.fetchall()
     for o in ofertas:
         nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual = o
@@ -1504,11 +1504,11 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_of += "No hay ningún juego en oferta\n"
 
     texto_st = "<b>Juegos en reposición</b>\n\n"
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE reposicion = "Sí"')
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE fecha_reposicion < datetime("now", "-3 days", "localtime")')
     restock = cursor.fetchall()
     for r in restock:
         nombre, sitio, sitio_id, bgg_id, precio_actual = r
-        if precio_actual != None:
+        if precio_actual is not None:
             texto_st += f"\U000027A1 <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a> está en stock en <a href='{constantes.sitio_URL[sitio]+sitio_id}'>{constantes.sitio_nom[sitio]}</a> a ${precio_actual:.0f} (y antes no lo estaba)\n"
     if texto_st == "<b>Juegos en reposición</b>\n\n":
         texto_st = "No hay ningún juego en reposición\n"
@@ -1717,10 +1717,10 @@ def admin_juegos_sugeridos(update: Update, context: CallbackContext) -> int:
             dependencia_leng = 0
 
         texto += f"Nombre: <a href='{constantes.sitio_URL['BGG']+str(bgg_id)}'>{html.escape(nombre)}</a>\n"
-        if peso != None:
+        if peso is not None:
             texto += f"Peso: {peso}\n"
 
-        if precio_envio != None:
+        if precio_envio is not None:
             texto += f"Precio envío: {precio_envio}\n"
 
         cursor.execute ('SELECT sitio, sitio_ID FROM juegos WHERE BGG_id = ?',[int(bgg_id)])
@@ -1881,7 +1881,7 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
         conn.commit()
         conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, "Usuario", id_venta, fecha, ranking, None, dependencia_leng, 0, None, "No", "No", nombre_noacentos))
         conn.commit()
-        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} fue agregado al listado por una semana.')
+        manda.send_message(usuario_id, f'El juego {nombre}, estado "{estado}", a ${precio}, desde {ciudad} fue agregado al listado por dos semanas.')
 
 # Manda alarmas
         cursor.execute('SELECT id_persona, precio_alarma FROM alarmas WHERE BGG_id = ? and precio_alarma >= ?',(bgg_id, precio))

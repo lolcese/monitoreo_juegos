@@ -20,7 +20,7 @@ def grafica(bgg_id, nombre, db):
         cursor_h = conn_h.cursor()
         valido = True
 
-    if valido != None: # Si hay algún dato válido
+    if valido is not None: # Si hay algún dato válido
         cursor.execute('SELECT id_juego, sitio FROM juegos WHERE bgg_id = ?',[bgg_id])
         juego = cursor.fetchall()
         plt.ioff()

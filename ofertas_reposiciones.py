@@ -20,7 +20,7 @@ for p in prom:
     id_juego, precio_prom = p
     cursor.execute('SELECT precio FROM precios WHERE id_juego = ? ORDER BY fecha DESC LIMIT 1', [id_juego])
     precio_actual = cursor.fetchone()[0]
-    if precio_actual != None and precio_actual <= 0.9 * precio_prom:
+    if precio_actual is not None and precio_actual <= 0.9 * precio_prom:
         cursor.execute('SELECT nombre, sitio, sitio_id,BGG_id FROM juegos WHERE id_juego = ?', [id_juego])
         nombre, sitio, sitio_id, bgg_id = cursor.fetchone()
         porc = (precio_prom - precio_actual) / precio_prom * 100
