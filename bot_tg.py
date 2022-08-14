@@ -498,7 +498,7 @@ def borrar_venta(update: Update, context: CallbackContext) -> int:
     id_venta = query.data.split("_")[2]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM juegos WHERE id_juego = ? and sitio_ID = "Usuario"', [id_venta])
+    cursor.execute('DELETE FROM juegos WHERE sitio_ID = ? and sitio = "Usuario"', [id_venta])
     conn.commit()
     cursor.execute('DELETE FROM ventas WHERE id_venta = ?', [id_venta])
     conn.commit()
