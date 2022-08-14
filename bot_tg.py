@@ -1478,7 +1478,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
     porc_15 = []
     porc_20 = []
     texto_of = "<b>Juegos en oferta</b>\n\n"
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual FROM juegos WHERE fecha_oferta < datetime("now", "-7 days", "localtime") and precio_actual > 0')
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual FROM juegos WHERE fecha_oferta > datetime("now", "-7 days", "localtime") and precio_actual > 0')
     ofertas = cursor.fetchall()
     for o in ofertas:
         nombre, sitio, sitio_id, bgg_id, precio_prom, precio_actual = o
@@ -1504,7 +1504,7 @@ def ofertas_restock(update: Update, context: CallbackContext) -> int:
         texto_of += "No hay ningún juego en oferta\n"
 
     texto_st = "<b>Juegos en reposición</b>\n\n"
-    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE fecha_reposicion < datetime("now", "-3 days", "localtime")')
+    cursor.execute('SELECT nombre, sitio, sitio_id, bgg_id, precio_actual FROM juegos WHERE fecha_reposicion > datetime("now", "-3 days", "localtime") and precio_actual > 0')
     restock = cursor.fetchall()
     for r in restock:
         nombre, sitio, sitio_id, bgg_id, precio_actual = r
