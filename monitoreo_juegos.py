@@ -452,12 +452,12 @@ def main():
             elif sitio == "MMadhouse":
                 precio = lee_pagina_mmadhouse(sitio_id)
 
+            cursor.execute('SELECT precio_prom, fecha_reposicion as "[timestamp]", fecha_oferta as "[timestamp]", fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?', [id_juego])
+            prom = cursor.fetchone()
+            precio_prom, fecha_reposicion, fecha_oferta, fecha_agregado = prom
             if precio is not None:
                 precio = round(precio)
 # Calcula el promedio y reposicion
-                cursor.execute('SELECT precio_prom, fecha_reposicion as "[timestamp]", fecha_oferta as "[timestamp]", fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?', [id_juego])
-                prom = cursor.fetchone()
-                precio_prom, fecha_reposicion, fecha_oferta, fecha_agregado = prom
                 if precio_prom is None and precio is not None and (fecha_agregado - datetime.now()).days > 3:
                     fecha_reposicion = datetime.now()
 # Dispara aviso reposiciones
