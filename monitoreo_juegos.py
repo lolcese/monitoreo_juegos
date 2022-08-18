@@ -472,22 +472,22 @@ def main():
                         manda.send_message(u[0], texto)
 
 # Dispara aviso ofertas
-            if precio != None and precio <= precio_prom * 0.9:
-                if precio < constantes.var["precio_max_avisos"]:
-                    porc = (precio_prom - precio) / precio_prom * 100
-                    if (fecha_oferta - datetime.now()).days > 7:
-                        if sitio == "BLIB" or sitio =="BLAM":
-                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
-                        else:
-                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
-                        usuarios_ofertas = cursor.fetchall()
-                        for u in usuarios_ofertas:
-                            texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
-                            manda.send_message(u[0], texto)
-                fecha_oferta = datetime.now()
+            if precio is not None:
+                if precio <= precio_prom * 0.9:
+                    if precio < constantes.var["precio_max_avisos"]:
+                        porc = (precio_prom - precio) / precio_prom * 100
+                        if (fecha_oferta - datetime.now()).days > 7:
+                            if sitio == "BLIB" or sitio =="BLAM":
+                                cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
+                            else:
+                                cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
+                            usuarios_ofertas = cursor.fetchall()
+                            for u in usuarios_ofertas:
+                                texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
+                                manda.send_message(u[0], texto)
+                    fecha_oferta = datetime.now()
 
 # Guarda el precio en la tabla precios
-            if precio is not None:
                 cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
                 conn.commit()
 
