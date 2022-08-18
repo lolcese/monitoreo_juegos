@@ -455,25 +455,23 @@ def main():
             if precio is not None:
                 precio = round(precio)
 # Calcula el promedio y reposicion
-            cursor.execute('SELECT precio_prom, fecha_reposicion as "[timestamp]", fecha_oferta as "[timestamp]", fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?', [id_juego])
-            prom = cursor.fetchone()
-            precio_prom, fecha_reposicion, fecha_oferta, fecha_agregado = prom
-            if precio_prom is None and precio is not None and (fecha_agregado - datetime.now()).days > 3:
-                fecha_reposicion = datetime.now()
+                cursor.execute('SELECT precio_prom, fecha_reposicion as "[timestamp]", fecha_oferta as "[timestamp]", fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?', [id_juego])
+                prom = cursor.fetchone()
+                precio_prom, fecha_reposicion, fecha_oferta, fecha_agregado = prom
+                if precio_prom is None and precio is not None and (fecha_agregado - datetime.now()).days > 3:
+                    fecha_reposicion = datetime.now()
 # Dispara aviso reposiciones
-                if precio < constantes.var["precio_max_avisos"]:
-                    if sitio == "BLIB" or sitio == "BLAM":
-                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
-                    else:
-                        cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
-                    usuarios_ofertas = cursor.fetchall()
-                    for u in usuarios_ofertas:
-                        texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
-                        manda.send_message(u[0], texto)
+                    if precio < constantes.var["precio_max_avisos"]:
+                        if sitio == "BLIB" or sitio == "BLAM":
+                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_reposicion = "BLP" OR tipo_alarma_reposicion = "Todo")')
+                        else:
+                            cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_reposicion = "Todo"')
+                        usuarios_ofertas = cursor.fetchall()
+                        for u in usuarios_ofertas:
+                            texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
+                            manda.send_message(u[0], texto)
 
 # Dispara aviso ofertas
-            if precio is not None:
-                print(precio)
                 if precio <= precio_prom * 0.9:
                     if precio < constantes.var["precio_max_avisos"]:
                         porc = (precio_prom - precio) / precio_prom * 100
