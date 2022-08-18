@@ -473,6 +473,7 @@ def main():
 
 # Dispara aviso ofertas
             if precio is not None:
+                print(precio)
                 if precio <= precio_prom * 0.9:
                     if precio < constantes.var["precio_max_avisos"]:
                         porc = (precio_prom - precio) / precio_prom * 100
