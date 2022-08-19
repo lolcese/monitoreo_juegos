@@ -458,7 +458,7 @@ def main():
             if precio is not None:
                 precio = round(precio)
 # Calcula el promedio y reposicion
-                if precio_prom is None and precio is not None and (fecha_agregado - datetime.now()).days > 3:
+                if precio_prom is None and (datetime.now() - fecha_agregado).days > 3:
                     fecha_reposicion = datetime.now()
 # Dispara aviso reposiciones
                     if precio < constantes.var["precio_max_avisos"]:
@@ -471,20 +471,21 @@ def main():
                             texto = f'\U00002757\U00002757\U00002757\n\n<b>Reposición</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en stock en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} (y antes no lo estaba)\n\n\U00002757\U00002757\U00002757'
                             manda.send_message(u[0], texto)
 
+                else:
 # Dispara aviso ofertas
-                if precio_prom is not None and precio <= precio_prom * 0.9:
-                    if precio < constantes.var["precio_max_avisos"]:
-                        porc = (precio_prom - precio) / precio_prom * 100
-                        if (fecha_oferta - datetime.now()).days > 7:
-                            if sitio == "BLIB" or sitio =="BLAM":
-                                cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
-                            else:
-                                cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
-                            usuarios_ofertas = cursor.fetchall()
-                            for u in usuarios_ofertas:
-                                texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
-                                manda.send_message(u[0], texto)
-                    fecha_oferta = datetime.now()
+                    if precio_prom is not None and precio <= precio_prom * 0.9:
+                        if precio < constantes.var["precio_max_avisos"]:
+                            porc = (precio_prom - precio) / precio_prom * 100
+                            if (datetime.now() - fecha_oferta).days > 7:
+                                if sitio == "BLIB" or sitio =="BLAM":
+                                    cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
+                                else:
+                                    cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE tipo_alarma_oferta = "Todo"')
+                                usuarios_ofertas = cursor.fetchall()
+                                for u in usuarios_ofertas:
+                                    texto = f'\U0001F381\U0001F381\U0001F381\n\n<b>Oferta</b>: <a href="{constantes.sitio_URL["BGG"]+str(bgg_id)}">{nombre}</a> está en <a href="{constantes.sitio_URL[sitio]+sitio_id}">{constantes.sitio_nom[sitio]}</a> a ${precio:.0f} y el promedio de 15 días es de ${precio_prom:.0f} ({porc:.0f}% menos)\n\n\U0001F381\U0001F381\U0001F381'
+                                    manda.send_message(u[0], texto)
+                        fecha_oferta = datetime.now()
 
 # Guarda el precio en la tabla precios
                 cursor.execute('INSERT INTO precios (id_juego, precio, fecha) VALUES (?,?,?)',[id_juego, precio, fecha]) 
