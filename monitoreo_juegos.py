@@ -476,7 +476,7 @@ def main():
                     if precio_prom is not None and precio <= precio_prom * 0.9:
                         if precio < constantes.var["precio_max_avisos"]:
                             porc = (precio_prom - precio) / precio_prom * 100
-                            if (datetime.now() - fecha_oferta).days > 7:
+                            if fecha_oferta is None or (datetime.now() - fecha_oferta).days > 7:
                                 if sitio == "BLIB" or sitio =="BLAM":
                                     cursor.execute('SELECT id_usuario FROM alarmas_ofertas WHERE (tipo_alarma_oferta = "BLP" OR tipo_alarma_oferta = "Todo")')
                                 else:
