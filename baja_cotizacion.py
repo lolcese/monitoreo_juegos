@@ -93,7 +93,7 @@ conn.commit()
 # tasa_kg = datos2[1]
 
 datos2 = re.search('<td class="indent">0\.1<\/td>\n.*?\n.*?\n.*?\n.*?\n.*?\nAR\$ (.*?) ',data)
-tasa_kg = datos2[1]
+tasa_kg = float(re.sub("\.", "", datos2[1]))
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "precio_kg"',(tasa_kg, fecha))
 conn.commit()
