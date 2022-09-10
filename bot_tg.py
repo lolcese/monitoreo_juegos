@@ -1280,17 +1280,17 @@ En el caso que agregues un juego de deepdiscount, poné también el peso en libr
 <b>En el caso que agregues un juego de Planeton, Casa del Libro o Miniature Market, poné también el costo (en euros / dólares) del envío a Argentina que aparece cuando lo agregás al carrito.</b>
 
 Ejemplos:
-<i>Deepdiscount</i>
+<i>Si es de Deepdiscount</i>
 https://www.boardgamegeek.com/boardgame/293296/splendor-marvel
 https://www.deepdiscount.com/splendor-marvel/3558380055334
 2.43
 
-<i>Planeton / Casa del Libro / Miniature Market</i>
+<i>Si es de Planeton / Casa del Libro / Miniature Market</i>
 https://boardgamegeek.com/boardgame/266192/wingspan
 https://www.planetongames.com/es/wingspan-p-8175.html
 34.85
 
-<i>Otros</i>
+<i>Otras tiendas</i>
 https://www.boardgamegeek.com/boardgame/220/high-society
 https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777
 """
@@ -1349,7 +1349,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     if len(dat) > 2 and re.search("deepdiscount", url):
         peso = dat[2]
     if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url)):
-        precio_envio = dat[2]
+        precio_envio = re.sub(",",".",dat[2])
 
     conn = conecta_db()
     cursor = conn.cursor()
