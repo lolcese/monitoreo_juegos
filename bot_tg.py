@@ -679,7 +679,7 @@ def avisos_venta(update: Update, context: CallbackContext) -> int:
     cursor.execute('SELECT tipo_aviso_ventas FROM alarmas_ofertas WHERE id_usuario = ?',[usuario_id])
     aviso_ventas = cursor.fetchone()
     if aviso_ventas == None:
-        cursor.execute('INSERT INTO alarmas_ofertas (id_usuario, tipo_alarma, tipo_aviso_ventas, tipo_alarma_oferta, tipo_alarma_reposicion) VALUES (?, ?, ?)',[usuario_id, 3, val, "No", "No"])
+        cursor.execute('INSERT INTO alarmas_ofertas (id_usuario, tipo_alarma, tipo_aviso_ventas, tipo_alarma_oferta, tipo_alarma_reposicion) VALUES (?, ?, ?, ?, ?)',[usuario_id, 3, val, "No", "No"])
     else:
         cursor.execute('UPDATE alarmas_ofertas SET tipo_aviso_ventas = ? WHERE id_usuario = ?',[val, usuario_id])
     conn.commit()
