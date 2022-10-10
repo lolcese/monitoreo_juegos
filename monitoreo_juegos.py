@@ -406,11 +406,12 @@ def lee_pagina_cdl(ju_id, precio_envio):
     precio_eur = float(precio_eur[1])
     precio_eur /= constantes.var['descuento_iva_CDL']
     precio_eur += precio_envio
-    precio_pesos = precio_eur * constantes.var['euro'] 
+    precio_pesos = precio_eur * constantes.var['euro'] * constantes.var['impuesto_CDL']
     precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
 
     return precio_final_ad
 
+# pero si, podrias poner un [(precio*descuentoiva+envio)*eurooficial *1.75 + (precio*descuentodeiva+envio)*0.55*eurooficial y decir que es aproximado aclarando con mayusculas
 ######### Lee información de Magic Madhouse
 def lee_pagina_mmadhouse(ju_id):
     url = "https://magicmadhouse.co.uk/"+ju_id

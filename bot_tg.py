@@ -1174,12 +1174,12 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+10/10/2022: Agregados impuestos a Casa del Libro
 23/07/2022: Agregado Magic Madhouse
 01/08/2022: Precios de Tiendamia en dólares
 23/07/2022: Avisos de ventas
 27/07/2022: Posibilidad de vender juegos
 23/07/2022: Agregado Casa del Libro
-20/07/2022: Agregado Cazagangas
 """
 
     keyboard = [
