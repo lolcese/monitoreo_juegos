@@ -144,36 +144,6 @@ def lee_pagina_tmwm(ju_id):
     pr_tm = precio_tm(peso,precio_ar)
     return pr_tm
 
-######### Lee información de TMEB
-def lee_pagina_tmeb(ju_id):
-    url = "https://tiendamia.com/ar/e-product?ebay="+ju_id
-    text = baja_pagina(url)
-    if text == "Error":
-        return None
-
-    peso = re.search('"([\d\.]+) kg"',text)
-    if not peso:
-        return None
-    peso = float(peso[1])
-
-    stock = '<span id="stock_producto_ajax">Sin Stock</span>' in text
-
-    # precio_dol = re.search('"final_price":{"label":"","value":{"dollar_price":"U\$S (.*?)"',text)
-    # if not precio_dol or stock:
-    #     return None
-    # precio_dol = float(precio_dol[1])
-    # if precio_dol < 1:
-    #     return None
-
-    precio_ar = re.search('"localPrice":"AR\$  (.*?)"',text)
-    if not precio_ar or not stock:
-        return None
-    precio_ar = float(re.sub("\.", "", precio_ar[1]))
-    if precio_ar < 1000:
-        return None
-
-    pr_tm = precio_tm(peso,precio_ar)
-    return pr_tm
 
 ######### Calcula precio para TM
 def precio_tm(peso,precio_ar):
@@ -387,8 +357,6 @@ def main():
                 precio = lee_pagina_tmam(sitio_id)
             elif sitio == "TMWM":
                 precio = lee_pagina_tmwm(sitio_id) 
-            elif sitio == "TMEB":
-                precio = lee_pagina_tmeb(sitio_id) 
             elif sitio == "BOOK":
                 precio = lee_pagina_book(sitio_id)
             elif sitio == "deep":

@@ -189,10 +189,6 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Walmart", callback_data='juegos_todos_sitio_TMWM')
         ],
         [
-            InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_todos_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_todos_sitio_grooves')
-        ],
-        [
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Magic Madhouse", callback_data='juegos_todos_sitio_MMadhouse'),
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_todos_sitio_BOOK'),
         ],
@@ -203,6 +199,9 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
         [
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_todos_sitio_MM'),
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_todos_sitio_deep'),
+        ],
+        [
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_todos_sitio_grooves')
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -259,10 +258,6 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Walmart", callback_data='juegos_stockalfab_sitio_TMWM')
         ],
         [
-            InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_stockalfab_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockalfab_sitio_grooves')
-        ],
-        [
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Magic Madhouse", callback_data='juegos_stockalfab_sitio_MMadhouse'),
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockalfab_sitio_BOOK'),
         ],
@@ -273,6 +268,9 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
         [
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockalfab_sitio_MM'),
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockalfab_sitio_deep'),
+        ],
+        [
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockalfab_sitio_grooves')
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -325,10 +323,6 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Tiendamia Walmart", callback_data='juegos_stockprecio_sitio_TMWM')
         ],
         [
-            InlineKeyboardButton("\U0001F1FA\U0001F1F8 EBAY", callback_data='juegos_stockprecio_sitio_TMEB'),
-            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockprecio_sitio_grooves')
-        ],
-        [
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Magic Madhouse", callback_data='juegos_stockprecio_sitio_MMadhouse'),
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockprecio_sitio_BOOK'),
         ],
@@ -339,6 +333,9 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         [
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockprecio_sitio_MM'),
             InlineKeyboardButton("\U0001F1FA\U0001F1F8 Deepdiscount", callback_data='juegos_stockprecio_sitio_deep'),
+        ],
+        [
+            InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockprecio_sitio_grooves')
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -1152,7 +1149,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
-19/11/2022: Sacados 365games, shop4es y shop4world
+19/11/2022: Sacados Tienamia EBAY, 365games, shop4es y shop4world
 10/10/2022: Agregados impuestos a Casa del Libro
 23/07/2022: Agregado Magic Madhouse
 01/08/2022: Precios de Tiendamia en dólares
@@ -1378,12 +1375,6 @@ def extrae_sitio(sitio_url):
     sitio_id = re.search('tiendamia\.com(\/|.)ar\/productow\?wrt=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "TMWM"
-        sitio_id = sitio_id[2]
-        return [sitio_nom, sitio_id]
-
-    sitio_id = re.search('tiendamia\.com(\/|.)ar\/e-?producto?\?ebay=(.*?)(\s|$|\/|\?|&)',sitio_url)
-    if sitio_id:
-        sitio_nom = "TMEB"
         sitio_id = sitio_id[2]
         return [sitio_nom, sitio_id]
 
