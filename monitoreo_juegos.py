@@ -120,6 +120,7 @@ def lee_pagina_tmwm(ju_id):
     text = baja_pagina(url)
     if text == "Error":
         return None
+
     peso = re.search('Peso con empaque: <span>(.*?) kg<\/span>',text)
     if not peso or peso[1] == "":
         return None
@@ -135,7 +136,7 @@ def lee_pagina_tmwm(ju_id):
     #     return None
 
     precio_ar = re.search('"localPrice":"AR\$  (.*?)"',text)
-    if not precio_ar or not stock:
+    if not precio_ar or stock:
         return None
     precio_ar = float(re.sub("\.", "", precio_ar[1]))
     if precio_ar < 1000:
@@ -143,7 +144,6 @@ def lee_pagina_tmwm(ju_id):
 
     pr_tm = precio_tm(peso,precio_ar)
     return pr_tm
-
 
 ######### Calcula precio para TM
 def precio_tm(peso,precio_ar):
@@ -312,7 +312,6 @@ def lee_pagina_cdl(ju_id, precio_envio):
 
     return precio_final_ad
 
-# pero si, podrias poner un [(precio*descuentoiva+envio)*eurooficial *1.75 + (precio*descuentodeiva+envio)*0.55*eurooficial y decir que es aproximado aclarando con mayusculas
 ######### Lee información de Magic Madhouse
 def lee_pagina_mmadhouse(ju_id):
     url = "https://magicmadhouse.co.uk/"+ju_id
