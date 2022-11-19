@@ -216,75 +216,6 @@ def lee_pagina_book(ju_id):
 
     return precio_ar
 
-######### Lee información de 365
-def lee_pagina_365(ju_id):
-    url = "https://www.365games.co.uk/"+ju_id
-    text = baja_pagina(url)
-    if text == "Error":
-        return None
-
-    stock = '<meta name="twitter:data2" content="Available">' in text
-
-    precio_lb = re.search('value: (.*?),',text)
-    if not precio_lb or stock == 0:
-        return None
-    precio_pesos = (float(precio_lb[1]) + constantes.var['envio_365']) * constantes.var['libra'] 
-    precio_dol = precio_pesos / constantes.var['dolar']
-
-    imp_aduana = 0
-    if precio_dol > 50:
-        imp_aduana = (precio_dol - 50) * 0.5
-
-    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
-
-    return precio_final_ad
-
-######### Lee información de shop4es
-def lee_pagina_shop4es(ju_id):
-    url = "https://www.shop4es.com/"+ju_id
-    text = baja_pagina(url)
-    if text == "Error":
-        return None
-
-    stock = '<meta name="twitter:data2" content="Available">' in text
-
-    precio_eu = re.search('value: (.*?),',text)
-    if not precio_eu or stock == 0:
-        return None
-    precio_pesos = (float(precio_eu[1]) + constantes.var['envio_shop4es']) * constantes.var['euro'] 
-    precio_dol = precio_pesos / constantes.var['dolar']
-
-    imp_aduana = 0
-    if precio_dol > 50:
-        imp_aduana = (precio_dol - 50) * 0.5
-
-    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
-
-    return precio_final_ad
-
-######### Lee información de shop4world
-def lee_pagina_shop4world(ju_id):
-    url = "https://www.shop4world.com/"+ju_id
-    text = baja_pagina(url)
-    if text == "Error":
-        return None
-
-    stock = '<meta name="twitter:data2" content="Available">' in text
-
-    precio_lb = re.search('value: (.*?),',text)
-    if not precio_lb or stock == 0:
-        return None
-    precio_pesos = (float(precio_lb[1]) + constantes.var['envio_shop4world']) * constantes.var['libra'] 
-    precio_dol = precio_pesos / constantes.var['dolar']
-
-    imp_aduana = 0
-    if precio_dol > 50:
-        imp_aduana = (precio_dol - 50) * 0.5
-
-    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
-
-    return precio_final_ad
-
 ######### Lee información de deepdiscount
 def lee_pagina_deep(ju_id, peso):
     url = "https://www.deepdiscount.com/"+ju_id
@@ -460,12 +391,6 @@ def main():
                 precio = lee_pagina_tmeb(sitio_id) 
             elif sitio == "BOOK":
                 precio = lee_pagina_book(sitio_id)
-            elif sitio == "365":
-                precio = lee_pagina_365(sitio_id)
-            elif sitio == "shop4es":
-                precio = lee_pagina_shop4es(sitio_id)
-            elif sitio == "shop4world":
-                precio = lee_pagina_shop4world(sitio_id)
             elif sitio == "deep":
                 precio = lee_pagina_deep(sitio_id, peso)
             elif sitio == "grooves":
