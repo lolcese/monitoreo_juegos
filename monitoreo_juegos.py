@@ -334,6 +334,25 @@ def lee_pagina_mmadhouse(ju_id):
 
     return precio_final_ad
 
+######### Lee información de FNAC
+def lee_pagina_fnac(ju_id):
+    url = "https://www.fnac.es/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
+
+    precio_eur = re.search('"priceCurrency":"EUR","price":(.*),"availability":"http:\/\/schema\.org\/InStock",',text)
+    if not precio_eur:
+        return None
+
+    precio_eur = float(precio_eur[1])
+    precio_envio = constantes.var['envio_FNAC']
+    precio_eur += precio_envio
+    precio_pesos = precio_eur * constantes.var['euro'] 
+    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
+
+    return precio_final_ad
+
 ######### Programa principal
 def main():
     conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -370,6 +389,8 @@ def main():
                 precio = lee_pagina_cdl(sitio_id, precio_envio)
             elif sitio == "MMadhouse":
                 precio = lee_pagina_mmadhouse(sitio_id)
+            elif sitio == "FNAC":
+                precio = lee_pagina_fnac(sitio_id)
 
             cursor.execute('SELECT precio_prom, fecha_reposicion as "[timestamp]", fecha_oferta as "[timestamp]", fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?', [id_juego])
             prom = cursor.fetchone()
