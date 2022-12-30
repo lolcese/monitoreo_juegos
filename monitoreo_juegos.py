@@ -342,7 +342,7 @@ def lee_pagina_fnac(ju_id):
     if text == "Error":
         return None
 
-    precio_eur = re.search('>EUR.*?(\d.*?)<\/span>',text)
+    precio_eur = re.search('>‏(\d.*) ‏€<\/span>',text)
     if not precio_eur:
         return None
 
