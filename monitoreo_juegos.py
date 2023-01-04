@@ -344,7 +344,9 @@ def lee_pagina_fnac(ju_id):
 
     precio_eur = re.search('>‏(\d.*) ‏€<\/span>',text)
     if not precio_eur:
-        return None
+        precio_eur = re.search('<span>€(\d+\.\d+)<\/span>',text)
+        if not precio_eur:
+            return None
 
     precio_eur = float(precio_eur[1])
     precio_envio = constantes.var['envio_FNAC']
