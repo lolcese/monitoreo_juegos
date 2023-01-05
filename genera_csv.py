@@ -20,7 +20,7 @@ def main():
     ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
     juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-    ju2 = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
+    ju2 = open(constantes.exporta_file2, mode='w', newline='', encoding="UTF-8")
     juegos_exporta2 = csv.writer(ju2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     juegos_exporta2.writerow(["Nombre","Sitio","Precio actual","Mínimo 15 días","Dependencia idioma","Ranking BGG"])
 
