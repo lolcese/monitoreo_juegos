@@ -20,6 +20,10 @@ def main():
     ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
     juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
+    ju2 = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
+    juegos_exporta2 = csv.writer(ju2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    juegos_exporta2.writerow("Nombre","Sitio","Precio actual","Mínimo 15 días","Dependencia idioma","Ranking BGG")
+
     cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos WHERE sitio != "Usuario" ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
@@ -35,7 +39,9 @@ def main():
         if fecha_actual == None:
             fecha_actual = "-"
         juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha_actual, min_precio, constantes.dependencia_len[dependencia_leng], ranking])
-    
+
+        juegos_exporta2.writerow([f'<a href="{constantes.sitio_URL["BGG"]+str(BGG_id)}">{nombre}</a>',f'<a href="{constantes.sitio_URL[sitio]+sitio_ID}">{constantes.sitio_nom[sitio]}</a>', precio, min_precio, constantes.dependencia_len[dependencia_leng], ranking])
+
     ju.close()
 
 if __name__ == '__main__':

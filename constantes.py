@@ -7,6 +7,7 @@ import sqlite3
 db_file = 'db/monitoreo_juegos.db'
 db_file_histo = 'db/monitoreo_juegos_todo.db'
 exporta_file = 'exporta/precios_exporta.csv'
+exporta_file2 = 'exporta/precios_exporta2.csv'
 
 conn = sqlite3.connect(db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 conn.execute("PRAGMA journal_mode=WAL")
