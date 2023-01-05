@@ -336,15 +336,15 @@ def lee_pagina_mmadhouse(ju_id):
 
 ######### Lee información de FNAC
 def lee_pagina_fnac(ju_id):
-    url = f"https://www.google.com/search?q=fnac+https://www.fnac.es/{ju_id}&aqs=chrome..69i57j69i64j69i60l3.1680j0j1&sourceid=chrome&ie=UTF-8"
+    url = f"https://www.google.com/search?q=fnac+{ju_id}"
 
     text = baja_pagina(url)
     if text == "Error":
         return None
 
-    precio_eur = re.search('>‏(\d.*) ‏€<\/span>',text)
+    precio_eur = re.search('<span>€(\d+\.\d+)<\/span>',text)
     if not precio_eur:
-        precio_eur = re.search('<span>€(\d+\.\d+)<\/span>',text)
+        precio_eur = re.search('>‏(\d.*) ‏€<\/span>',text)
         if not precio_eur:
             return None
 
