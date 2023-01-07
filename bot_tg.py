@@ -895,7 +895,6 @@ def texto_info_juego(BGG_id):
         texto_ju.append(f"\U0001F1E6\U0001F1F7 <a href='{cazagangas['url']}'>Cazagangas</a>: <b>${cazagangas['precio']:.0f}</b>\n")
         precio_ju.append(cazagangas["precio"])
 
-
     if min(precio_ju) != 999999:
         ini = "\U0001F449 "
     else:
