@@ -27,10 +27,10 @@ def main():
     juegos_exporta2.writerow(["Nombre","Sitio","País","Precio actual","Mínimo 15 días","Notas","Dependencia idioma","Ranking BGG"])
 
     # cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos WHERE sitio != "Usuario" ORDER BY nombre')
-    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos  ORDER BY nombre')
+    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, precio_prom, ranking FROM juegos  ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
-        nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_min, ranking = j
+        nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_min, precio_prom, ranking = j
         if precio_actual == None:
             precio = "-"
         else:
@@ -57,6 +57,8 @@ def main():
             sitio_v = f"{constantes.sitio_URL[sitio]+sitio_ID}++{constantes.sitio_nom[sitio]}"
             notas = "-"
             band = constantes.sitio_pais[sitio]
+            if precio_actual <= precio_prom * 0.9:
+                notas = f"Oferta ({int((precio_prom - precio) / precio_prom * 100)}% menos"
 
         band = band.lower()
         if band == "uk":
