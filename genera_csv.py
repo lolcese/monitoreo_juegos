@@ -58,10 +58,12 @@ def main():
             notas = "-"
             band = constantes.sitio_pais[sitio]
 
+        band = band.lower()
+
         if precio == "-":
             continue
 
-        juegos_exporta2.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", sitio_v, {band.lower()}, precio, min_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
+        juegos_exporta2.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", sitio_v, band, precio, min_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
 
         # url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
         # req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
