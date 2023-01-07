@@ -24,7 +24,7 @@ def main():
 
     ju2 = open(constantes.exporta_file2, mode='w', newline='', encoding="UTF-8")
     juegos_exporta2 = csv.writer(ju2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    juegos_exporta2.writerow(["Nombre","Sitio","Precio actual","Mínimo 15 días","Notas","Dependencia idioma","Ranking BGG"])
+    juegos_exporta2.writerow(["Nombre","Sitio","País","Precio actual","Mínimo 15 días","Notas","Dependencia idioma","Ranking BGG"])
 
     # cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos WHERE sitio != "Usuario" ORDER BY nombre')
     cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos  ORDER BY nombre')
@@ -59,7 +59,7 @@ def main():
         if precio == "-":
             continue
 
-        juegos_exporta2.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", sitio, precio, min_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
+        juegos_exporta2.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", {constantes.sitio_pais[sitio].lower()},sitio, precio, min_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
 
         # url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
         # req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
