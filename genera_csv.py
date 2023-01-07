@@ -22,9 +22,10 @@ def main():
 
     ju2 = open(constantes.exporta_file2, mode='w', newline='', encoding="UTF-8")
     juegos_exporta2 = csv.writer(ju2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    juegos_exporta2.writerow(["Nombre","Sitio","Precio actual","Mínimo 15 días","Dependencia idioma","Ranking BGG"])
+    juegos_exporta2.writerow(["Nombre","Sitio","Precio actual","Mínimo 15 días","Notas","Dependencia idioma","Ranking BGG"])
 
-    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos WHERE sitio != "Usuario" ORDER BY nombre')
+    # cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos WHERE sitio != "Usuario" ORDER BY nombre')
+    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos  ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
         nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_min, ranking = j
@@ -38,9 +39,25 @@ def main():
             min_precio = f"${precio_min:.0f}"
         if fecha_actual == None:
             fecha_actual = "-"
-        juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha_actual, min_precio, constantes.dependencia_len[dependencia_leng], ranking])
 
-        juegos_exporta2.writerow([f'<a href="{constantes.sitio_URL["BGG"]+str(BGG_id)}">{nombre}</a>',f'<a href="{constantes.sitio_URL[sitio]+sitio_ID}">{constantes.sitio_nom[sitio]}</a>', precio, min_precio, constantes.dependencia_len[dependencia_leng], ranking])
+        if sitio != "Usuario":
+            juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio, fecha_actual, min_precio, constantes.dependencia_len[dependencia_leng], ranking])
+
+        if sitio == "Usuario":
+            cursor.execute('SELECT username, precio, estado, ciudad FROM ventas WHERE id_venta = ?', [sitio_ID])
+            juego_venta = cursor.fetchone()
+            username, precio, estado, ciudad = juego_venta
+            sitio = f"https://t.me/{username}++Vendido por @{username}"
+            precio = f"${precio}"
+            notas = f"{ciudad} - {estado}"
+        else:
+            sitio = f"{constantes.sitio_URL[sitio]+sitio_ID}++{constantes.sitio_nom[sitio]}"
+            notas = "-"
+
+        if precio == "-":
+            continue
+
+        juegos_exporta2.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", sitio, precio, min_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
 
     ju.close()
 
