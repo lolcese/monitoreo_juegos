@@ -59,6 +59,8 @@ def main():
             band = constantes.sitio_pais[sitio]
 
         band = band.lower()
+        if band == "uk":
+            band = "gb"
 
         if precio == "-":
             continue
