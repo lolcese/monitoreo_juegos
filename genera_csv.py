@@ -72,6 +72,15 @@ def main():
         if band == "uk":
             band = "gb"
 
+        if ranking == "Not Ranked":
+            ranking = ""
+        
+        if min_precio == "-":
+            min_precio = ""
+
+        if prom_precio == "-":
+            prom_precio = ""
+
         juegos_exporta2.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", sitio_v, band, precio_p, min_precio, prom_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
 
         # url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
