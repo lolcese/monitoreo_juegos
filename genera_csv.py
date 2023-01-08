@@ -9,8 +9,6 @@
 import sqlite3
 import constantes
 import csv
-import urllib.request
-import json
 
 ######### Programa principal
 def main():
@@ -22,11 +20,8 @@ def main():
     ju = open(constantes.exporta_file, mode='w', newline='', encoding="UTF-8")
     juegos_exporta = csv.writer(ju, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-    ju2 = open(constantes.exporta_file2, mode='w', newline='', encoding="UTF-8")
-    juegos_exporta2 = csv.writer(ju2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    juegos_exporta2.writerow(["Nombre","Sitio","País","Precio actual","Mínimo 15 días","Promedio 15 días","Notas","Dependencia idioma","Ranking BGG"])
+    juegos_exporta.writerow(["Nombre","Sitio","País","Precio actual","Mínimo 15 días","Promedio 15 días","Notas","Dependencia idioma","Ranking BGG"])
 
-    # cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, ranking FROM juegos WHERE sitio != "Usuario" ORDER BY nombre')
     cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, precio_prom, ranking FROM juegos ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
@@ -46,9 +41,6 @@ def main():
 
         if fecha_actual == None:
             fecha_actual = "-"
-
-        if sitio != "Usuario":
-            juegos_exporta.writerow([nombre,constantes.sitio_URL['BGG']+str(BGG_id),constantes.sitio_nom[sitio],constantes.sitio_URL[sitio]+sitio_ID, precio_p, fecha_actual, min_precio, prom_precio, constantes.dependencia_len[dependencia_leng], ranking])
 
         if precio_p == "-" and sitio != "Usuario":
             continue
@@ -81,16 +73,15 @@ def main():
         if prom_precio == "-":
             prom_precio = ""
 
-        juegos_exporta2.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", sitio_v, band, precio_p, min_precio, prom_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
-
-        # url = f"https://www.cazagangas.com.ar/api/id/{BGG_id}"
-        # req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
-        # data = urllib.request.urlopen(req)
-        # cazagangas = json.loads(data.read())
-        # if cazagangas["disponible"] == True:
-        #     juegos_exporta2.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", f"{cazagangas['url']}++Cazagangas 🇦🇷", precio, "-", notas, constantes.dependencia_len[dependencia_leng], ranking])
+        juegos_exporta.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", sitio_v, band, precio_p, min_precio, prom_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
 
     ju.close()
+
+    filenames = [constantes.exporta_file, constantes.exporta_cazagangas]
+    with open('path/to/output/file', 'w') as outfile:
+        for fname in filenames:
+            with open(fname) as infile:
+                outfile.write(infile.read())
 
 if __name__ == '__main__':
     main()
