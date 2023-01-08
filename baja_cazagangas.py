@@ -12,7 +12,7 @@ cursor = conn.cursor()
 caza = open(constantes.exporta_cazagangas, mode='w', newline='', encoding="UTF-8")
 cazagangas_exporta = csv.writer(caza, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-cursor.execute('SELECT DISTINCT BGG_id, nombre, dependencia_leng, ranking FROM juegos WHERE precio_actual != None')
+cursor.execute('SELECT DISTINCT BGG_id, nombre, dependencia_leng, ranking FROM juegos WHERE precio_actual NOT NULL')
 juegos_id = cursor.fetchall()
 for j in juegos_id:
     BGG_id, nombre, dependencia_leng, ranking = j
