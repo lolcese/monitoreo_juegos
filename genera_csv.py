@@ -78,7 +78,7 @@ def main():
     ju.close()
 
     filenames = [constantes.exporta_file, constantes.exporta_cazagangas]
-    with open('path/to/output/file', 'w') as outfile:
+    with open(constantes.exporta_tabla, 'w') as outfile:
         for fname in filenames:
             with open(fname) as infile:
                 outfile.write(infile.read())
