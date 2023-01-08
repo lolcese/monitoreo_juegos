@@ -162,9 +162,8 @@ def juegos_planilla(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Planilla con todos los juegos</b>
     
-Si querés ver una planilla con todos los precios de los juegos, andá <a href="https://tinyurl.com/MonitorJuegosbot">acá</a>.
-    
-Tené en cuenta que, si bien se actualiza automáticamente, puede tener un desfasaje de 2-3 horas con los precios reales (y 1 hora con los precios que muestra el bot)."""
+Si querés ver una planilla con todos los precios de los juegos, andá <a href="http://www.monitorjuegos.com.ar">http://www.monitorjuegos.com.ar</a>.
+"""
     keyboard = [
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -1152,6 +1151,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+08/01/2023: Planilla en sitio www.monitorjuegos.com.ar
 28/12/2022: Agregado FNAC
 19/11/2022: Sacados Tienamia EBAY, 365games, shop4es y shop4world
 10/10/2022: Agregados impuestos a Casa del Libro
