@@ -734,7 +734,7 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
     context.chat_data["username"] = update.message.from_user.username
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? OR nom_alt_1 LIKE ? OR nom_alt_2 LIKE ? OR nom_alt_3 LIKE ? OR nom_alt_4 LIKE ? OR nom_alt_5 LIKE ? OR nom_alt_6 LIKE ? OR nom_alt_7 LIKE ? OR nom_alt_8 LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%'))
+    cursor.execute('SELECT DISTINCT nombre, BGG_id, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? OR nom_alt_1 LIKE ? OR nom_alt_2 LIKE ? OR nom_alt_3 LIKE ? OR nom_alt_4 LIKE ? OR nom_alt_5 LIKE ? OR nom_alt_6 LIKE ? OR nom_alt_7 LIKE ? OR nom_alt_8 LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%'))
     juegos = cursor.fetchall()
     keyboard = []
     if len(juegos) > 15:
@@ -749,7 +749,8 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
         return JUEGO_ELECCION
     
     for j in juegos:
-        keyboard.append([InlineKeyboardButton(f'\U000027A1 {j[0]}', callback_data='BGG_'+str(j[1]))])
+        nom = " / ".join(filter(None,[j[0], j[2], j[3], j[4], j[5], j[6], j[7], j[8]]))
+        keyboard.append([InlineKeyboardButton(f'\U000027A1 {nom}', callback_data='BGG_'+str(j[1]))])
     keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
     reply_markup = InlineKeyboardMarkup(keyboard)
     id = update.message.reply_text(text = "Elegí el juego", reply_markup=reply_markup)
@@ -764,11 +765,13 @@ def juego_nom_otra(update: Update, context: CallbackContext) -> int:
     nombre_juego = context.chat_data["nombre_juego"]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? OR nom_alt_1 LIKE ? OR nom_alt_2 LIKE ? OR nom_alt_3 LIKE ? OR nom_alt_4 LIKE ? OR nom_alt_5 LIKE ? OR nom_alt_6 LIKE ? OR nom_alt_7 LIKE ? OR nom_alt_8 LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%'))
+    cursor.execute('SELECT DISTINCT nombre, BGG_id, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? OR nom_alt_1 LIKE ? OR nom_alt_2 LIKE ? OR nom_alt_3 LIKE ? OR nom_alt_4 LIKE ? OR nom_alt_5 LIKE ? OR nom_alt_6 LIKE ? OR nom_alt_7 LIKE ? OR nom_alt_8 LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%'))
+
     juegos = cursor.fetchall()
     keyboard = []
     for j in juegos:
-        keyboard.append([InlineKeyboardButton(f'\U000027A1 {j[0]}', callback_data='BGG_'+str(j[1]))])
+        nom = " / ".join(filter(None,[j[0], j[2], j[3], j[4], j[5], j[6], j[7], j[8]]))
+        keyboard.append([InlineKeyboardButton(f'\U000027A1 {nom}', callback_data='BGG_'+str(j[1]))])
     keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
     reply_markup = InlineKeyboardMarkup(keyboard)
     id = context.bot.send_message(chat_id = usuario_id, text = "Elegí el juego", reply_markup=reply_markup)
