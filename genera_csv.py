@@ -22,6 +22,10 @@ def main():
 
     juegos_exporta.writerow(["Nombre","Sitio","País","Precio actual","Mínimo 15 días","Promedio 15 días","Notas","Dependencia idioma","Ranking BGG"])
 
+    tabla = open("tabla.html", "a")
+    tabla.write("<table>")
+    tabla.write(f"<tr><th>Nombre</th><th>Sitio</th><th>País</th><th>Precio actual</th><th>Mínimo 15 días</th><th>Promedio 15 días</th><th>Notas</th><th>Dependencia idioma</th><th>Ranking BGG</th></tr>")
+
     cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, precio_prom, ranking FROM juegos ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
@@ -74,8 +78,11 @@ def main():
             prom_precio = ""
 
         juegos_exporta.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", sitio_v, band, precio_p, min_precio, prom_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
+        tabla.write(f"<tr><td>{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}</td><td>{sitio_v}</td><td>{band}</td><td>{precio_p}</td><td>{min_precio}</td><td>{prom_precio}</td><td>{notas}</td><td>{constantes.dependencia_len[dependencia_leng]}</td><td>{ranking}</td></tr>\n")
 
     ju.close()
+    tabla.write("</table>")
+    tabla.close()
 
     filenames = [constantes.exporta_file, constantes.exporta_cazagangas]
     with open(constantes.exporta_tabla, 'w') as outfile:
