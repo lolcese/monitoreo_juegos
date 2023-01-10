@@ -836,8 +836,9 @@ def texto_info_juego(BGG_id):
     nombre = juegos[0][1]
     ranking = juegos[0][4]
     dependencia_leng = constantes.dependencia_len[juegos[0][5]]
+    alt = " / ".join(filter(None,[juegos[0][9], juegos[0][10], juegos[0][11], juegos[0][12], juegos[0][13], juegos[0][14], juegos[0][15], juegos[0][16]]))
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
-    texto = f"<b>{html.escape(nombre)}</b>\n\n"
+    texto = f"<b>{html.escape(nombre)}</b> ({html.escape(alt)})\n\n"
     texto += f"<a href= '{link_BGG}'>Enlace BGG</a> - Ranking: {ranking}\n"
     texto += f"Dependencia del idioma: {dependencia_leng}\n\n"
     texto += "Los precios indicados son <b>finales</b> (incluyen envío, aduana y correo).\n\n"
@@ -1061,10 +1062,10 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
     juegos = cursor.fetchone()
     nombre = juegos[1]
     ranking = juegos[2]
-    alt = " / ".join(filter(None,[juegos[4], juegos[5], juegos[6], juegos[7], juegos[8], juegos[9], juegos[10], juegos[11]]))
     dependencia_leng = constantes.dependencia_len[juegos[3]]
+    alt = " / ".join(filter(None,[juegos[4], juegos[5], juegos[6], juegos[7], juegos[8], juegos[9], juegos[10], juegos[11]]))
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
-    texto = f"<b>{html.escape(nombre)}</b> ({alt})\n\n"
+    texto = f"<b>{html.escape(nombre)}</b> ({html.escape(alt)})\n\n"
     texto += f"<a href= '{link_BGG}'>Enlace BGG</a> - Ranking: {ranking}\n"
     texto += f"Dependencia del idioma: {dependencia_leng}"
 
