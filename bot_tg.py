@@ -831,7 +831,7 @@ def juego_info(update: Update, context: CallbackContext) -> int:
 def texto_info_juego(BGG_id):
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking, dependencia_leng, precio_actual, precio_mejor, fecha_mejor, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8, as "[timestamp]" FROM juegos WHERE BGG_id = ?',[BGG_id])
+    cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking, dependencia_leng, precio_actual, precio_mejor, fecha_mejor as "[timestamp]", nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 FROM juegos WHERE BGG_id = ?',[BGG_id])
     juegos = cursor.fetchall()
     nombre = juegos[0][1]
     ranking = juegos[0][4]
