@@ -636,6 +636,7 @@ def vender_juego(update: Update, context: CallbackContext) -> int:
     texto = f"{usuario_nom} quiere vender {bgg_url}"
     manda.send_message(id_aviso, texto)
     keyboard = [
+        [InlineKeyboardButton("\U0001F4B2 Agregar un juego a la venta", callback_data='agregar_venta')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
