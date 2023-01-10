@@ -734,7 +734,7 @@ def juego_nom(update: Update, context: CallbackContext) -> int:
     context.chat_data["username"] = update.message.from_user.username
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%'))
+    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? OR nom_alt_1 LIKE ? OR nom_alt_2 LIKE ? OR nom_alt_3 LIKE ? OR nom_alt_4 LIKE ? OR nom_alt_5 LIKE ? OR nom_alt_6 LIKE ? OR nom_alt_7 LIKE ? OR nom_alt_8 LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%'))
     juegos = cursor.fetchall()
     keyboard = []
     if len(juegos) > 15:
@@ -764,7 +764,7 @@ def juego_nom_otra(update: Update, context: CallbackContext) -> int:
     nombre_juego = context.chat_data["nombre_juego"]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%'))
+    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? OR nom_alt_1 LIKE ? OR nom_alt_2 LIKE ? OR nom_alt_3 LIKE ? OR nom_alt_4 LIKE ? OR nom_alt_5 LIKE ? OR nom_alt_6 LIKE ? OR nom_alt_7 LIKE ? OR nom_alt_8 LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%'))
     juegos = cursor.fetchall()
     keyboard = []
     for j in juegos:
@@ -831,7 +831,7 @@ def juego_info(update: Update, context: CallbackContext) -> int:
 def texto_info_juego(BGG_id):
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking, dependencia_leng, precio_actual, precio_mejor, fecha_mejor as "[timestamp]" FROM juegos WHERE BGG_id = ?',[BGG_id])
+    cursor.execute('SELECT id_juego, nombre, sitio, sitio_ID, ranking, dependencia_leng, precio_actual, precio_mejor, fecha_mejor, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8, as "[timestamp]" FROM juegos WHERE BGG_id = ?',[BGG_id])
     juegos = cursor.fetchall()
     nombre = juegos[0][1]
     ranking = juegos[0][4]
@@ -845,7 +845,6 @@ def texto_info_juego(BGG_id):
     precio_ju = []
     ju = 0
     for j in juegos:
-
         sitio = j[2]
         sitio_ID = j[3]
         if sitio == "Usuario":
@@ -1028,7 +1027,7 @@ def historicos_nom(update: Update, context: CallbackContext) -> int:
     context.chat_data["nombre_juego"] = nombre_juego
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%'))
+    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? OR nom_alt_1 LIKE ? OR nom_alt_2 LIKE ? OR nom_alt_3 LIKE ? OR nom_alt_4 LIKE ? OR nom_alt_5 LIKE ? OR nom_alt_6 LIKE ? OR nom_alt_7 LIKE ? OR nom_alt_8 LIKE ? ORDER BY nombre',('%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%','%'+nombre_juego+'%'))
     juegos = cursor.fetchall()
     keyboard = []
     if len(juegos) > 15:
@@ -1058,13 +1057,14 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
     BGG_id = query.data.split("_")[1]
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT id_juego, nombre, ranking, dependencia_leng FROM juegos WHERE BGG_id = ? and sitio != "Usuario"',[BGG_id])
+    cursor.execute('SELECT id_juego, nombre, ranking, dependencia_leng, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 FROM juegos WHERE BGG_id = ? and sitio != "Usuario"',[BGG_id])
     juegos = cursor.fetchone()
     nombre = juegos[1]
     ranking = juegos[2]
+    alt = " / ".join(filter(None,[juegos[4], juegos[5], juegos[6], juegos[7], juegos[8], juegos[9], juegos[10], juegos[11]]))
     dependencia_leng = constantes.dependencia_len[juegos[3]]
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
-    texto = f"<b>{html.escape(nombre)}</b>\n\n"
+    texto = f"<b>{html.escape(nombre)}</b> ({alt})\n\n"
     texto += f"<a href= '{link_BGG}'>Enlace BGG</a> - Ranking: {ranking}\n"
     texto += f"Dependencia del idioma: {dependencia_leng}"
 
@@ -1154,14 +1154,12 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+10/01/2023: Toma nombres en castellano
 08/01/2023: Planilla en sitio http://www.monitorjuegos.com.ar/
 28/12/2022: Agregado FNAC
 19/11/2022: Sacados Tienamia EBAY, 365games, shop4es y shop4world
 10/10/2022: Agregados impuestos a Casa del Libro
 23/07/2022: Agregado Magic Madhouse
-01/08/2022: Precios de Tiendamia en dólares
-23/07/2022: Avisos de ventas
-27/07/2022: Posibilidad de vender juegos
 """
 
     keyboard = [
@@ -1594,7 +1592,7 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
 
     conn = conecta_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? ORDER BY nombre',('%'+query+'%','%'+query+'%'))
+    cursor.execute('SELECT DISTINCT nombre, BGG_id FROM juegos WHERE nombre LIKE ? OR nombre_noacentos LIKE ? OR nom_alt_1 LIKE ? OR nom_alt_2 LIKE ? OR nom_alt_3 LIKE ? OR nom_alt_4 LIKE ? OR nom_alt_5 LIKE ? OR nom_alt_6 LIKE ? OR nom_alt_7 LIKE ? OR nom_alt_8 LIKE ? ORDER BY nombre',('%'+query+'%','%'+query+'%','%'+query+'%','%'+query+'%','%'+query+'%','%'+query+'%','%'+query+'%','%'+query+'%','%'+query+'%','%'+query+'%'))
     juegos = cursor.fetchall()
     results = []
 
