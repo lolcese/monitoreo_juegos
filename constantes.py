@@ -8,7 +8,9 @@ db_file = 'db/monitoreo_juegos.db'
 db_file_histo = 'db/monitoreo_juegos_todo.db'
 exporta_file = 'exporta/precios_exporta.csv'
 exporta_cazagangas = 'exporta/cazagangas_exporta.csv'
+exporta_cazagangas_json = 'exporta/cazagangas_exporta.json'
 exporta_tabla = '/var/www/Monitor_Juegos_bot/data/tabla_exporta.csv'
+exporta_json = '/var/www/Monitor_Juegos_bot/data/tabla_exporta.json'
 
 conn = sqlite3.connect(db_file, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 conn.execute("PRAGMA journal_mode=WAL")

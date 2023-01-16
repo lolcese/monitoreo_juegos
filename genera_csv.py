@@ -9,6 +9,8 @@
 import sqlite3
 import constantes
 import csv
+import html
+import json
 
 ######### Programa principal
 def main():
@@ -22,9 +24,7 @@ def main():
 
     juegos_exporta.writerow(["Nombre","Sitio","País","Precio actual","Mínimo 15 días","Promedio 15 días","Notas","Dependencia idioma","Ranking BGG"])
 
-    tabla = open("tabla.html", "a")
-    tabla.write("<table>")
-    tabla.write(f"<tr><th>Nombre</th><th>Sitio</th><th>País</th><th>Precio actual</th><th>Mínimo 15 días</th><th>Promedio 15 días</th><th>Notas</th><th>Dependencia idioma</th><th>Ranking BGG</th></tr>")
+    data = json.load(open(constantes.exporta_cazagangas_json))
 
     cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, precio_prom, ranking FROM juegos ORDER BY nombre')
     juegos_id = cursor.fetchall()
@@ -54,11 +54,13 @@ def main():
             juego_venta = cursor.fetchone()
             username, precio, estado, ciudad = juego_venta
             sitio_v = f"https://t.me/{username}++Vendido por @{username}"
+            sitio_vj = f"<a href='https://t.me/{username}'>Vendido por @{username}</a>"
             precio_p = f"${precio}"
             notas = f"{ciudad} - {estado}"
             band = "AR"
         else:
             sitio_v = f"{constantes.sitio_URL[sitio]+sitio_ID}++{constantes.sitio_nom[sitio]}"
+            sitio_vj = f"<a href='{constantes.sitio_URL[sitio]+sitio_ID}'>{constantes.sitio_nom[sitio]}</a>"
             notas = "-"
             band = constantes.sitio_pais[sitio]
             if precio_actual <= precio_prom * 0.9:
@@ -67,6 +69,8 @@ def main():
         band = band.lower()
         if band == "uk":
             band = "gb"
+
+        imagen_band = f"<img src='https://flagcdn.com/24x18/{band}.png' alt='Bandera {band}'>"
 
         if ranking == "Not Ranked":
             ranking = ""
@@ -77,18 +81,29 @@ def main():
         if prom_precio == "-":
             prom_precio = ""
 
-        juegos_exporta.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", sitio_v, band, precio_p, min_precio, prom_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
-        tabla.write(f"<tr><td>{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}</td><td>{sitio_v}</td><td>{band}</td><td>{precio_p}</td><td>{min_precio}</td><td>{prom_precio}</td><td>{notas}</td><td>{constantes.dependencia_len[dependencia_leng]}</td><td>{ranking}</td></tr>\n")
+        juegos_exporta.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{html.escape(nombre)}", sitio_v, band, precio_p, min_precio, prom_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
+
+        data.append([f"<a href=\'{constantes.sitio_URL['BGG']+str(BGG_id)}\'>{html.escape(nombre)}</a>", \
+            f"{sitio_vj}", \
+            f"{imagen_band}", \
+            f"{precio_p}", \
+            f"{min_precio}", \
+            f"{prom_precio}", \
+            f"{notas}", \
+            f"{constantes.dependencia_len[dependencia_leng]}", \
+            f"{ranking}" ])
 
     ju.close()
-    tabla.write("</table>")
-    tabla.close()
 
     filenames = [constantes.exporta_file, constantes.exporta_cazagangas]
     with open(constantes.exporta_tabla, 'w') as outfile:
         for fname in filenames:
             with open(fname) as infile:
                 outfile.write(infile.read())
+
+    data = {"data": data}
+    tabla = open(constantes.exporta_json, 'w', encoding='utf-8')
+    json.dump(data, tabla, ensure_ascii=False, indent=4)
 
 if __name__ == '__main__':
     main()
