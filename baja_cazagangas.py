@@ -17,7 +17,7 @@ cazagangas_exporta = csv.writer(caza, delimiter=',', quotechar='"', quoting=csv.
 
 datos_cazagangas = []
 
-cursor.execute('SELECT DISTINCT BGG_id, nombre, dependencia_leng, ranking nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 FROM juegos WHERE precio_actual, NOT NULL ORDER BY nombre')
+cursor.execute('SELECT DISTINCT BGG_id, nombre, dependencia_leng, ranking, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 FROM juegos WHERE precio_actual NOT NULL ORDER BY nombre')
 juegos_id = cursor.fetchall()
 for j in juegos_id:
     BGG_id, nombre, dependencia_leng, ranking, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 = j
