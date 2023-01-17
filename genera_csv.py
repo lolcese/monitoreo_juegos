@@ -65,7 +65,7 @@ def main():
                 nom_alt = ""
             sitio_v = f"{constantes.sitio_URL[sitio]+sitio_ID}++{constantes.sitio_nom[sitio]}"
             sitio_vj = f"<a href='{constantes.sitio_URL[sitio]+sitio_ID}'>{constantes.sitio_nom[sitio]}</a>"
-            notas = "-"
+            notas = ""
             band = constantes.sitio_pais[sitio]
             if precio_actual <= precio_prom * 0.9:
                 notas = f"Oferta ({int((precio_prom - precio_actual) / precio_prom * 100)}% menos) "
