@@ -24,12 +24,13 @@ def main():
 
     juegos_exporta.writerow(["Nombre","Sitio","País","Precio actual","Mínimo 15 días","Promedio 15 días","Notas","Dependencia idioma","Ranking BGG"])
 
-    data = json.load(open(constantes.exporta_cazagangas_json))
+    # data = json.load(open(constantes.exporta_cazagangas_json))
+    data = []
 
-    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, precio_prom, ranking FROM juegos ORDER BY nombre')
+    cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, precio_prom, ranking, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 FROM juegos ORDER BY nombre')
     juegos_id = cursor.fetchall()
     for j in juegos_id:
-        nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_min, precio_prom, ranking = j
+        nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_min, precio_prom, ranking, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 = j
         if precio_actual == None:
             precio_p = "-"
         else:
@@ -59,6 +60,10 @@ def main():
             notas = f"{ciudad} - {estado}"
             band = "AR"
         else:
+            if nom_alt_1 != None:
+                nom_alt = f' ({" / ".join(filter(None,[nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8]))})'
+            else:
+                nom_alt = ""
             sitio_v = f"{constantes.sitio_URL[sitio]+sitio_ID}++{constantes.sitio_nom[sitio]}"
             sitio_vj = f"<a href='{constantes.sitio_URL[sitio]+sitio_ID}'>{constantes.sitio_nom[sitio]}</a>"
             notas = "-"
@@ -73,7 +78,7 @@ def main():
         imagen_band = f"<img src='https://flagcdn.com/24x18/{band}.png' alt='Bandera {band}'>"
 
         if ranking == "Not Ranked":
-            ranking = ""
+            ranking = "Sin datos"
         
         if min_precio == "-":
             min_precio = ""
@@ -83,15 +88,15 @@ def main():
 
         juegos_exporta.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{html.escape(nombre)}", sitio_v, band, precio_p, min_precio, prom_precio, notas, constantes.dependencia_len[dependencia_leng], ranking])
 
-        data.append([f"<a href=\'{constantes.sitio_URL['BGG']+str(BGG_id)}\'>{html.escape(nombre)}</a>", \
-            f"{sitio_vj}", \
-            f"{imagen_band}", \
-            f"{precio_p}", \
-            f"{min_precio}", \
-            f"{prom_precio}", \
-            f"{notas}", \
-            f"{constantes.dependencia_len[dependencia_leng]}", \
-            f"{ranking}" ])
+        data.append({
+            "nombre": f"<a href=\'{constantes.sitio_URL['BGG']+str(BGG_id)}\'>{html.escape(nombre)}</a>{nom_alt}, Ranking BGG: {ranking}, Dependencia idioma: {constantes.dependencia_len[dependencia_leng]}",
+            "sitio": sitio_vj,
+            "pais": imagen_band,
+            "precio_actual": precio_p,
+            "minimo_15": min_precio,
+            "promedio_15": prom_precio,
+            "notas": notas
+        })
 
     ju.close()
 
