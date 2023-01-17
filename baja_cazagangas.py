@@ -30,14 +30,20 @@ for j in juegos_id:
     if cazagangas["disponible"] == True:
         cazagangas_exporta.writerow([f"{constantes.sitio_URL['BGG']+str(BGG_id)}++{nombre}", f"{cazagangas['url']}++Cazagangas", "ar", f"${cazagangas['precio']:.0f}", "", "", "-", constantes.dependencia_len[dependencia_leng], ranking])
 
-        nom_alt = " / ".join(filter(None,[nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8]))
-        datos_cazagangas.append([f"'nombre': '<a href=\'{constantes.sitio_URL['BGG']+str(BGG_id)}\'>{html.escape(nombre)}</a> ({nom_alt}), Ranking BGG: {ranking}, Dependencia idioma: {constantes.dependencia_len[dependencia_leng]}'", \
-            f"'sitio': '<a href=\'{cazagangas['url']}\'>Cazagangas</a>'", \
-            f"'pais': '<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>'", \
-            f"'precio_actual': '${cazagangas['precio']:.0f}'", \
-            f"'minimo_15': ''", \
-            f"'promedio_15': ''", \
-            f"'notas': '-'" ])
+        if nom_alt_1 != None:
+            nom_alt = f' ({" / ".join(filter(None,[nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8]))})'
+        else:
+            nom_alt = ""
+            
+        datos_cazagangas.append({
+            "nombre": f"<a href=\'{constantes.sitio_URL['BGG']+str(BGG_id)}\'>{html.escape(nombre)}</a>{html.escape(nom_alt)}, Ranking BGG: {ranking}, Dependencia idioma: {constantes.dependencia_len[dependencia_leng]}",
+            "sitio": f"<a href='{cazagangas['url']}'>Cazagangas</a>",
+            "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
+            "precio_actual": f"${cazagangas['precio']:.0f}",
+            "minimo_15": '',
+            "promedio_15": '',
+            "notas": ''
+        })
 
     time.sleep(1)
 
