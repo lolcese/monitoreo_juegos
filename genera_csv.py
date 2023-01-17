@@ -24,8 +24,7 @@ def main():
 
     juegos_exporta.writerow(["Nombre","Sitio","País","Precio actual","Mínimo 15 días","Promedio 15 días","Notas","Dependencia idioma","Ranking BGG"])
 
-    # data = json.load(open(constantes.exporta_cazagangas_json))
-    data = []
+    data = json.load(open(constantes.exporta_cazagangas_json))
 
     cursor.execute('SELECT nombre, BGG_id, sitio, sitio_ID, dependencia_leng, precio_actual, fecha_actual, precio_mejor, precio_prom, ranking, nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8 FROM juegos ORDER BY nombre')
     juegos_id = cursor.fetchall()
