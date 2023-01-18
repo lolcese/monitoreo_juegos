@@ -59,16 +59,17 @@ def main():
             notas = f"{ciudad} - {estado}"
             band = "AR"
         else:
-            if nom_alt_1 != None:
-                nom_alt = f' ({" / ".join(filter(None,[nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8]))})'
-            else:
-                nom_alt = ""
             sitio_v = f"{constantes.sitio_URL[sitio]+sitio_ID}++{constantes.sitio_nom[sitio]}"
             sitio_vj = f"<a href='{constantes.sitio_URL[sitio]+sitio_ID}'>{constantes.sitio_nom[sitio]}</a>"
             notas = ""
             band = constantes.sitio_pais[sitio]
             if precio_actual <= precio_prom * 0.9:
                 notas = f"Oferta ({int((precio_prom - precio_actual) / precio_prom * 100)}% menos) "
+
+        if nom_alt_1 != None:
+            nom_alt = f' ({" / ".join(filter(None,[nom_alt_1, nom_alt_2, nom_alt_3, nom_alt_4, nom_alt_5, nom_alt_6, nom_alt_7, nom_alt_8]))})'
+        else:
+            nom_alt = ""
 
         band = band.lower()
         if band == "uk":
