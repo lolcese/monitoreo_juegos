@@ -845,7 +845,7 @@ def texto_info_juego(BGG_id):
         nom_alt = ""
 
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
-    texto = f"<b>{html.escape(nombre)}</b> {html.escape(alt)}\n\n"
+    texto = f"<b>{html.escape(nombre)}</b> {html.escape(nom_alt)}\n\n"
     texto += f"<a href= '{link_BGG}'>Enlace BGG</a> - Ranking: {ranking}\n"
     texto += f"Dependencia del idioma: {dependencia_leng}\n\n"
     texto += "Los precios indicados son <b>finales</b> (incluyen envío, aduana y correo).\n\n"
