@@ -1742,8 +1742,31 @@ def admin_sugeridos_r(update: Update, context: CallbackContext) -> int:
         nombre_noacentos = strip_accents(nombre)
         nombre_noacentos = re.sub(r'[^\w\s]','',nombre_noacentos)
         nombre_noacentos = re.sub(r'\s+',' ',nombre_noacentos)
+
         conn.execute ('INSERT INTO juegos (BGG_id, nombre, sitio, sitio_ID, fecha_agregado, ranking, peso, dependencia_leng, prioridad, precio_envio, reposicion, oferta, nombre_noacentos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',(int(bgg_id), nombre, sitio_nom, sitio_id, fecha, ranking, peso, dependencia_leng, "3", precio_envio, "Nuevo", "Sí", nombre_noacentos))
         conn.commit()
+
+        # Lee info de versión de BGG
+        url = f"https://api.geekdo.com/api/geekitem/linkeditems?ajax=1&linkdata_index=boardgameversion&nosession=1&objectid={bgg_id}&objecttype=thing&pageid=1&showcount=100&subtype=boardgameversion"
+        req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
+        data = urllib.request.urlopen(req)
+        dato_bgg = json.loads(data.read())
+        lis = []
+        uni = []
+        for item in dato_bgg["items"]:
+            linkedname = item["linkedname"]
+            for lan in item["links"]["languages"]:
+                if lan["name"] == "Spanish" and linkedname != nombre:
+                    lis.append(linkedname)
+                    break
+        for x in lis:
+            if x not in uni:
+                uni.append(x)
+        if len(uni) > 0:
+            for i in range(len(uni)):
+                cursor.execute(f'UPDATE juegos SET nom_alt_{i+1} = ? WHERE BGG_id = ?',(uni[i],bgg_id))
+                conn.commit()
+
         manda.send_message(usuario_id, f'Gracias por la sugerencia, <a href="{constantes.sitio_URL["BGG"]+bgg_id}">{nombre}</a> desde {constantes.sitio_URL[sitio_nom]+sitio_id} ha sido agregado al monitoreo')
     conn.execute ('DELETE FROM juegos_sugeridos WHERE id_juego_sugerido = ?',[sug_id])
     conn.commit()
