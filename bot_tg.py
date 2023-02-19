@@ -880,6 +880,8 @@ def texto_info_juego(BGG_id):
                 band = "\U0001F1EA\U0001F1F8"
             elif pais_sitio == "DE":
                 band = "\U0001F1E9\U0001F1EA"
+            elif pais_sitio == "FR":
+                band = "\U0001F1EB\U0001F1F7"
             if precio_actual == None:
                 precio_ju.append(999999)
                 if precio_mejor == None:
