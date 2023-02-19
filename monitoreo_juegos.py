@@ -368,7 +368,7 @@ def lee_pagina_phil(ju_id, precio_envio):
     if not precio_eur or stock == 1:
         return None
 
-    precio_eur = float(precio_eur[1])
+    precio_eur = float(precio_eur[1]) * constantes.var['descuento_iva_Philibert']
     precio_eur += precio_envio
 
     precio_final_ad = precio_eur * constantes.var['euro'] * constantes.var['impuesto_compras_exterior'] + precio_eur * constantes.var['euro'] * constantes.var['impuesto_Philibert']
