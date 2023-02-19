@@ -203,7 +203,7 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_todos_sitio_grooves'),
-            InlineKeyboardButton("\U0001F1EA\U0001F1F8 FNAC", callback_data='juegos_todos_sitio_FNAC'),
+            InlineKeyboardButton("\U0001F1EB\U0001F1F7 Philibert", callback_data='juegos_todos_sitio_philibert'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -273,7 +273,7 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockalfab_sitio_grooves'),
-            InlineKeyboardButton("\U0001F1EA\U0001F1F8 FNAC", callback_data='juegos_stockalfab_sitio_FNAC'),
+            InlineKeyboardButton("\U0001F1EB\U0001F1F7 Philibert", callback_data='juegos_stockalfab_sitio_philibert'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -339,7 +339,7 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockprecio_sitio_grooves'),
-            InlineKeyboardButton("\U0001F1EA\U0001F1F8 FNAC", callback_data='juegos_stockprecio_sitio_FNAC'),
+            InlineKeyboardButton("\U0001F1EB\U0001F1F7 Philibert", callback_data='juegos_stockprecio_sitio_philibert'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -1104,7 +1104,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     texto = """
 <b>Ayuda</b>
     
-@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, Deepdiscount, Grooves.land, Planeton, Casa del Libro, Miniaturemarket, Magic Madhouse y FNAC, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
+@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, Deepdiscount, Grooves.land, Planeton, Casa del Libro, Miniaturemarket, Magic Madhouse y Philibert, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
     
 Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 75% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
     
@@ -1146,7 +1146,7 @@ Todos los precios que se muestran acá son finales, considerando los impuestos d
 \U0001F1FA\U0001F1F8 <a href='http://www.miniaturemarket.com/'>Miniature Market</a>: Se toma el envío más barato. Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
 \U0001F1FA\U0001F1F8 <a href='https://www.deepdiscount.com/'>Deepdiscount</a>: El envío es caro, pero a veces aparecen ofertas.
 \U0001F1EC\U0001F1E7 <a href='https://magicmadhouse.co.uk/'>Magic Madhouse</a>: El envío es courier, y te permite pagar impuestos por anticipado.
-\U0001F1EA\U0001F1F8 <a href='https://www.fnac.es/'>FNAC</a>: Los juegos son en español, mandan por courier, hay que tener cuidado que el máximo son 5 por año. Conviene pedir de a 3 juegos.
+\U0001F1EA\U0001F1F8 <a href='https://www.philibertnet.com/'>Philibert</a>: Los juegos son en francés. El envío es courier y al precio que sale en la página hay que sumarle impuestos.
 """
 
     keyboard = [
@@ -1162,6 +1162,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+19/02/2023: Agregado Philibert y sacado FNAC
 10/01/2023: Toma nombres en castellano
 08/01/2023: Planilla en sitio http://www.monitorjuegos.com.ar/
 28/12/2022: Agregado FNAC
@@ -1306,8 +1307,8 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
         return LISTA_JUEGOS
 
-    if not re.search("tiendamia|bookdepository|buscalibre|deepdiscount|grooves|planeton|casadellibro|miniaturemarke|magicmadhouse|fnac\.es", url):
-        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, Deepdiscount, Grooves.land, Planeton, MiniatureMarket, Casa del Libro, Magic Madhouse o FNAC.")
+    if not re.search("tiendamia|bookdepository|buscalibre|deepdiscount|grooves|planeton|casadellibro|miniaturemarke|magicmadhouse|philibertnet", url):
+        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, Deepdiscount, Grooves.land, Planeton, MiniatureMarket, Casa del Libro, Magic Madhouse o Philibert .")
         return LISTA_JUEGOS
 
     sitio_nom, sitio_id = extrae_sitio(url)
@@ -1327,7 +1328,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")
         return LISTA_JUEGOS
 
-    if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url)):
+    if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url) or re.search("philibert", url)):
         update.message.reply_text("Cuando agregás un juego de ese sitio, tenés que poner el monto del envío.")
         return LISTA_JUEGOS
 
@@ -1336,7 +1337,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
     if len(dat) > 2 and re.search("deepdiscount", url):
         peso = dat[2]
-    if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url)):
+    if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url) or re.search("philibert", url)):
         precio_envio = re.sub(",",".",dat[2])
 
     conn = conecta_db()
@@ -1426,9 +1427,15 @@ def extrae_sitio(sitio_url):
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('fnac\.es/(.*?)$',sitio_url)
+    # sitio_id = re.search('fnac\.es/(.*?)$',sitio_url)
+    # if sitio_id:
+    #     sitio_nom = "FNAC"
+    #     sitio_id = sitio_id[1]
+    #     return [sitio_nom, sitio_id]
+
+    sitio_id = re.search('philibert\.com/(.*?)$',sitio_url)
     if sitio_id:
-        sitio_nom = "FNAC"
+        sitio_nom = "PHIL"
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 

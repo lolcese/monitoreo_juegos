@@ -335,24 +335,43 @@ def lee_pagina_mmadhouse(ju_id):
     return precio_final_ad
 
 ######### Lee información de FNAC
-def lee_pagina_fnac(ju_id):
-    url = f"https://www.google.com/search?q=fnac+{ju_id}"
+# def lee_pagina_fnac(ju_id):
+#     url = f"https://www.google.com/search?q=fnac+{ju_id}"
 
+#     text = baja_pagina(url)
+#     if text == "Error":
+#         return None
+
+#     precio_eur = re.search('<span>€(\d+\.\d+)<\/span>',text)
+#     if not precio_eur:
+#         precio_eur = re.search('>‏(\d.*) ‏€<\/span>',text)
+#         if not precio_eur:
+#             return None
+
+#     precio_eur = float(precio_eur[1])
+#     precio_envio = constantes.var['envio_FNAC']
+#     precio_eur += precio_envio
+#     precio_pesos = precio_eur * constantes.var['euro'] 
+#     precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
+
+#     return precio_final_ad
+
+######### Lee información de Philibert
+def lee_pagina_phil(ju_id, precio_envio):
+    url = "https://www.philibertnet.com/"+ju_id
     text = baja_pagina(url)
     if text == "Error":
         return None
 
-    precio_eur = re.search('<span>€(\d+\.\d+)<\/span>',text)
-    if not precio_eur:
-        precio_eur = re.search('>‏(\d.*) ‏€<\/span>',text)
-        if not precio_eur:
-            return None
+    precio_eur = re.search('var gtmProductData .*"price":"(.*?)"',text)
+    stock = 'This product is no longer in stock <' in text
+    if not precio_eur or stock == 1:
+        return None
 
     precio_eur = float(precio_eur[1])
-    precio_envio = constantes.var['envio_FNAC']
     precio_eur += precio_envio
-    precio_pesos = precio_eur * constantes.var['euro'] 
-    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
+
+    precio_final_ad = precio_eur * constantes.var['euro'] * constantes.var['impuesto_compras_exterior'] + precio_eur * constantes.var['euro'] * constantes.var['impuesto_Philibert']
 
     return precio_final_ad
 
@@ -392,8 +411,10 @@ def main():
                 precio = lee_pagina_cdl(sitio_id, precio_envio)
             elif sitio == "MMadhouse":
                 precio = lee_pagina_mmadhouse(sitio_id)
-            elif sitio == "FNAC":
-                precio = lee_pagina_fnac(sitio_id)
+            # elif sitio == "FNAC":
+            #     precio = lee_pagina_fnac(sitio_id)
+            elif sitio == "PHIL":
+                precio = lee_pagina_phil(sitio_id, precio_envio)
 
             cursor.execute('SELECT precio_prom, fecha_reposicion as "[timestamp]", fecha_oferta as "[timestamp]", fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?', [id_juego])
             prom = cursor.fetchone()
