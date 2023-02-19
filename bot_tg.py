@@ -203,7 +203,7 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_todos_sitio_grooves'),
-            InlineKeyboardButton("\U0001F1EB\U0001F1F7 Philibert", callback_data='juegos_todos_sitio_philibert'),
+            InlineKeyboardButton("\U0001F1EB\U0001F1F7 Philibert", callback_data='juegos_todos_sitio_phil'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -273,7 +273,7 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockalfab_sitio_grooves'),
-            InlineKeyboardButton("\U0001F1EB\U0001F1F7 Philibert", callback_data='juegos_stockalfab_sitio_philibert'),
+            InlineKeyboardButton("\U0001F1EB\U0001F1F7 Philibert", callback_data='juegos_stockalfab_sitio_phil'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -339,7 +339,7 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1E9\U0001F1EA Grooves Land", callback_data='juegos_stockprecio_sitio_grooves'),
-            InlineKeyboardButton("\U0001F1EB\U0001F1F7 Philibert", callback_data='juegos_stockprecio_sitio_philibert'),
+            InlineKeyboardButton("\U0001F1EB\U0001F1F7 Philibert", callback_data='juegos_stockprecio_sitio_phil'),
         ],
         [
             InlineKeyboardButton("\U00002B05 Anterior", callback_data='juegos_lista_menu'),
@@ -1330,7 +1330,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")
         return LISTA_JUEGOS
 
-    if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url) or re.search("philibert", url)):
+    if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url) or re.search("philibertnet", url)):
         update.message.reply_text("Cuando agregás un juego de ese sitio, tenés que poner el monto del envío.")
         return LISTA_JUEGOS
 
@@ -1339,7 +1339,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
     if len(dat) > 2 and re.search("deepdiscount", url):
         peso = dat[2]
-    if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url) or re.search("philibert", url)):
+    if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url) or re.search("philibertnet", url)):
         precio_envio = re.sub(",",".",dat[2])
 
     conn = conecta_db()
