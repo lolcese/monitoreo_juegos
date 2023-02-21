@@ -1264,7 +1264,7 @@ def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto = """<b>Sugerir juego a monitorear</b>
     
-<b>LEER, HAY CAMBIOS</b>
+<b>LEER</b>
 
 Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, Deepdiscount, Grooves.land, Planeton, Miniature Market y Magic Madhouse).
 En el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).
@@ -1349,6 +1349,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     texto = f"{usuario_nom} sugirió el juego {url}"
     manda.send_message(id_aviso, texto)
     keyboard = [
+        [InlineKeyboardButton("\U0000270F Sugerir otro juego", callback_data='sugerir_juego_datos')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
