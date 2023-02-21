@@ -1264,8 +1264,6 @@ def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto = """<b>Sugerir juego a monitorear</b>
     
-<b>LEER</b>
-
 Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, Deepdiscount, Grooves.land, Planeton, Miniature Market y Magic Madhouse).
 En el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).
 <b>En el caso que agregues un juego de Planeton, Casa del Libro o Miniature Market, poné también el costo (en euros / dólares) del envío a Argentina que aparece cuando lo agregás al carrito.</b>
@@ -1354,7 +1352,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(text = 'Gracias por agregar el juego. Va a ser revisado y vas a recibir un mensaje si es aprobado o rechazado.', reply_markup=reply_markup)
-    return PRINCIPAL
+    return LISTA_JUEGOS
 
 ######### Extrae ID del sitio
 def extrae_sitio(sitio_url):
