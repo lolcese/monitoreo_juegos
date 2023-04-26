@@ -168,23 +168,23 @@ def precio_tm(peso,precio_ar):
     precio_final_arg = precio_ar + imp * constantes.var['dolar'] + constantes.var['tasa_correo']
     return precio_final_arg
 
-######### Lee información de BOOK
-def lee_pagina_book(ju_id):
-    url = "https://www.bookdepository.com/es/x/"+ju_id
-    text = baja_pagina(url)
-    if text == "Error":
-        return None
+# ######### Lee información de BOOK
+# def lee_pagina_book(ju_id):
+#     url = "https://www.bookdepository.com/es/x/"+ju_id
+#     text = baja_pagina(url)
+#     if text == "Error":
+#         return None
 
-    precio_ar = re.search('<span class=\"sale-price\">ARS\$(.*?)<\/span>',text)
-    if not precio_ar:
-        return None
-    no_stock = re.search('<p class="red-text bold">Actualmente no disponible<\/p>',text)
-    if no_stock:
-        return None
-    precio_ar = re.sub("\.", "", precio_ar[1])
-    precio_ar = float(re.sub(",", ".", precio_ar)) * constantes.var['impuesto_compras_exterior']
+#     precio_ar = re.search('<span class=\"sale-price\">ARS\$(.*?)<\/span>',text)
+#     if not precio_ar:
+#         return None
+#     no_stock = re.search('<p class="red-text bold">Actualmente no disponible<\/p>',text)
+#     if no_stock:
+#         return None
+#     precio_ar = re.sub("\.", "", precio_ar[1])
+#     precio_ar = float(re.sub(",", ".", precio_ar)) * constantes.var['impuesto_compras_exterior']
 
-    return precio_ar
+#     return precio_ar
 
 ######### Lee información de deepdiscount
 def lee_pagina_deep(ju_id, peso):
@@ -397,8 +397,8 @@ def main():
                 precio = lee_pagina_tmam(sitio_id)
             elif sitio == "TMWM":
                 precio = lee_pagina_tmwm(sitio_id) 
-            elif sitio == "BOOK":
-                precio = lee_pagina_book(sitio_id)
+            # elif sitio == "BOOK":
+            #     precio = lee_pagina_book(sitio_id)
             elif sitio == "deep":
                 precio = lee_pagina_deep(sitio_id, peso)
             elif sitio == "grooves":

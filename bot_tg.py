@@ -191,7 +191,7 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Magic Madhouse", callback_data='juegos_todos_sitio_MMadhouse'),
-            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_todos_sitio_BOOK'),
+            # InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_todos_sitio_BOOK'),
         ],
         [
             InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_todos_sitio_planeton'),
@@ -261,7 +261,7 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Magic Madhouse", callback_data='juegos_stockalfab_sitio_MMadhouse'),
-            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockalfab_sitio_BOOK'),
+            # InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockalfab_sitio_BOOK'),
         ],
         [
             InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_stockalfab_sitio_planeton'),
@@ -327,7 +327,7 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         ],
         [
             InlineKeyboardButton("\U0001F1EC\U0001F1E7 Magic Madhouse", callback_data='juegos_stockprecio_sitio_MMadhouse'),
-            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockprecio_sitio_BOOK'),
+            # InlineKeyboardButton("\U0001F1EC\U0001F1E7 Bookdepository", callback_data='juegos_stockprecio_sitio_BOOK'),
         ],
         [
             InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_stockprecio_sitio_planeton'),
@@ -1106,7 +1106,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     texto = """
 <b>Ayuda</b>
     
-@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Bookdepository, Deepdiscount, Grooves.land, Planeton, Casa del Libro, Miniaturemarket, Magic Madhouse y Philibert, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
+@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Deepdiscount, Grooves.land, Planeton, Casa del Libro, Miniaturemarket, Magic Madhouse y Philibert, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
     
 Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 75% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
     
@@ -1141,7 +1141,6 @@ def consejos(update: Update, context: CallbackContext) -> int:
 Todos los precios que se muestran acá son finales, considerando los impuestos del 35%, 30% y aduana.
 \U0001F1E6\U0001F1F7 <a href='https://www.buscalibre.com.ar/'>Buscalibre</a>: Los precios en la página son finales, y los juegos llegan directamente a tu casa sin trámite de aduana. Podés pagar en Ahora 3.
 \U0001F1FA\U0001F1F8 <a href='https://www.tiendamia.com/'>Tiendamía</a>: Siempre hay cupones que se pueden usar para bajar el precio. Buscalos en los mensajes fijados de https://t.me/comprasjuegosexterior.
-\U0001F1EC\U0001F1E7 <a href='https://www.bookdepository.com/'>Bookdepository</a>: Si sacás tarjeta de débito de Mercadopago y pagás con eso, no te cobra el 75% de impuestos.
 \U0001F1E9\U0001F1EA <a href='http://grooves.land/'>Grooves.land</a>: Cuidado, los juegos están en alemán. Se puede pagar un par de euros para tener tracking en el envío.
 \U0001F1EA\U0001F1F8 <a href='http://www.planeton.com/'>Planeton</a>: Los juegos son en español, pero los precios son aproximados (por el envío). Conviene pedir de a varios juegos por vez, así el envío es proporcionalmente más barato.
 \U0001F1EA\U0001F1F8 <a href='https://www.casadellibro.com/'>Casa del Libro</a>: Los juegos son en español, mandan por courier, hay que tener cuidado que el máximo son 5 por año.
@@ -1264,7 +1263,7 @@ def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto = """<b>Sugerir juego a monitorear</b>
     
-Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Bookdepository, Deepdiscount, Grooves.land, Planeton, Miniature Market y Magic Madhouse).
+Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Deepdiscount, Grooves.land, Planeton, Miniature Market y Magic Madhouse).
 En el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).
 <b>En el caso que agregues un juego de Planeton, Casa del Libro o Miniature Market, poné también el costo (en euros / dólares) del envío a Argentina que aparece cuando lo agregás al carrito.</b>
 
@@ -1281,7 +1280,7 @@ https://www.planetongames.com/es/wingspan-p-8175.html
 
 <i>Otras tiendas</i>
 https://www.boardgamegeek.com/boardgame/220/high-society
-https://www.bookdepository.com/es/High-Society-Dr-Reiner-Knizia/9781472827777
+https://www.buscalibre.com.ar/amazon?url=1472827775
 """
 
     query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
@@ -1307,8 +1306,8 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
         return LISTA_JUEGOS
 
-    if not re.search("tiendamia|bookdepository|buscalibre|deepdiscount|grooves|planeton|casadellibro|miniaturemarke|magicmadhouse|philibertnet", url):
-        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Bookdepository, Deepdiscount, Grooves.land, Planeton, MiniatureMarket, Casa del Libro, Magic Madhouse o Philibert .")
+    if not re.search("tiendamia|buscalibre|deepdiscount|grooves|planeton|casadellibro|miniaturemarke|magicmadhouse|philibertnet", url):
+        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Deepdiscount, Grooves.land, Planeton, MiniatureMarket, Casa del Libro, Magic Madhouse o Philibert .")
         return LISTA_JUEGOS
 
     sitio_nom, sitio_id = extrae_sitio(url)
@@ -1371,12 +1370,6 @@ def extrae_sitio(sitio_url):
     sitio_id = re.search('buscalibre\.com\.ar\/(.*?)(\s|$|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "BLIB"
-        sitio_id = sitio_id[1]
-        return [sitio_nom, sitio_id]
-
-    sitio_id = re.search('bookdepository.com\/..\/.*?\/(.*?)(\s|$|\/|\?|&)',sitio_url)
-    if sitio_id:
-        sitio_nom = "BOOK"
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
