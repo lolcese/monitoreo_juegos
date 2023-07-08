@@ -115,8 +115,8 @@ conn.commit()
 url = "https://www.buscalibre.com.ar/despacho-ar_st.html"
 response = get(url)
 text = response.content.decode('utf-8', errors='ignore')
-datos1 = re.search('<span class="region">CABA</span><span class="valor">.*?</span><span class="despacho">.*?</span></li><li><span class="region">PROVINCIA DE BUENOS AIRES </span><span class="valor">\$ (.*?)</span>',text)
-env_bl = float(datos1[1])
+datos1 = re.search('<span class="region">CABA<\/span><span class="valor">.*?<\/span><span class="despacho">.*?<\/span></li><li><span class="region">PROVINCIA DE BUENOS AIRES <\/span><span class="valor">\$ (.*?)<\/span>',text)
+env_bl = float(re.sub("\.", "", datos1[1]))
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "envio_BL"',(env_bl, fecha))
 conn.commit()
