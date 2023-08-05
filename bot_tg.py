@@ -1391,10 +1391,10 @@ def extrae_sitio(sitio_url):
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('grooves\.land\/(.*?html)',sitio_url)
+    sitio_id = re.search('grooves(\.land|-inc\.com)\/(.*?html)',sitio_url)
     if sitio_id:
         sitio_nom = "grooves"
-        sitio_id = sitio_id[1]
+        sitio_id = sitio_id[2]
         return [sitio_nom, sitio_id]
 
     sitio_id = re.search('planetongames\.com\/(es\/)?(.*?html)',sitio_url)
