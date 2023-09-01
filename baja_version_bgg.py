@@ -32,8 +32,11 @@ for j in juegos_id:
         if x not in uni:
             uni.append(x)
 
+    for i in range(9):
+        cursor.execute(f'UPDATE juegos SET nom_alt_{i+1} = ? WHERE BGG_id = ?',(None,BGG_id))
+        conn.commit()
     if len(uni) > 0:
-        for i in range(len(uni)):
+        for i in min(range(len(uni)), 8):
             cursor.execute(f'UPDATE juegos SET nom_alt_{i+1} = ? WHERE BGG_id = ?',(uni[i],BGG_id))
             conn.commit()
 
