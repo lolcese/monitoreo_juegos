@@ -47,7 +47,7 @@ dolar = float(re.sub("\,", ".", dolar))
 cursor.execute('SELECT valor FROM variables WHERE variable = "dolar"')
 dolar_viejo = float(cursor.fetchone()[0])
 if abs(dolar - dolar_viejo) / dolar_viejo > 0.05:
-    send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&parse_mode=Markdown&text=El nuevo precio del dólar es ${dolar}, revisar'
+    send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&parse_mode=Markdown&text=El nuevo precio del dólar es ${dolar}, revisar. De ser correcto, cambiarlo directamente en la base de datos'
     response = requests.get(send_text)
 else:
     cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "dolar"',(dolar, fecha))
@@ -58,7 +58,7 @@ libra = float(re.sub("\,", ".", libra))
 cursor.execute('SELECT valor FROM variables WHERE variable = "libra"')
 libra_viejo = float(cursor.fetchone()[0])
 if abs(libra - libra_viejo) / libra_viejo > 0.05:
-    send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&parse_mode=Markdown&text=El nuevo precio de la libra es ${libra}, revisar'
+    send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&parse_mode=Markdown&text=El nuevo precio de la libra es ${libra}, revisar. De ser correcto, cambiarlo directamente en la base de datos'
     response = requests.get(send_text)
 else:
     cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "libra"',(libra, fecha))
@@ -69,7 +69,7 @@ euro = float(re.sub("\,", ".", euro))
 cursor.execute('SELECT valor FROM variables WHERE variable = "euro"')
 euro_viejo = float(cursor.fetchone()[0])
 if abs(euro - euro_viejo) / euro_viejo > 0.05:
-    send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&parse_mode=Markdown&text=El nuevo precio del euro es ${euro}, revisar'
+    send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={id_aviso}&parse_mode=Markdown&text=El nuevo precio del euro es ${euro}, revisar. De ser correcto, cambiarlo directamente en la base de datos'
     response = requests.get(send_text)
 else:
     cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "euro"',(euro, fecha))
