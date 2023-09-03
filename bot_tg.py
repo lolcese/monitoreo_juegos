@@ -2029,6 +2029,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(compraventa_menu,         pattern='^compraventa_menu$'),
                 CallbackQueryHandler(herramientas,             pattern='^herramientas$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
+                CallbackQueryHandler(calculadora_planeton,     pattern='^calculadora_planeton$'),
             ],  
             LISTA_JUEGOS: [
                 CallbackQueryHandler(ofertas_restock,          pattern='^ofertas_restock$'),
@@ -2101,7 +2102,6 @@ def main() -> PRINCIPAL:
             ],
             HERRAMIENTAS: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, muestra_calculadora_planeton),
-                CallbackQueryHandler(calculadora_planeton,     pattern='^calculadora_planeton$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
