@@ -1056,7 +1056,7 @@ def historicos_nom(update: Update, context: CallbackContext) -> int:
         keyboard.append([InlineKeyboardButton(f'\U000027A1 {j[0]}', callback_data='Histo_'+str(j[1]))])
     keyboard.append( [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')])
     reply_markup = InlineKeyboardMarkup(keyboard)
-    id = update.message.reply_text(text = "Elegí el juego (demora unos segundos en procesarlo)", reply_markup=reply_markup)
+    id = update.message.reply_text(text = "Elegí el juego (demora varios segundos en procesarlo)", reply_markup=reply_markup)
     context.chat_data["mensaje_id"] = id.message_id
     return HISTORICOS
 
@@ -1073,9 +1073,9 @@ def histo_juego_info(update: Update, context: CallbackContext) -> int:
     nombre = juegos[1]
     ranking = juegos[2]
     dependencia_leng = constantes.dependencia_len[juegos[3]]
-    alt = " / ".join(filter(None,[juegos[4], juegos[5], juegos[6], juegos[7], juegos[8], juegos[9], juegos[10], juegos[11]]))
+    alt = " ("+" / ".join(filter(None,[juegos[4], juegos[5], juegos[6], juegos[7], juegos[8], juegos[9], juegos[10], juegos[11]]))+")"
     link_BGG = constantes.sitio_URL["BGG"]+str(BGG_id)
-    texto = f"<b>{html.escape(nombre)}</b> ({html.escape(alt)})\n\n"
+    texto = f"<b>{html.escape(nombre)}</b>{html.escape(alt)}\n\n"
     texto += f"<a href= '{link_BGG}'>Enlace BGG</a> - Ranking: {ranking}\n"
     texto += f"Dependencia del idioma: {dependencia_leng}"
 
