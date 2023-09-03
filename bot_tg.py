@@ -25,7 +25,7 @@ from urllib.parse import unquote
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS, VENTAS = range(12)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS, VENTAS, HERRAMIENTAS, CALCULADORA = range(14)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -127,6 +127,7 @@ def menu():
         [InlineKeyboardButton("\U0001F4DA Ver Listas de juegos \U0001F4DA", callback_data='juegos_lista_menu')],
         [InlineKeyboardButton("\U0001F4B0 Compraventa de juegos\U0001F4B0", callback_data='compraventa_menu')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego y mis alarmas \U0001F3B2", callback_data='juego_ver')],
+        [InlineKeyboardButton("\U0001F527 Herramientas \U0001F527", callback_data='herramientas')],
         [InlineKeyboardButton("\U00002753 Ayuda e información \U00002753", callback_data='ayuda_info')],
         [InlineKeyboardButton("\U0001F932 Colaborá con el server \U0001F932", callback_data='colaborar')]
     ]
@@ -1163,13 +1164,13 @@ def novedades(update: Update, context: CallbackContext) -> int:
     query.answer()
     texto = """<b>Novedades</b>
 
+02/09/2023: Agregado el calulador de costos de Planeton    
+26/04/2023: Sacado Bopokdepository :(
 19/02/2023: Agregado Philibert y sacado FNAC
 10/01/2023: Toma nombres en castellano
 08/01/2023: Planilla en sitio http://www.monitorjuegos.com.ar/
 28/12/2022: Agregado FNAC
 19/11/2022: Sacados Tienamia EBAY, 365games, shop4es y shop4world
-10/10/2022: Agregados impuestos a Casa del Libro
-23/07/2022: Agregado Magic Madhouse
 """
 
     keyboard = [
@@ -1306,7 +1307,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
         return LISTA_JUEGOS
 
-    if not re.search("tiendamia|buscalibre|deepdiscount|grooves|planeton|casadellibro|miniaturemarke|magicmadhouse|philibertnet", url):
+    if not re.search("tiendamia|buscalibre|deepdiscount|grooves|planeton|casadellibro|miniaturemarket|magicmadhouse|philibertnet", url):
         update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Deepdiscount, Grooves.land, Planeton, MiniatureMarket, Casa del Libro, Magic Madhouse o Philibert .")
         return LISTA_JUEGOS
 
@@ -1926,6 +1927,84 @@ def admin_vender_r(update: Update, context: CallbackContext) -> int:
     query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
     return ADMIN
 
+######### Menú de herramientas
+def herramientas(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    keyboard = [
+        [InlineKeyboardButton("\U0001F1EA\U0001F1F8 Calculadora Planeton", callback_data='calculadora_planeton')],
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    id = query.edit_message_text(text = "Elegí la herramienta", reply_markup=reply_markup)
+    context.chat_data["mensaje_id"] = id.message_id
+    return HERRAMIENTAS
+
+######### Calculadora Planeton
+def calculadora_planeton(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    texto = """<b>Calculadora de costos de Planeton</b>
+    
+El bot te da los costos finales de comprar un juego en Planeton, pero conviene comprar varios juntos, y acá podés calcular el monto final que vas a tener que pagar.
+Escribí el Subtotal y el Transporte que aparecen cuando estés en el paso final (donde dice <b>CONFIRMAR PEDIDO</b>).
+Por ejemplo: 123.13, 47.45
+"""
+    query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
+    return CALCULADORA
+
+######### Muestra resultados de calculadora Planeton
+def muestra_calculadora_planeton(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    precio_ar = re.search("([\d|.]+).*?([\d|.]+)", update.message.text)
+    if not precio_ar:
+        return None
+    precio = float(precio_ar[1])
+    envio = float(precio_ar[2])
+    texto = f"\U000027A1 El precio de los juegos es €{precio:.2f}"
+    if precio > constantes.var['limite_descuento_planeton']:
+        precio -= float(constantes.var['descuento_montoalto_planeton'])
+        texto += f", al ser más de €{constantes.var['limite_descuento_planeton']:.0f}, te descuentan €{constantes.var['descuento_montoalto_planeton']:.0f}"
+
+    planeton_pesos = (precio + envio) * constantes.var['euro']
+    planeton_dolares = (precio + envio) * constantes.var['euro'] / constantes.var['dolar']
+
+    texto += f": <b>${(precio * constantes.var['euro']):.0f}</b>.\n"
+    texto += f"\U000027A1 El envío APROXIMADO es €{envio:.2f} (te lo van a confirmar después): <b>${(envio * constantes.var['euro']):.0f}</b>.\n"
+    texto += f"\U000027A1 El impuesto PAÍS (35%) es ${planeton_pesos*0.35:.0f}, el impuesto a las ganancias (40%, te lo reintegran al año siguiente) es ${planeton_pesos*0.40:.0f}"
+    impuestos = planeton_pesos * 0.75
+    if planeton_dolares >= 300:
+        texto += f", el impuesto al dólar Qatar (5% si la compra es de más de U$S300) es ${planeton_pesos*0.05:.0f}"
+        impuestos += planeton_pesos * 0.05
+    texto += f", por lo que el total de impuestos es: <b>${impuestos:.0f}</b>.\n"
+
+    precio_dol = precio * constantes.var['euro'] / constantes.var['dolar']
+
+    if precio_dol <= 50:
+        aduana = 0
+        texto += f"\U000027A1 Como el total (precio+envío) no pasa los U$S50, no vas a pagar aduana.\n"
+    else:
+        aduana = (planeton_dolares - 50) / 2 * constantes.var['dolar']
+        texto += f"\U000027A1 Como el total (precio+envío) pasa los U$S50, vas a pagar de aduana el 50% de lo que exceda a U$S50, en tu caso es: <b>${aduana:.0f}<b>.\n"
+    texto += f"\U000027A1 La tasa del correo es: <b>${constantes.var['tasa_correo']:.0f}</b>.\n"
+
+    precio_final = planeton_pesos + impuestos + aduana + constantes.var['tasa_correo']
+    texto += f"\n\U0001F1E6\U0001F1F7 El total a pagar (Planeton + impuestos + aduana + correo) es: <b>${precio_final:.0f}</b>.\n"
+
+    keyboard = [
+        [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(text = texto, parse_mode = "HTML", reply_markup=reply_markup, disable_web_page_preview = True)
+
+    return PRINCIPAL
+
 ######### Handlers
 def main() -> PRINCIPAL:
     updater = Updater(bot_token, use_context=True)
@@ -1949,6 +2028,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(consejos,                 pattern='^consejos$'),
                 CallbackQueryHandler(historicos,               pattern='^historicos$'),
                 CallbackQueryHandler(compraventa_menu,         pattern='^compraventa_menu$'),
+                CallbackQueryHandler(herramientas,             pattern='^herramientas$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],  
             LISTA_JUEGOS: [
@@ -2018,6 +2098,10 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(avisos_venta,             pattern='^avisos_venta$'),
                 CallbackQueryHandler(compraventa_menu,         pattern='^compraventa_menu$'),
                 CallbackQueryHandler(borrar_venta,             pattern='^borrar_venta_'),
+                CallbackQueryHandler(inicio,                   pattern='^inicio$'),
+            ],
+            CALCULADORA: [
+                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, muestra_calculadora_planeton),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
