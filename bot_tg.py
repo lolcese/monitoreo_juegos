@@ -1988,7 +1988,7 @@ def muestra_calculadora_planeton(update: Update, context: CallbackContext) -> in
         texto += f"\U000027A1 Como el total (precio+envío) no pasa los U$S50, no vas a pagar aduana.\n"
     else:
         aduana = (planeton_dolares - 50) / 2 * constantes.var['dolar']
-        texto += f"\U000027A1 Como el total (precio+envío) pasa los U$S50, vas a pagar de aduana el 50% de lo que exceda a U$S50, en tu caso es: <b>${aduana:.0f}<b>.\n"
+        texto += f"\U000027A1 Como el total (precio+envío) pasa los U$S50, vas a pagar de aduana el 50% de lo que exceda a U$S50, en tu caso es: <b>${aduana:.0f}</b>.\n"
     texto += f"\U000027A1 La tasa del correo es: <b>${constantes.var['tasa_correo']:.0f}</b>.\n"
 
     precio_final = planeton_pesos + impuestos + aduana + constantes.var['tasa_correo']
