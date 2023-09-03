@@ -1956,7 +1956,7 @@ Escribí el Subtotal y el Transporte que aparecen cuando estés en el paso final
 Por ejemplo: 123.13, 47.45
 """
     query.edit_message_text(text = texto, parse_mode = "HTML", disable_web_page_preview = True, reply_markup=reply_markup)
-    return PRINCIPAL
+    return HERRAMIENTAS
 
 ######### Muestra resultados de calculadora Planeton
 def muestra_calculadora_planeton(update: Update, context: CallbackContext) -> int:
