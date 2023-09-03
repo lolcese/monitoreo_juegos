@@ -25,7 +25,7 @@ from urllib.parse import unquote
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS, VENTAS, HERRAMIENTAS, CALCULADORA = range(14)
+PRINCIPAL, LISTA_JUEGOS, JUEGO_ELECCION, JUEGO, ALARMAS, ALARMAS_NUEVA_PRECIO, ALARMAS_CAMBIAR_PRECIO, COMENTARIOS, OFERTAS, ADMIN, HISTORICOS, VENTAS, HERRAMIENTAS = range(13)
 
 ######### Conecta con la base de datos
 def conecta_db():
@@ -2100,7 +2100,7 @@ def main() -> PRINCIPAL:
                 CallbackQueryHandler(borrar_venta,             pattern='^borrar_venta_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
-            CALCULADORA: [
+            HERRAMIENTAS: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, muestra_calculadora_planeton),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
