@@ -1936,8 +1936,7 @@ def herramientas(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    id = query.edit_message_text(text = "Elegí la herramienta", reply_markup=reply_markup)
-    context.chat_data["mensaje_id"] = id.message_id
+    query.edit_message_text(text = "Elegí la herramienta", reply_markup=reply_markup)
     return HERRAMIENTAS
 
 ######### Calculadora Planeton
