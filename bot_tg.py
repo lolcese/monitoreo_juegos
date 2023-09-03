@@ -1959,8 +1959,6 @@ Por ejemplo: 123.13, 47.45
 
 ######### Muestra resultados de calculadora Planeton
 def muestra_calculadora_planeton(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    query.answer()
     precio_ar = re.search("([\d|.]+).*?([\d|.]+)", update.message.text)
     if not precio_ar:
         return None
