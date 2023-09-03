@@ -2102,6 +2102,7 @@ def main() -> PRINCIPAL:
             ],
             HERRAMIENTAS: [
                 MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, muestra_calculadora_planeton),
+                CallbackQueryHandler(calculadora_planeton,     pattern='^calculadora_planeton$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
