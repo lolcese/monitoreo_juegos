@@ -144,7 +144,7 @@ def juegos_lista_menu(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("\U0001F522 Juegos disp. (por precio)", callback_data='juegos_stockprecio')],
         [InlineKeyboardButton("\U0001F5DE Últimos 30 agregados", callback_data='juegos_lista_ULT')],
         [InlineKeyboardButton("\U0001F4B2 30 juegos baratos", callback_data='juegos_baratos_0')],
-        [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición", callback_data='ofertas_restock')],
+        [InlineKeyboardButton("\U0001F381 Ofertas y juegos en reposición (alarmas)", callback_data='ofertas_restock')],
         [InlineKeyboardButton("\U0000270F Sugerir juego a monitorear", callback_data='sugerir_juego_datos')],
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
