@@ -124,7 +124,7 @@ def inicio_borrar(update: Update, context: CallbackContext) -> int:
 ######### Menú principal
 def menu():
     keyboard = [
-        [InlineKeyboardButton("\U0001F4DA Ver Listas de juegos \U0001F4DA", callback_data='juegos_lista_menu')],
+        [InlineKeyboardButton("\U0001F4DA Ver Listas de juegos y ofertas \U0001F4DA", callback_data='juegos_lista_menu')],
         [InlineKeyboardButton("\U0001F4B0 Compraventa de juegos\U0001F4B0", callback_data='compraventa_menu')],
         [InlineKeyboardButton("\U0001F3B2 Ver un juego y mis alarmas \U0001F3B2", callback_data='juego_ver')],
         [InlineKeyboardButton("\U0001F527 Herramientas \U0001F527", callback_data='herramientas')],
