@@ -1,6 +1,6 @@
 matplotlib==3.5.2
-Pillow==9.1.1
-python_telegram_bot==13.11
-requests==2.27.1
+Pillow==9.2.0
+python_telegram_bot==20.6
+requests==2.31.0
 telegram==0.0.1
-python-decouple==3.6
+python-decouple==3.8
