@@ -1961,11 +1961,11 @@ Por ejemplo: 123.13, 47.45
 
 ######### Muestra resultados de calculadora Planeton
 def muestra_calculadora_planeton(update: Update, context: CallbackContext) -> int:
-    precio_ar = re.search("([\d|.]+).*?([\d|.]+)", update.message.text)
-    if not precio_ar:
+    precio_pl = re.search("([\d|.]+).*?([\d|.]+)", update.message.text)
+    if not precio_pl:
         return None
-    precio = float(precio_ar[1])
-    envio = float(precio_ar[2])
+    precio = float(precio_pl[1])
+    envio = float(precio_pl[2])
     texto = f"\U000027A1 El precio de los juegos es €{precio:.2f}"
     if precio > constantes.var['limite_descuento_planeton']:
         precio -= float(constantes.var['descuento_montoalto_planeton'])
