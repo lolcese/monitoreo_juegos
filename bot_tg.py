@@ -1983,9 +1983,7 @@ def muestra_calculadora_planeton(update: Update, context: CallbackContext) -> in
     #     impuestos += planeton_pesos * 0.05
     texto += f", por lo que el total de impuestos es: <b>${impuestos:.0f}</b>.\n"
 
-    precio_dol = precio * constantes.var['euro'] / constantes.var['dolar']
-
-    if precio_dol <= 50:
+    if planeton_dolares <= 50:
         aduana = 0
         texto += f"\U000027A1 Como el total (precio+envío) no pasa los U$S50, no vas a pagar aduana.\n"
     else:
