@@ -1,5 +1,5 @@
 matplotlib==3.5.2
-Pillow==9.2.0
+Pillow==9.3.0
 python_telegram_bot==20.6
 requests==2.31.0
 telegram==0.0.1
