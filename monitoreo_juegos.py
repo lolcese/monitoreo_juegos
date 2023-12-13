@@ -393,28 +393,28 @@ def main():
                 precio = lee_pagina_blam(sitio_id)
             elif sitio == "BLIB":
                 precio = lee_pagina_blib(sitio_id)
-            elif sitio == "TMAM":
-                precio = lee_pagina_tmam(sitio_id)
-            elif sitio == "TMWM":
-                precio = lee_pagina_tmwm(sitio_id) 
+            # elif sitio == "TMAM":
+            #     precio = lee_pagina_tmam(sitio_id)
+            # elif sitio == "TMWM":
+            #     precio = lee_pagina_tmwm(sitio_id) 
             # elif sitio == "BOOK":
             #     precio = lee_pagina_book(sitio_id)
-            elif sitio == "deep":
-                precio = lee_pagina_deep(sitio_id, peso)
-            elif sitio == "grooves":
-                precio = lee_pagina_grooves(sitio_id)
-            elif sitio == "planeton":
-                precio = lee_pagina_planeton(sitio_id, precio_envio)
-            elif sitio == "MM":
-                precio = lee_pagina_mm(sitio_id, precio_envio)
-            elif sitio == "CDL":
-                precio = lee_pagina_cdl(sitio_id, precio_envio)
-            elif sitio == "MMadhouse":
-                precio = lee_pagina_mmadhouse(sitio_id)
+            # elif sitio == "deep":
+            #     precio = lee_pagina_deep(sitio_id, peso)
+            # elif sitio == "grooves":
+            #     precio = lee_pagina_grooves(sitio_id)
+            # elif sitio == "planeton":
+            #     precio = lee_pagina_planeton(sitio_id, precio_envio)
+            # elif sitio == "MM":
+            #     precio = lee_pagina_mm(sitio_id, precio_envio)
+            # elif sitio == "CDL":
+            #     precio = lee_pagina_cdl(sitio_id, precio_envio)
+            # elif sitio == "MMadhouse":
+            #     precio = lee_pagina_mmadhouse(sitio_id)
             # elif sitio == "FNAC":
             #     precio = lee_pagina_fnac(sitio_id)
-            elif sitio == "PHIL":
-                precio = lee_pagina_phil(sitio_id, precio_envio)
+            # elif sitio == "PHIL":
+            #     precio = lee_pagina_phil(sitio_id, precio_envio)
 
             cursor.execute('SELECT precio_prom, fecha_reposicion as "[timestamp]", fecha_oferta as "[timestamp]", fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?', [id_juego])
             prom = cursor.fetchone()
