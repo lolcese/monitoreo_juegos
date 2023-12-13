@@ -394,33 +394,22 @@ def main():
             elif sitio == "BLIB":
                 precio = lee_pagina_blib(sitio_id)
             elif sitio == "TMAM":
-                continue
                 precio = lee_pagina_tmam(sitio_id)
             elif sitio == "TMWM":
-                continue
                 precio = lee_pagina_tmwm(sitio_id) 
-            # elif sitio == "BOOK":
-            #     precio = lee_pagina_book(sitio_id)
             elif sitio == "deep":
-                continue
                 precio = lee_pagina_deep(sitio_id, peso)
             elif sitio == "grooves":
-                continue
                 precio = lee_pagina_grooves(sitio_id)
             elif sitio == "planeton":
-                continue
                 precio = lee_pagina_planeton(sitio_id, precio_envio)
             elif sitio == "MM":
-                continue
                 precio = lee_pagina_mm(sitio_id, precio_envio)
             elif sitio == "CDL":
-                continue
                 precio = lee_pagina_cdl(sitio_id, precio_envio)
             elif sitio == "MMadhouse":
-                continue
                 precio = lee_pagina_mmadhouse(sitio_id)
             elif sitio == "PHIL":
-                continue
                 precio = lee_pagina_phil(sitio_id, precio_envio)
 
             cursor.execute('SELECT precio_prom, fecha_reposicion as "[timestamp]", fecha_oferta as "[timestamp]", fecha_agregado as "[timestamp]" FROM juegos WHERE id_juego = ?', [id_juego])

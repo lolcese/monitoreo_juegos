@@ -1976,8 +1976,8 @@ def muestra_calculadora_planeton(update: Update, context: CallbackContext) -> in
 
     texto += f": <b>${(precio * constantes.var['euro']):.0f}</b>.\n"
     texto += f"\U000027A1 El envío APROXIMADO es €{envio:.2f} (te lo van a confirmar después): <b>${(envio * constantes.var['euro']):.0f}</b>.\n"
-    texto += f"\U000027A1 El impuesto PAÍS (30%) es ${planeton_pesos * 0.30:.0f}, el impuesto a las ganancias (100%, te lo reintegran al año siguiente) es ${planeton_pesos*1.00:.0f} y el impuesto a bienes personales (25%) es ${planeton_pesos*0.25:.0f}"
-    impuestos = planeton_pesos * 0.30 + planeton_pesos * 1.00 + planeton_pesos * 0.25
+    texto += f"\U000027A1 El impuesto por compras en el exterior es ${planeton_pesos * 0.60:.0f}"
+    impuestos = planeton_pesos * 0.60
     # if planeton_dolares >= 300:
     #     texto += f", el impuesto al dólar Qatar (5% si la compra es de más de U$S300) es ${planeton_pesos * 0.05:.0f}"
     #     impuestos += planeton_pesos * 0.05
