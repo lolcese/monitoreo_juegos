@@ -390,9 +390,11 @@ def main():
             fecha = datetime.now()
             id_juego, sitio, sitio_id, peso, precio_envio = j
             if   sitio == "BLAM":
-                precio = lee_pagina_blam(sitio_id)
+                # precio = lee_pagina_blam(sitio_id)
+                continue
             elif sitio == "BLIB":
-                precio = lee_pagina_blib(sitio_id)
+                # precio = lee_pagina_blib(sitio_id)
+                continue
             elif sitio == "TMAM":
                 precio = lee_pagina_tmam(sitio_id)
             elif sitio == "TMWM":

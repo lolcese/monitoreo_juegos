@@ -4,13 +4,15 @@ from urllib.error import URLError, HTTPError
 import urllib.request
 
 def baja_pagina(url):
-    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
+    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36'})
+
     try:
         data = urllib.request.urlopen(req)
-    except HTTPError as e:
-        return "Error"
+    except urllib.error.HTTPError as err:
+        print(f'A HTTPError was thrown: {err.code} {err.reason}')
+        return("Error1")
     except URLError as e:
-        return "Error"
+        return "Error2"
 
     if data.headers.get_content_charset() is None:
         encoding='utf-8'
@@ -23,6 +25,7 @@ def baja_pagina(url):
 def lee_pagina_blib(ju_id):
     url = "https://www.buscalibre.com.ar/"+ju_id
     text = baja_pagina(url)
+    print(text)
     if text == "Error":
         return None
 
