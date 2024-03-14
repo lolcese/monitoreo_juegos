@@ -1,5 +1,3 @@
-import requests
-from bs4 import BeautifulSoup
 import re
 from requests import get
 from urllib.error import URLError, HTTPError
@@ -21,12 +19,20 @@ def baja_pagina(url):
 
     return data.read().decode(encoding, errors='ignore')
 
-url = "https://www.buscalibre.com.ar/despacho-ar_st.html"
-response = baja_pagina(url)
+######### Lee información de BLIB
+def lee_pagina_blib(ju_id):
+    url = "https://www.buscalibre.com.ar/"+ju_id
+    text = baja_pagina(url)
+    if text == "Error":
+        return None
 
-datos1 = re.findall('const data.* = \[ \".*\", \".*\", \"(.*)\", \".*\", \".*\", \".*\", \".*\", \".*\" \];',response)
+    precio_ar = re.search("'ecomm_totalvalue' : '(.*?)'",text)
+    if not precio_ar or float(precio_ar[1]) == 0:
+        return None
+    precio_ar = float(precio_ar[1]) + 2900
+    return precio_ar
 
+ju_id = "libro-undaunted-normandy/9781472834706/p/51957292"
 
-env_bl = float(datos1[-1])
+print(lee_pagina_blib(ju_id))
 
-print(env_bl)
