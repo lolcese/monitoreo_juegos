@@ -113,10 +113,9 @@ conn.commit()
 
 ######### Baja envío BL
 url = "https://www.buscalibre.com.ar/despacho-ar_st.html"
-response = get(url)
-text = response.content.decode('utf-8', errors='ignore')
-datos1 = re.search('const data.* = \[ \".*\", \".*\", \"(.*)\", \".*\", \".*\", \".*\", \".*\", \".*\" \];',text)
-env_bl = float(datos1[1])
+response = baja_pagina(url)
+datos1 = re.findall('const data.* = \[ \".*\", \".*\", \"(.*)\", \".*\", \".*\", \".*\", \".*\", \".*\" \];',response)
+env_bl = float(datos1[-1])
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "envio_BL"',(env_bl, fecha))
 conn.commit()
