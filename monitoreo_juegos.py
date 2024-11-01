@@ -22,6 +22,7 @@ import hace_grafico
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
 import socket
 from datetime import date
+import time
 
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
@@ -186,34 +187,34 @@ def precio_tm(peso,precio_ar):
 
 #     return precio_ar
 
-######### Lee información de deepdiscount
-def lee_pagina_deep(ju_id, peso):
-    url = "https://www.deepdiscount.com/"+ju_id
-    text = baja_pagina(url)
-    if text == "Error":
-        return None
+# ######### Lee información de deepdiscount
+# def lee_pagina_deep(ju_id, peso):
+#     url = "https://www.deepdiscount.com/"+ju_id
+#     text = baja_pagina(url)
+#     if text == "Error":
+#         return None
 
-    precio_dol = re.search('\"price\": \"(.*?)"',text)
-    if not precio_dol:
-        return None
+#     precio_dol = re.search('\"price\": \"(.*?)"',text)
+#     if not precio_dol:
+#         return None
 
-    if peso < 2:
-        costo_envio = constantes.var['envio_deepdiscount_0_2_lb']
-    elif peso < 3:
-        costo_envio = constantes.var['envio_deepdiscount_2_3_lb']
-    elif peso < 4:
-        costo_envio = constantes.var['envio_deepdiscount_3_4_lb']
+#     if peso < 2:
+#         costo_envio = constantes.var['envio_deepdiscount_0_2_lb']
+#     elif peso < 3:
+#         costo_envio = constantes.var['envio_deepdiscount_2_3_lb']
+#     elif peso < 4:
+#         costo_envio = constantes.var['envio_deepdiscount_3_4_lb']
 
-    precio_dol = float(precio_dol[1]) + costo_envio
+#     precio_dol = float(precio_dol[1]) + costo_envio
 
-    imp_aduana = 0
-    if precio_dol > 50:
-        imp_aduana = (precio_dol - 50) * 0.5
+#     imp_aduana = 0
+#     if precio_dol > 50:
+#         imp_aduana = (precio_dol - 50) * 0.5
 
-    precio_ar = precio_dol * constantes.var['dolar'] * constantes.var['impuesto_compras_exterior']
-    precio_final_ad = precio_ar + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
+#     precio_ar = precio_dol * constantes.var['dolar'] * constantes.var['impuesto_compras_exterior']
+#     precio_final_ad = precio_ar + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
 
-    return precio_final_ad
+#     return precio_final_ad
 
 ######### Lee información de grooves
 def lee_pagina_grooves(ju_id):
@@ -268,71 +269,71 @@ def lee_pagina_planeton(ju_id, precio_envio):
 
     return precio_final_ad
 
-######### Lee información de Miniature Market
-def lee_pagina_mm(ju_id, precio_envio):
-    url = "https://www.miniaturemarket.com/"+ju_id
-    text = baja_pagina(url)
-    if text == "Error":
-        return None
+# ######### Lee información de Miniature Market
+# def lee_pagina_mm(ju_id, precio_envio):
+#     url = "https://www.miniaturemarket.com/"+ju_id
+#     text = baja_pagina(url)
+#     if text == "Error":
+#         return None
 
-    precio_dol = re.search("price: '(.*?)',",text)
-    stock = '<div class="availability out-of-stock">Out of stock<\/div>' in text
-    if not precio_dol or stock == 1:
-        return None
+#     precio_dol = re.search("price: '(.*?)',",text)
+#     stock = '<div class="availability out-of-stock">Out of stock<\/div>' in text
+#     if not precio_dol or stock == 1:
+#         return None
 
-    precio_dol = float(precio_dol[1])
-    precio_dol += precio_envio
-    precio_pesos = precio_dol * constantes.var['dolar'] 
+#     precio_dol = float(precio_dol[1])
+#     precio_dol += precio_envio
+#     precio_pesos = precio_dol * constantes.var['dolar'] 
 
-    imp_aduana = 0
-    if precio_dol > 50:
-        imp_aduana = (precio_dol - 50) * 0.5
+#     imp_aduana = 0
+#     if precio_dol > 50:
+#         imp_aduana = (precio_dol - 50) * 0.5
 
-    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
+#     precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior'] + imp_aduana * constantes.var['dolar'] + constantes.var['tasa_correo']
 
-    return precio_final_ad
+#     return precio_final_ad
 
-######### Lee información de Casa del Libro
-def lee_pagina_cdl(ju_id, precio_envio):
-    url = "https://www.casadellibro.com/"+ju_id
-    text = baja_pagina(url)
-    if text == "Error":
-        return None
+# ######### Lee información de Casa del Libro
+# def lee_pagina_cdl(ju_id, precio_envio):
+#     url = "https://www.casadellibro.com/"+ju_id
+#     text = baja_pagina(url)
+#     if text == "Error":
+#         return None
 
-    precio_eur = re.search('\"Price\":\"(.*?)€?\"',text)
-    stock = '"availability":"OutOfStock"' in text
-    if not precio_eur or stock == 1:
-        return None
+#     precio_eur = re.search('\"Price\":\"(.*?)€?\"',text)
+#     stock = '"availability":"OutOfStock"' in text
+#     if not precio_eur or stock == 1:
+#         return None
 
-    precio_eur = float(precio_eur[1])
-    precio_eur /= constantes.var['descuento_iva_CDL']
-    precio_eur += precio_envio
-    precio_pesos = precio_eur * constantes.var['euro'] * constantes.var['impuesto_CDL']
-    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
+#     precio_eur = float(precio_eur[1])
+#     precio_eur /= constantes.var['descuento_iva_CDL']
+#     precio_eur += precio_envio
+#     precio_pesos = precio_eur * constantes.var['euro'] * constantes.var['impuesto_CDL']
+#     precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
 
-    return precio_final_ad
+#     return precio_final_ad
 
-######### Lee información de Magic Madhouse
-def lee_pagina_mmadhouse(ju_id):
-    url = "https://magicmadhouse.co.uk/"+ju_id
-    text = baja_pagina(url)
-    if text == "Error":
-        return None
+# ######### Lee información de Magic Madhouse
+# def lee_pagina_mmadhouse(ju_id):
+#     url = "https://magicmadhouse.co.uk/"+ju_id
+#     text = baja_pagina(url)
+#     if text == "Error":
+#         return None
 
-    precio_gbp = re.search('"itemSalePrice": "(.*?)",',text)
-    stock = '"stock":0,' in text
-    if not precio_gbp or stock == 1:
-        return None
+#     precio_gbp = re.search('"itemSalePrice": "(.*?)",',text)
+#     stock = '"stock":0,' in text
+#     if not precio_gbp or stock == 1:
+#         return None
 
-    precio_gbp = float(precio_gbp[1])
-    precio_gbp /= constantes.var['descuento_iva_MMadhouse']
-    precio_envio = constantes.var['envio_MMadhouse']
-    precio_imp = precio_gbp * constantes.var['fraccion_imp_MMadhouse'] + constantes.var['fijo_imp_MMadhouse']
-    precio_gbp += precio_envio + precio_imp
-    precio_pesos = precio_gbp * constantes.var['libra'] 
-    precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
+#     precio_gbp = float(precio_gbp[1])
+#     precio_gbp /= constantes.var['descuento_iva_MMadhouse']
+#     precio_envio = constantes.var['envio_MMadhouse']
+#     precio_imp = precio_gbp * constantes.var['fraccion_imp_MMadhouse'] + constantes.var['fijo_imp_MMadhouse']
+#     precio_gbp += precio_envio + precio_imp
+#     precio_pesos = precio_gbp * constantes.var['libra'] 
+#     precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
 
-    return precio_final_ad
+#     return precio_final_ad
 
 ######### Lee información de FNAC
 # def lee_pagina_fnac(ju_id):
@@ -399,18 +400,18 @@ def main():
                 precio = lee_pagina_tmam(sitio_id)
             elif sitio == "TMWM":
                 precio = lee_pagina_tmwm(sitio_id) 
-            elif sitio == "deep":
-                precio = lee_pagina_deep(sitio_id, peso)
+            # elif sitio == "deep":
+            #     precio = lee_pagina_deep(sitio_id, peso)
             elif sitio == "grooves":
                 precio = lee_pagina_grooves(sitio_id)
             elif sitio == "planeton":
                 precio = lee_pagina_planeton(sitio_id, precio_envio)
-            elif sitio == "MM":
-                precio = lee_pagina_mm(sitio_id, precio_envio)
-            elif sitio == "CDL":
-                precio = lee_pagina_cdl(sitio_id, precio_envio)
-            elif sitio == "MMadhouse":
-                precio = lee_pagina_mmadhouse(sitio_id)
+            # elif sitio == "MM":
+            #     precio = lee_pagina_mm(sitio_id, precio_envio)
+            # elif sitio == "CDL":
+            #     precio = lee_pagina_cdl(sitio_id, precio_envio)
+            # elif sitio == "MMadhouse":
+            #     precio = lee_pagina_mmadhouse(sitio_id)
             elif sitio == "PHIL":
                 precio = lee_pagina_phil(sitio_id, precio_envio)
 
@@ -486,6 +487,7 @@ def main():
                     reply_markup = InlineKeyboardMarkup(keyboard)
                     manda.send_message_key(id_persona, texto, reply_markup)
                 os.remove(arch)
-
+    time.sleep(5)
+    
 if __name__ == '__main__':
     main()

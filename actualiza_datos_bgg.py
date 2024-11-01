@@ -6,7 +6,6 @@ import json
 import time
 import html
 import re
-import time
 from datetime import datetime
 
 conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -69,5 +68,5 @@ for j in juegos_id:
         for i in range(min(len(uni), 8)):
             cursor.execute(f'UPDATE juegos SET nom_alt_{i+1} = ? WHERE BGG_id = ?',(uni[i],BGG_id))
             conn.commit()
-    time.sleep(1)
+    time.sleep(10)
 
