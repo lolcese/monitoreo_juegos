@@ -931,7 +931,7 @@ def alarmas_agregar_precio(update: Update, context: CallbackContext) -> int:
 
 ######### Guarda la alarma agregada
 def alarmas_agregar(update: Update, context: CallbackContext) -> int:
-    precio = re.sub("\D", "", update.message.text)
+    precio = re.sub(r"\D", "", update.message.text)
     keyboard = [
         [InlineKeyboardButton("\U00002B06 Inicio", callback_data='inicio')],
     ]
@@ -966,7 +966,7 @@ def alarmas_cambiar_precio(update: Update, context: CallbackContext) -> int:
 
 ######### Cambia una alarma
 def alarmas_cambiar(update: Update, context: CallbackContext) -> int:
-    precio = re.sub("\D", "", update.message.text)
+    precio = re.sub(r"\D", "", update.message.text)
     usuario_id = update.message.from_user.id
     BGG_id = context.chat_data["BGG_id"]
     nombre = context.chat_data["BGG_nombre"]
@@ -1287,7 +1287,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     bgg_url = dat[0]
     url = unquote(dat[1])
 
-    busca_id = re.search('boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)',bgg_url)
+    busca_id = re.search(r'boardgamegeek\.com\/boardgame(expansion)?\/(.*?)($|\/)',bgg_url)
     if busca_id:
         bgg_id = busca_id.group(2)
     else:
@@ -1343,49 +1343,49 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
 ######### Extrae ID del sitio
 def extrae_sitio(sitio_url):
-    sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=.*?\/dp\/(.*?)\/',sitio_url)
+    sitio_id = re.search(r'buscalibre\.com\.ar\/amazon\?url=.*?\/dp\/(.*?)\/',sitio_url)
     if sitio_id:
         sitio_nom = "BLAM"
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&|#)',sitio_url)
+    sitio_id = re.search(r'buscalibre\.com\.ar\/amazon\?url=(.*?)(\s|$|\/|\?|&|#)',sitio_url)
     if sitio_id:
         sitio_nom = "BLAM"
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('buscalibre\.com\.ar\/(.*?)(\s|$|\?|&)',sitio_url)
+    sitio_id = re.search(r'buscalibre\.com\.ar\/(.*?)(\s|$|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "BLIB"
         sitio_id = sitio_id[1]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('tiendamia\.com(\/|.)ar\/producto\?amz=(.*?)(\s|$|\/|\?|&)',sitio_url)
+    sitio_id = re.search(r'tiendamia\.com(\/|.)ar\/producto\?amz=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "TMAM"
         sitio_id = sitio_id[2]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('tiendamia\.com(\/|.)ar\/productow\?wrt=(.*?)(\s|$|\/|\?|&)',sitio_url)
+    sitio_id = re.search(r'tiendamia\.com(\/|.)ar\/productow\?wrt=(.*?)(\s|$|\/|\?|&)',sitio_url)
     if sitio_id:
         sitio_nom = "TMWM"
         sitio_id = sitio_id[2]
         return [sitio_nom, sitio_id]
 
-    # sitio_id = re.search('deepdiscount\.com\/(.*?)(\?|&|$)',sitio_url)
+    # sitio_id = re.search(r'deepdiscount\.com\/(.*?)(\?|&|$)',sitio_url)
     # if sitio_id:
     #     sitio_nom = "deep"
     #     sitio_id = sitio_id[1]
     #     return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('grooves(\.land|-inc\.com)\/(.*?html)',sitio_url)
+    sitio_id = re.search(r'grooves(\.land|-inc\.com)\/(.*?html)',sitio_url)
     if sitio_id:
         sitio_nom = "grooves"
         sitio_id = sitio_id[2]
         return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('planetongames\.com\/(es\/)?(.*?html)',sitio_url)
+    sitio_id = re.search(r'planetongames\.com\/(es\/)?(.*?html)',sitio_url)
     if sitio_id:
         sitio_nom = "planeton"
         sitio_id = sitio_id[2]
@@ -1415,7 +1415,7 @@ def extrae_sitio(sitio_url):
     #     sitio_id = sitio_id[1]
     #     return [sitio_nom, sitio_id]
 
-    sitio_id = re.search('philibertnet\.com/(.*?)$',sitio_url)
+    sitio_id = re.search(r'philibertnet\.com/(.*?)$',sitio_url)
     if sitio_id:
         sitio_nom = "PHIL"
         sitio_id = sitio_id[1]
