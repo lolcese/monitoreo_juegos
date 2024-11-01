@@ -6,7 +6,7 @@
 ############################################################################################
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, InlineQueryResultArticle, InputTextMessageContent
-from telegram.ext import (Updater,InlineQueryHandler,CommandHandler,CallbackQueryHandler,ConversationHandler,CallbackContext,MessageHandler,Filters)
+from telegram.ext import (Updater,InlineQueryHandler,CommandHandler,CallbackQueryHandler,ConversationHandler,CallbackContext,MessageHandler,filters)
 from datetime import datetime
 import re
 import sqlite3
@@ -2029,10 +2029,10 @@ def main() -> None:
                 CallbackQueryHandler(juegos_baratos,           pattern='^juegos_baratos_'),
                 CallbackQueryHandler(sugerir_juego_datos,      pattern='^sugerir_juego_datos$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, sugerir_juego)
+                MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.update.edited_message, sugerir_juego)
             ],
             JUEGO_ELECCION: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, juego_nom),
+                MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.update.edited_message, juego_nom),
                 CallbackQueryHandler(alarmas_muestra,          pattern='^alarmas_muestra$'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
@@ -2041,11 +2041,11 @@ def main() -> None:
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ALARMAS_NUEVA_PRECIO: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, alarmas_agregar),
+                MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.update.edited_message, alarmas_agregar),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ALARMAS_CAMBIAR_PRECIO: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, alarmas_cambiar),
+                MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.update.edited_message, alarmas_cambiar),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ALARMAS: [
@@ -2062,17 +2062,17 @@ def main() -> None:
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             COMENTARIOS: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, comentarios_mandar),
+                MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.update.edited_message, comentarios_mandar),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             HISTORICOS: [
-                MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, historicos_nom),
+                MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.update.edited_message, historicos_nom),
                 CallbackQueryHandler(alarmas_muestra,          pattern='^alarmas_muestra$'),
                 CallbackQueryHandler(histo_juego_info,         pattern='^Histo_'),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             # VENTAS: [
-            #     MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, vender_juego),
+            #     MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.update.edited_message, vender_juego),
             #     CallbackQueryHandler(juegos_fecha_venta,       pattern='^juegos_fecha_venta$'),
             #     CallbackQueryHandler(juegos_precio_venta,      pattern='^juegos_precio_venta$'),
             #     CallbackQueryHandler(juegos_alfab_venta,       pattern='^juegos_alfab_venta$'),
@@ -2085,7 +2085,7 @@ def main() -> None:
             #     CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             # ],
             HERRAMIENTAS: [
-                # MessageHandler(Filters.text & ~Filters.command & ~Filters.update.edited_message, muestra_calculadora_planeton),
+                # MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.update.edited_message, muestra_calculadora_planeton),
                 CallbackQueryHandler(inicio,                   pattern='^inicio$'),
             ],
             ADMIN: [
