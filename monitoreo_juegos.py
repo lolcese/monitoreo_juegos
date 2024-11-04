@@ -384,18 +384,18 @@ def main():
     cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos WHERE prioridad = ? ORDER BY nombre',[prioridad])
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
+        print (f"Procesando {jb[1]}")
         bgg_id, nombre = jb
         cursor.execute('SELECT id_juego, sitio, sitio_id, peso, precio_envio FROM juegos WHERE BGG_id = ? and sitio != "Usuario" ORDER BY sitio', [bgg_id])
         juegos_id = cursor.fetchall()
         for j in juegos_id: # Cada repetición del mismo juego
+            print(f"Sitio: {j[1]}")
             fecha = datetime.now()
             id_juego, sitio, sitio_id, peso, precio_envio = j
-            if   sitio == "BLAM":
-                # precio = lee_pagina_blam(sitio_id)
-                continue
+            if sitio == "BLAM":
+                precio = lee_pagina_blam(sitio_id)
             elif sitio == "BLIB":
-                # precio = lee_pagina_blib(sitio_id)
-                continue
+                precio = lee_pagina_blib(sitio_id)
             elif sitio == "TMAM":
                 precio = lee_pagina_tmam(sitio_id)
             elif sitio == "TMWM":
