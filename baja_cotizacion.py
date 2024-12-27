@@ -84,6 +84,7 @@ data = response.content.decode('utf-8', errors='ignore')
 # env_int_dol = datos1[1]
 
 datos1 = re.search('el shipping internacional tiene un costo de\s+<span class="price dollar_price">\n.*\n\s+<span class="price currency_price">\n\s+AR\$ (.*?)\s+<\/span>',data)
+datos1 = re.search('el shipping internacional tiene un costo de\s+<span class="price dollar_price">\n.*\n\s+<span class="price currency_price">\n\s+AR\$ (.*?)\s+<\/span>',data)
 env_int_dol = float(re.sub("\.", "", datos1[1]))
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "tasa_tm"',(env_int_dol, fecha))
@@ -92,6 +93,7 @@ conn.commit()
 # datos2 = re.search('<td class="indent">0\.1<\/td>\n.*?\n.*?\n.*?\nU\$S (.*?) ',data)
 # tasa_kg = datos2[1]
 
+datos2 = re.search('<td class="indent">0\.1<\/td>\n.*?\n.*?\n.*?\n.*?\n.*?\n\s+AR\$ (.*?)\s+<\/span>',data)
 datos2 = re.search('<td class="indent">0\.1<\/td>\n.*?\n.*?\n.*?\n.*?\n.*?\n\s+AR\$ (.*?)\s+<\/span>',data)
 tasa_kg = float(re.sub("\.", "", datos2[1]))
 
@@ -115,6 +117,7 @@ conn.commit()
 url = "https://www.buscalibre.com.ar/despacho-ar_st.html"
 response = baja_pagina(url)
 datos1 = re.findall('const data.* = \[\s?\".*\", \".*\", \"(.*)\", \".*\", \".*\", \".*\", \".*\", \".*\"\s?\];',response)
+datos1 = re.findall('const data.* = \[\s?\".*\", \".*\", \"(.*)\", \".*\", \".*\", \".*\", \".*\", \".*\"\s?\];',response)
 env_bl = float(datos1[-1])
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "envio_BL"',(env_bl, fecha))
@@ -136,3 +139,4 @@ for v in vencidos:
     conn.commit()
 
 cursor.close()
+
