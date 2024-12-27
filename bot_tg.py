@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 ############################################################################################
 # Este bot de telegram es iniciado como un servicio y brinda la posibilidad

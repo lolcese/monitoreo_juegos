@@ -1,11 +1,9 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 ############################################################################################
 # Este programa es llamado a correr cada n minutos por el sistema,
 # y baja las páginas de cada juego, extrae el precio y el peso (si fuera necesario),
 # calcula el precio final en Argentina, grafica y manda alarmas.
 ############################################################################################
-# https://pypi.org/project/schedule/
 
 import urllib.request
 import re
@@ -27,7 +25,7 @@ import time
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-prioridad = str(sys.argv[1])
+#prioridad = str(sys.argv[1])
 
 updater = Updater(bot_token)
 
@@ -382,7 +380,8 @@ def main():
     conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.execute("PRAGMA journal_mode=WAL")
     cursor = conn.cursor()
-    cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos WHERE prioridad = ? ORDER BY nombre',[prioridad])
+#    cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos WHERE prioridad = ? ORDER BY nombre',[prioridad])
+    cursor.execute('SELECT DISTINCT BGG_id, nombre FROM juegos ORDER BY nombre')
     juegos_BGG = cursor.fetchall()
     for jb in juegos_BGG: # Cada juego diferente
         bgg_id, nombre = jb
