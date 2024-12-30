@@ -1255,13 +1255,13 @@ def sugerir_juego_datos(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
     texto = """<b>Sugerir juego a monitorear</b>
     
-Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Grooves.land y Planeton).
+Escribí la URL de BGG del juego (es decir https://www.boardgamegeek.com/boardgame/XXXXXXX) y en el renglón siguiente el URL del juego en el sitio donde lo vendan (por el momento Buscalibre, Tiendamia, Grooves.land, Philibert, MagicMadhouse y Planeton).
 En el caso que agregues un juego de deepdiscount, poné también el peso en libras que informa cuando lo agregás al carrito (o 0 si no lo informa).
 <b>En el caso que agregues un juego de Planeton, Casa del Libro o Miniature Market, poné también el costo (en euros / dólares) del envío a Argentina que aparece cuando lo agregás al carrito.</b>
 
 Ejemplos:
 
-<i>Si es de Planeton / Philibert</i>
+<i>Si es de Planeton</i>
 https://boardgamegeek.com/boardgame/266192/wingspan
 https://www.planetongames.com/es/wingspan-p-8175.html
 34.85
@@ -1294,8 +1294,8 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
         update.message.reply_text("Por favor, revisá lo que escribiste, tenés que poner el URL de la entrada del juego (no de la versión).")
         return LISTA_JUEGOS
 
-    if not re.search("tiendamia|buscalibre|deepdiscount|grooves|planeton|casadellibro|miniaturemarket|magicmadhouse|philibertnet", url):
-        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Grooves.land, Planeton o Philibert .")
+    if not re.search("tiendamia|buscalibre|grooves|planeton|casadellibro|miniaturemarket|magicmadhouse|philibertnet", url):
+        update.message.reply_text("Por favor, revisá lo que escribiste, el sitio tiene que ser Buscalibre, Tiendamia, Grooves.land, Planeton, MagicMadhouse o Philibert.")
         return LISTA_JUEGOS
 
     sitio_nom, sitio_id = extrae_sitio(url)
@@ -1315,7 +1315,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
     #     update.message.reply_text("Cuando agregás un juego de deepdiscount, tenés que poner el peso.")
     #     return LISTA_JUEGOS
 
-    if len(dat) == 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url) or re.search("philibertnet", url)):
+    if len(dat) == 2 and re.search("planeton", url):
         update.message.reply_text("Cuando agregás un juego de ese sitio, tenés que poner el monto del envío.")
         return LISTA_JUEGOS
 
@@ -1324,7 +1324,7 @@ def sugerir_juego(update: Update, context: CallbackContext) -> int:
 
     # if len(dat) > 2 and re.search("deepdiscount", url):
     #     peso = dat[2]
-    if len(dat) > 2 and (re.search("planeton", url) or re.search("miniaturemarket", url) or re.search("casadellibro", url) or re.search("philibertnet", url)):
+    if len(dat) > 2 and re.search("planeton", url):
         precio_envio = re.sub(",",".",dat[2])
 
     conn = conecta_db()
@@ -1403,11 +1403,11 @@ def extrae_sitio(sitio_url):
     #     sitio_id = sitio_id[1]
     #     return [sitio_nom, sitio_id]
 
-    # sitio_id = re.search('magicmadhouse\.co\.uk\/(.*?)$',sitio_url)
-    # if sitio_id:
-    #     sitio_nom = "MMadhouse"
-    #     sitio_id = sitio_id[1]
-    #     return [sitio_nom, sitio_id]
+    sitio_id = re.search(r'magicmadhouse\.co\.uk\/(.*?)$',sitio_url)
+    if sitio_id:
+        sitio_nom = "MMadhouse"
+        sitio_id = sitio_id[1]
+        return [sitio_nom, sitio_id]
 
     # sitio_id = re.search('fnac\.es/(.*?)$',sitio_url)
     # if sitio_id:
