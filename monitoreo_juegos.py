@@ -25,8 +25,6 @@ import time
 bot_token = config('bot_token')
 id_aviso = config('id_aviso')
 
-#prioridad = str(sys.argv[1])
-
 updater = Updater(bot_token)
 
 ######### Baja una página cualquiera
@@ -324,37 +322,14 @@ def lee_pagina_mmadhouse(ju_id):
         return None
 
     precio_gbp = float(precio_gbp[1])
-    # precio_gbp /= constantes.var['descuento_iva_MMadhouse']
+    precio_gbp /= constantes.var['descuento_iva_MMadhouse']
     precio_envio = constantes.var['envio_MMadhouse']
-    # precio_imp = precio_gbp * constantes.var['fraccion_imp_MMadhouse'] + constantes.var['fijo_imp_MMadhouse']
     precio_imp = precio_gbp * constantes.var['fraccion_imp_MMadhouse']
     precio_gbp += precio_envio + precio_imp
     precio_pesos = precio_gbp * constantes.var['libra'] 
     precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
 
     return precio_final_ad
-
-######### Lee información de FNAC
-# def lee_pagina_fnac(ju_id):
-#     url = f"https://www.google.com/search?q=fnac+{ju_id}"
-
-#     text = baja_pagina(url)
-#     if text == "Error":
-#         return None
-
-#     precio_eur = re.search('<span>€(\d+\.\d+)<\/span>',text)
-#     if not precio_eur:
-#         precio_eur = re.search('>‏(\d.*) ‏€<\/span>',text)
-#         if not precio_eur:
-#             return None
-
-#     precio_eur = float(precio_eur[1])
-#     precio_envio = constantes.var['envio_FNAC']
-#     precio_eur += precio_envio
-#     precio_pesos = precio_eur * constantes.var['euro'] 
-#     precio_final_ad = precio_pesos * constantes.var['impuesto_compras_exterior']
-
-#     return precio_final_ad
 
 ######### Lee información de Philibert
 def lee_pagina_phil(ju_id, precio_envio):
@@ -368,7 +343,18 @@ def lee_pagina_phil(ju_id, precio_envio):
     if not precio_eur or stock == 1:
         return None
 
-    precio_eur = float(precio_eur[1]) / constantes.var['descuento_iva_Philibert']
+    precio_eur = float(precio_eur[1]) 
+    precio_eur /= constantes.var['descuento_iva_Philibert']
+
+    if precio_eur < 60:
+        precio_envio = constantes.var['envio_Philibert_60']
+    elif precio_eur < 120:
+        precio_envio = constantes.var['envio_Philibert_120']
+    elif precio_eur < 200:
+        precio_envio = constantes.var['envio_Philibert_200']
+    else:
+        precio_envio = constantes.var['envio_Philibert_300']
+
     precio_eur += precio_envio
 
     precio_final_ad = precio_eur * constantes.var['euro'] * constantes.var['impuesto_compras_exterior'] + precio_eur * constantes.var['euro'] * constantes.var['impuesto_Philibert']

@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import sqlite3
 import re
 import html
@@ -20,13 +19,19 @@ conn = sqlite3.connect(constantes.db_file, timeout=20, detect_types=sqlite3.PARS
 conn.execute("PRAGMA journal_mode=WAL")
 cursor = conn.cursor()
 
+######### Baja una página cualquiera
 def baja_pagina(url):
     req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}) 
     try:
-        data = urllib.request.urlopen(req)
+        data = urllib.request.urlopen(req, timeout = 60)
     except HTTPError as e:
+        # print(f"**** HTTPError bajando {url}")
+        return "Error"
+    except socket.timeout:
+        # print(f"**** Timeout bajando {url}")
         return "Error"
     except URLError as e:
+        # print(f"**** URLError bajando {url}")
         return "Error"
 
     if data.headers.get_content_charset() is None:
@@ -34,13 +39,14 @@ def baja_pagina(url):
     else:
         encoding = data.headers.get_content_charset()
 
-    return data.read().decode(encoding, errors='ignore')
+    try: 
+        pag = data.read().decode(encoding, errors='ignore')
+    except:
+        return "Error"
+    return pag
 
 ######### Baja cotización de monedas de BNA
-url = 'https://www.bna.com.ar/Personas'
-req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}) 
-data = urllib.request.urlopen(req).read()
-data = data.decode('utf-8')
+data = baja_pagina('https://www.bna.com.ar/Personas')
 
 dolar = html.unescape(re.search('<td class=\"tit\">Dolar U\.S\.A</td>\s+<td>.*?</td>\s+<td>(\d+\.\d+)</td>',data)[1])
 dolar = float(re.sub("\,", ".", dolar))
@@ -76,24 +82,14 @@ else:
     conn.commit()
 
 ######### Baja datos de costos de TM
-url = 'https://tiendamia.com/ar/tarifas'
-response = get(url)
-data = response.content.decode('utf-8', errors='ignore')
+data = baja_pagina('https://tiendamia.com/ar/tarifas')
 
-# datos1 = re.search('el shipping internacional tiene un costo de <span class="price dollar_price">\nU\$S (.*?) <\/span>',data)
-# env_int_dol = datos1[1]
-
-datos1 = re.search('el shipping internacional tiene un costo de\s+<span class="price dollar_price">\n.*\n\s+<span class="price currency_price">\n\s+AR\$ (.*?)\s+<\/span>',data)
 datos1 = re.search('el shipping internacional tiene un costo de\s+<span class="price dollar_price">\n.*\n\s+<span class="price currency_price">\n\s+AR\$ (.*?)\s+<\/span>',data)
 env_int_dol = float(re.sub("\.", "", datos1[1]))
 
 cursor.execute('UPDATE variables SET valor = ?, fecha = ? WHERE variable = "tasa_tm"',(env_int_dol, fecha))
 conn.commit()
 
-# datos2 = re.search('<td class="indent">0\.1<\/td>\n.*?\n.*?\n.*?\nU\$S (.*?) ',data)
-# tasa_kg = datos2[1]
-
-datos2 = re.search('<td class="indent">0\.1<\/td>\n.*?\n.*?\n.*?\n.*?\n.*?\n\s+AR\$ (.*?)\s+<\/span>',data)
 datos2 = re.search('<td class="indent">0\.1<\/td>\n.*?\n.*?\n.*?\n.*?\n.*?\n\s+AR\$ (.*?)\s+<\/span>',data)
 tasa_kg = float(re.sub("\.", "", datos2[1]))
 
@@ -102,9 +98,7 @@ conn.commit()
 
 ######### Baja dólar TM
 id_prod_ref = "B000FZX93K"
-url = "https://tiendamia.com/ar/producto?amz="+id_prod_ref
-response = get(url)
-text = response.content.decode('utf-8', errors='ignore')
+text = baja_pagina("https://tiendamia.com/ar/producto?amz="+id_prod_ref)
 precios = re.search('"currencies":{\n\s+"ARS":(.*?),\n\s+"USD":(.*?),',text)
 precio_ar = float(precios[1])
 precio_us = float(precios[2])

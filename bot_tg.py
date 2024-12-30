@@ -195,7 +195,7 @@ def juegos_todos(update: Update, context: CallbackContext) -> int:
         # ],
         [
             InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_todos_sitio_planeton'),
-            # InlineKeyboardButton("\U0001F1EA\U0001F1F8 Casa del Libro", callback_data='juegos_todos_sitio_CDL'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Magic Madhouse", callback_data='juegos_todos_sitio_MMadhouse'),
         ],
         # [
         #     InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_todos_sitio_MM'),
@@ -265,7 +265,7 @@ def juegos_stockalfab(update: Update, context: CallbackContext) -> int:
         # ],
         [
             InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_stockalfab_sitio_planeton'),
-            # InlineKeyboardButton("\U0001F1EA\U0001F1F8 Casa del Libro", callback_data='juegos_stockalfab_sitio_CDL'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Magic Madhouse", callback_data='juegos_stockalfab_sitio_MMadhouse'),
         ],
         # [
         #     InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockalfab_sitio_MM'),
@@ -331,7 +331,7 @@ def juegos_stockprecio(update: Update, context: CallbackContext) -> int:
         # ],
         [
             InlineKeyboardButton("\U0001F1EA\U0001F1F8 Planeton", callback_data='juegos_stockprecio_sitio_planeton'),
-            # InlineKeyboardButton("\U0001F1EA\U0001F1F8 Casa del Libro", callback_data='juegos_stockprecio_sitio_CDL'),
+            InlineKeyboardButton("\U0001F1EC\U0001F1E7 Magic Madhouse", callback_data='juegos_stockprecio_sitio_MMadhouse'),
         ],
         # [
         #     InlineKeyboardButton("\U0001F1FA\U0001F1F8 Miniature Market", callback_data='juegos_stockprecio_sitio_MM'),
@@ -1107,7 +1107,7 @@ def ayuda(update: Update, context: CallbackContext) -> int:
     texto = """
 <b>Ayuda</b>
     
-@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Grooves.land, Planeton y Philibert, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
+@Monitor_Juegos_bot es un bot de telegram que monitorea precios de juegos desde diversos sitios (Buscalibre, Tiendamia, Grooves.land, Planeton, MagicMadhouse y Philibert, más la referencia de Cazagangas gracias a @jotaleal) con una frecuencia de entre 15 minutos y 2 horas, dependiendo del número de alarmas del juego. No es un buscador, no sirve para juegos que no estén siendo monitoreados.
     
 Ofrece la posibilidad de agregar alarmas para que te llegue una notificación cuando el precio <b>FINAL EN ARGENTINA</b> de un juego desede cualquier sitio (incluyendo 75% a compras en el exterior, tasa de Aduana y correo) sea menor al que le indicaste. Para borrar la alarma, andá al juego correspondiente.
     
@@ -1161,6 +1161,7 @@ def novedades(update: Update, context: CallbackContext) -> int:
     texto = """<b>Novedades</b>
 
 01/11/2024: Nuevo server, limpieza general
+29/12/2024: Reagregado MagicMadHouse, acutalización de Phillibert
 """
 
     keyboard = [
