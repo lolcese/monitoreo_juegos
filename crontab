@@ -1,0 +1,9 @@
+0 7,19 * * * cd /home/lolcese/monitoreo_juegos && /usr/local/bin/python monitoreo_juegos.py >>logs/log_moni>
+30           1   * * * cd /home/lolcese/monitoreo_juegos && /usr/local/bin/python baja_cotizacion.py  >>log>
+5            2   * * 6 cd /home/lolcese/monitoreo_juegos && /usr/local/bin/python actualiza_datos_bgg.py >>>
+#45           *   * * * cd /root/monitoreo_juegos && python3 ofertas_reposiciones.py  >>logs/log_ofertas_re>
+0,15,30,45   *   * * * cd /home/lolcese/monitoreo_juegos && /usr/local/bin/python genera_csv.py            >
+#5            3   * * * cd /root/monitoreo_juegos && python3 actualiza_prioridades.py >>logs/log_actualiza_>
+5            4   * * * cd /home/lolcese/monitoreo_juegos && bash backup.sh >/dev/null 2>&1
+2            2   * * * cd /home/lolcese/monitoreo_juegos && /usr/local/bin/python baja_cazagangas.py       >
+#
