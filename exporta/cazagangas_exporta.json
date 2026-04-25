@@ -3,7 +3,16 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/173346'>7 Wonders Duel</a>, Ranking BGG: 21, Dependencia idioma: Sin texto",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/7-wonders-duel?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$85000",
+        "precio_actual": "$84900",
+        "minimo_15": "",
+        "promedio_15": "",
+        "notas": ""
+    },
+    {
+        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/309116'>7 Wonders Duel: Agora</a>, Ranking BGG: Sin datos, Dependencia idioma: Sin texto",
+        "sitio": "<a href='https://www.cazagangas.com.ar/juego/7-wonders-duel-agora?source=bot'>Cazagangas</a>",
+        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
+        "precio_actual": "$69900",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -27,6 +36,15 @@
         "notas": ""
     },
     {
+        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/154458'>Akrotiri</a>, Ranking BGG: 1018, Dependencia idioma: Sin texto",
+        "sitio": "<a href='https://www.cazagangas.com.ar/juego/akrotiri?source=bot'>Cazagangas</a>",
+        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
+        "precio_actual": "$144375",
+        "minimo_15": "",
+        "promedio_15": "",
+        "notas": ""
+    },
+    {
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/185343'>Anachrony</a>, Ranking BGG: 57, Dependencia idioma: Sin texto",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/anachrony?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
@@ -39,7 +57,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/285967'>Ankh: Gods of Egypt</a> (Ankh: Dioses de Egipto), Ranking BGG: 239, Dependencia idioma: Cantidad de texto moderada",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/ankh-dioses-de-egipto?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$300000",
+        "precio_actual": "$319000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -57,7 +75,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/342942'>Ark Nova</a>, Ranking BGG: 3, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/ark-nova?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$160000",
+        "precio_actual": "$168960",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -84,7 +102,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/28720'>Brass: Lancashire</a>, Ranking BGG: 21, Dependencia idioma: Sin texto",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/brass-lancashire?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$140000",
+        "precio_actual": "$174990",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -102,52 +120,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/332386'>Brew</a>, Ranking BGG: 1337, Dependencia idioma: Cantidad de texto moderada",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/brew?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$125000",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/214887'>CO₂: Second Chance</a> (CO2: Segunda Oportunidad), Ranking BGG: 874, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/co2-segunda-chance?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$248200",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/284936'>Café</a> (Café &amp; Expresso), Ranking BGG: 1213, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/cafe?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$32500",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/2993'>Carcassonne: Expansion 1 – Inns &amp; Cathedrals</a> (Carcassonne: Posadas y Catedrales), Ranking BGG: Sin datos, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/carcassonne-posadas-y-catedrales?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$36980",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/478'>Citadels</a> (Ciudadelas Clásico / Ciudadelas), Ranking BGG: 558, Dependencia idioma: Cantidad de texto moderada",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/ciudadelas-clasico?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$46900",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/233371'>Clank! In! Space!: A Deck-Building Adventure</a> (Clank!: ¡En el espacio!), Ranking BGG: 153, Dependencia idioma: Cantidad de texto moderada",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/clank-en-el-espacio-?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$149400",
+        "precio_actual": "$127300",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -156,25 +129,16 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/147151'>Concept</a>, Ranking BGG: 1063, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/concept?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$90000",
+        "precio_actual": "$94900",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
     },
     {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/174090'>Dixit: Memories</a> (Dixit 6: Memories / Диксит 6: Воспоминания), Ranking BGG: Sin datos, Dependencia idioma: No hay datos",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/dixit-memories?source=bot'>Cazagangas</a>",
+        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/253344'>Cthulhu: Death May Die</a>, Ranking BGG: 53, Dependencia idioma: Cantidad de texto moderada",
+        "sitio": "<a href='https://www.cazagangas.com.ar/juego/cthulhu-death-may-die?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$47500",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/55660'>Dixit: Quest</a> (Dixit 2: Quest / Dixit 2), Ranking BGG: Sin datos, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/dixit-quest?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$47500",
+        "precio_actual": "$329000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -183,7 +147,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/146021'>Eldritch Horror</a>, Ranking BGG: 133, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/eldritch-horror?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$195000",
+        "precio_actual": "$205000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -192,7 +156,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/199792'>Everdell</a>, Ranking BGG: 40, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/everdell?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$165000",
+        "precio_actual": "$102000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -207,19 +171,10 @@
         "notas": ""
     },
     {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/157354'>Five Tribes: The Djinns of Naqala</a> (Five Tribes: Los genios de Naqala), Ranking BGG: 89, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/five-tribes?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$150000",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/220308'>Gaia Project</a>, Ranking BGG: 13, Dependencia idioma: Sin texto",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/gaia-project?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$185000",
+        "precio_actual": "$167500",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -228,7 +183,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/174430'>Gloomhaven</a>, Ranking BGG: 4, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/gloomhaven?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$469800",
+        "precio_actual": "$550000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -246,7 +201,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/366013'>Heat: Pedal to the Metal</a> (Heat), Ranking BGG: 43, Dependencia idioma: Sin texto",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/heat?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$178200",
+        "precio_actual": "$194000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -255,7 +210,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/177478'>IKI</a> (IKI: El juego de los artesanos de Edo), Ranking BGG: 459, Dependencia idioma: Sin texto",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/iki?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$135000",
+        "precio_actual": "$130000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -264,7 +219,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/318184'>Imperium: Classics</a> (Imperium: Clásicos), Ranking BGG: 356, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/imperium-clasicos?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$65500",
+        "precio_actual": "$69900",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -273,25 +228,25 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/255588'>Inis: Seasons of Inis</a> (Inis: Las Estaciones de Inis), Ranking BGG: Sin datos, Dependencia idioma: No hay datos",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/inis-las-estaciones-de-inis?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$144900",
+        "precio_actual": "$160000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
     },
     {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/6931'>Katamino</a> (Katamino Deluxe / Katamino Pocket / Winomino / קטמינו), Ranking BGG: 4162, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/katamino?source=bot'>Cazagangas</a>",
+        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/271324'>It&#x27;s a Wonderful World</a>, Ranking BGG: 152, Dependencia idioma: Sin texto",
+        "sitio": "<a href='https://www.cazagangas.com.ar/juego/its-a-wonderful-world?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$94500",
+        "precio_actual": "$160000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
     },
     {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/379629'>Knarr</a>, Ranking BGG: 1203, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/knarr?source=bot'>Cazagangas</a>",
+        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/223953'>Kitchen Rush</a>, Ranking BGG: 961, Dependencia idioma: Poco texto",
+        "sitio": "<a href='https://www.cazagangas.com.ar/juego/kitchen-rush?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$55990",
+        "precio_actual": "$163710",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -300,7 +255,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/285984'>Last Bastion</a>, Ranking BGG: 901, Dependencia idioma: Sin texto",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/last-bastion?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$205900",
+        "precio_actual": "$179000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -309,7 +264,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/312484'>Lost Ruins of Arnak</a> (Las Ruinas Perdidas de Arnak), Ranking BGG: 28, Dependencia idioma: Cantidad de texto moderada",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/las-ruinas-perdidas-de-arnak?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$129900",
+        "precio_actual": "$132900",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -333,19 +288,10 @@
         "notas": ""
     },
     {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/244711'>Newton</a>, Ranking BGG: 421, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/newton?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$155200",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/314040'>Pandemic Legacy: Season 0</a> (Pandemic Legacy: Temporada 0), Ranking BGG: 53, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/pandemic-legacy-temporada-cero?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$339000",
+        "precio_actual": "$249900",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -372,16 +318,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/169786'>Scythe</a>, Ranking BGG: 17, Dependencia idioma: Cantidad de texto moderada",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/scythe?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$265000",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/367220'>Sea Salt &amp; Paper</a> (Océanos de Papel), Ranking BGG: 453, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/oceanos-de-papel?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$17500",
+        "precio_actual": "$175000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -390,7 +327,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/204305'>Sherlock Holmes Consulting Detective: Jack the Ripper &amp; West End Adventures</a> (Sherlock Holmes Detective Asesor: Jack el Destripador y Aventuras en el West End), Ranking BGG: 441, Dependencia idioma: Injugable en otro idioma",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/sherlock-holmes-detective-asesor-jack-el-destripador-y-aventuras-en-el-west-end?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$205800",
+        "precio_actual": "$163900",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -399,16 +336,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/2511'>Sherlock Holmes Consulting Detective: The Thames Murders &amp; Other Cases</a> (Sherlock Holmes Detective Asesor: Los Crímenes del Támesis y otros casos / Sherlock Holmes: Detective Asesor), Ranking BGG: 156, Dependencia idioma: Injugable en otro idioma",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/sherlock-holmes-detective-asesor-los-crimenes-del-tamesis-y-otros-casos?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$205800",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/150145'>Skull King</a>, Ranking BGG: 326, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/skull-king?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$37900",
+        "precio_actual": "$163900",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -435,7 +363,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/123260'>Suburbia</a>, Ranking BGG: 210, Dependencia idioma: Cantidad de texto moderada",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/suburbia?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$175500",
+        "precio_actual": "$189000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -445,15 +373,6 @@
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/the-island?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
         "precio_actual": "$117000",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/127784'>Suspend</a>, Ranking BGG: 4543, Dependencia idioma: Sin texto",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/suspend?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$59700",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -480,7 +399,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/229853'>Teotihuacan: City of Gods</a> (Teotihuacan: Ciudad de Dioses), Ranking BGG: 84, Dependencia idioma: Sin texto",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/teotihuacan-ciudad-de-dioses?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$199000",
+        "precio_actual": "$159000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -489,7 +408,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/167791'>Terraforming Mars</a>, Ranking BGG: 7, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/terraforming-mars?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$159900",
+        "precio_actual": "$115200",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -498,7 +417,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/281259'>The Isle of Cats</a> (La Isla de los Gatos), Ranking BGG: 133, Dependencia idioma: Cantidad de texto moderada",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/la-isla-de-los-gatos?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$107712",
+        "precio_actual": "$112200",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -516,7 +435,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/279537'>The Search for Planet X</a> (La Búsqueda del Planeta X), Ranking BGG: 93, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/la-busqueda-del-planeta-x?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$154900",
+        "precio_actual": "$110000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -549,15 +468,6 @@
         "notas": ""
     },
     {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/361545'>Twilight Inscription</a>, Ranking BGG: 760, Dependencia idioma: Cantidad de texto moderada",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/twilight-inscription?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$160000",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/12333'>Twilight Struggle</a>, Ranking BGG: 13, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/twilight-struggle?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
@@ -570,7 +480,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/340466'>Unfathomable</a> (Insondable), Ranking BGG: 609, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/insondable?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$301500",
+        "precio_actual": "$249900",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -579,7 +489,7 @@
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/274637'>Unmatched: Battle of Legends, Volume One</a> (Unmatched: Battle of Legends, Volumen Uno), Ranking BGG: 257, Dependencia idioma: Cantidad de texto moderada",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/unmatched-battle-of-legends-volumen-uno?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$89000",
+        "precio_actual": "$94900",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
@@ -594,28 +504,10 @@
         "notas": ""
     },
     {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/115746'>War of the Ring: Second Edition</a> (Guerra del Anillo: Segunda Edición), Ranking BGG: 8, Dependencia idioma: Alta dependencia",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/guerra-del-anillo-segunda-edicion?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$224960",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
         "nombre": "<a href='https://www.boardgamegeek.com/boardgame/266192'>Wingspan</a>, Ranking BGG: 25, Dependencia idioma: Alta dependencia",
         "sitio": "<a href='https://www.cazagangas.com.ar/juego/wingspan?source=bot'>Cazagangas</a>",
         "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$116160",
-        "minimo_15": "",
-        "promedio_15": "",
-        "notas": ""
-    },
-    {
-        "nombre": "<a href='https://www.boardgamegeek.com/boardgame/290448'>Wingspan: European Expansion</a>, Ranking BGG: Sin datos, Dependencia idioma: Alta dependencia",
-        "sitio": "<a href='https://www.cazagangas.com.ar/juego/wingspan-expansion-europea?source=bot'>Cazagangas</a>",
-        "pais": "<img src='https://flagcdn.com/24x18/ar.png' alt='Bandera ar'>",
-        "precio_actual": "$120000",
+        "precio_actual": "$110000",
         "minimo_15": "",
         "promedio_15": "",
         "notas": ""
